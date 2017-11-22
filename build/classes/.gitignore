@@ -1,0 +1,16 @@
+/jeecg/
+/org/
+/test/
+/weixin/
+/CKfinderConfig.xml
+/dbconfig.properties
+/ehcache.xml
+/log4j.properties
+/spring-minidao.xml
+/spring-mvc-aop.xml
+/spring-mvc-cgform.xml
+/spring-mvc-context.xml
+/spring-mvc-hibernate.xml
+/spring-mvc-timeTask.xml
+/spring-mvc.xml
+/sysConfig.properties
