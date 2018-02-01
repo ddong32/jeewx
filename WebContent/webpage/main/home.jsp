@@ -3,6 +3,22 @@
      <div class="funcList" id="func">
             <ul class="list">
                 
+                <a href="cmsController.do?goPage&page=index" target="_blank">
+	                <li>
+	                    <img src="./plug-in/weixin/img/func01.jpg" width="104" height="107">
+	                    <h3>微网站 </h3>
+	                    <p>5分钟轻松建站<br>打造酷炫微官网</p>
+	                </li>
+                </a>
+                <a href="cmsController.do?goPage&page=photoAlbum" target="_blank">
+                	<li>
+                    	<img src="./plug-in/weixin/img/func04.jpg" width="106" height="107">
+                    	<h3>微相册</h3>
+                    	<p>各行各业<br> 照片展现轻松搞定</p>
+                	</li>
+                </a>
+                
+                <!-- 
                  <a href="menuManagerController.do?list&clickFunctionId=4028d881436d514601436d5884be019d" target="_blank">
                      <li><img src="./plug-in/weixin/img/func06.jpg">
 	                    <h3>自定义菜单</h3>
@@ -46,20 +62,6 @@
                     </li>
                     </a>
                 
-                <a href="cmsController.do?goPage&page=index" target="_blank">
-	                <li>
-	                    <img src="./plug-in/weixin/img/func01.jpg" width="104" height="107">
-	                    <h3>微网站 </h3>
-	                    <p>5分钟轻松建站<br>打造酷炫微官网</p>
-	                </li>
-                </a>
-                <a href="cmsController.do?goPage&page=photoAlbum" target="_blank">
-                	<li>
-                    	<img src="./plug-in/weixin/img/func04.jpg" width="106" height="107">
-                    	<h3>微相册</h3>
-                    	<p>各行各业<br> 照片展现轻松搞定</p>
-                	</li>
-                </a>
                	<li>
                    	<img src="./plug-in/weixin/img/func04.jpg" width="106" height="107">
                    	<h3>微翻译</h3>
@@ -70,7 +72,7 @@
                    	<h3>微天气</h3>
                    	<p>通过城市：定位天气预报</p>
                	</li>
-               	   <!-- 
+               	   
                 <li>
                     <img src="./plug-in/weixin/img/func13.jpg">
                     <h3>微信插件机制</h3>

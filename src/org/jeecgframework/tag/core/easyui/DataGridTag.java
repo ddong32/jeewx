@@ -642,10 +642,8 @@ public class DataGridTag extends TagSupport {
 							}else if(!StringUtil.isEmpty(col.getDictionary())){
 								if(col.getDictionary().contains(",")){
 									String[] dic = col.getDictionary().split(",");
-									String sql = "select " + dic[1] + " as field," + dic[2]
-											+ " as text from " + dic[0];
-									systemService = ApplicationContextUtil.getContext().getBean(
-											SystemService.class);
+									String sql = "select " + dic[1] + " as field," + dic[2] + " as text from " + dic[0];
+									systemService = ApplicationContextUtil.getContext().getBean(SystemService.class);
 									List<Map<String, Object>> list = systemService.findForJdbc(sql);
 									sb.append("<select name=\""+col.getField().replaceAll("_","\\.")+"\" WIDTH=\"100\" style=\"width: 104px\"> ");
 									sb.append("<option value =\"\" >---请选择---</option>");

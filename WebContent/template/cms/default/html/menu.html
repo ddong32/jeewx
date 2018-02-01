@@ -1,134 +1,243 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>${cmsData.title}</title>
-		<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<meta name="format-detection" content="telephone=no">
-  		<link type="text/css" rel="stylesheet" href="template/cms/default/css/weixin_cms.css" />
-	    <script type='text/javascript' src='plug-in/jquery/jquery-1.8.3.js'></script>
-	    <script type="text/javascript">
-	    	var rows = 5;//每页显示记录数
-	    	var page = 1;//当前页
-	    	var total = 0;//总记录数
-	    	var field = "id,title,columnId,summary,createDate,imageName,imageHref,accountid,";//字段
-	    	var sort = "createDate";
-	    	var order = "desc";
-	    	var columnId = '${cmsData.menu.id}';//当前栏目id
-	    	var $moreBtn = $("#j-viewmore");//显示更多按钮
-	    	$(function(){
-	    		
-	    	    //返回顶部按钮逻辑
-	    	    $('#j-gotop').on("click", function () {
-	    	        window.scrollTo(0, 0); 
-	    	    });
-	    	    $("#j-viewmore").on("click",function(){
-	    	    	loadData();
-		    	});
-	    	    $("#j-viewmore").click();
-		    });
-		    //数据加载
-		    function loadData(){
-				if ($("#j-viewmore").hasClass("disabled")) {
-					return;
-				}
-				$("#j-viewmore").html("努力加载中…").addClass("disabled");
-	    		$.ajax({
-	                type: "GET",
-	                url: "cmsController.do?getMenuList",
-	                data: {columnid:columnId, field:field, rows:rows,page:page,sort:sort,order:order},
-	                dataType: "json",
-	                success: function(data){
-	                            $.each(data, function(key, value){
-		                            if(key=="rows"){
-			                            for(var i = 0; i < value.length; i++){
-				                        	console.log("article",value[i]);
-			                            	setData(value[i]);
-			                            }
-			                        }
-			                        if(key=="total"){
-			                        	total = value;
-				                    }
-	                            });
-	            		        if ((page * rows) >= total){
-	            		        	$("#j-viewmore").html("已显示全部").addClass("disabled");
-	            					$moreBtn.off('click');
-	            				} else {
-	            					page++;
-	            					$("#j-viewmore").html("查看更多").removeClass("disabled");
-	            				}
-	                         }
-	            });
-			}
-			//数据填充展示
-			function setData(article){
-				var html = "";
-				html= '<section class="w-goods " mon="action=click&amp;type=item">'
-					+ '			<a href="cmsController.do?goPage&page=article&articleid='+article.id+'" class="clearfix">'
-					+ '				<div class="img-wrapper">'
-					+ '					<img'
-					+ '						src="'+article.imageHref+'"'
-					+ '						width="118" height="79" style="visibility: visible;">'
-					+ '				</div>'
-					+ '				<ul>'
-					+ '					<li class="title">'
-					+ '						<span class="store ">'+formatCSTDate(article.createDate,'yyyy-MM-dd hh:mm:ss')+'</span><span class="item-name">'+article.title+'</span>'
-					+ '					</li>'
-					+ '					<li class="info">'
-					+ '						'+article.summary+''
-					+ '					</li>'
-					+ '				</ul>'
-					+ '			</a>'
-					+ '</section>'
-				$("#j-goods-container").append(html);
-			}
-					//格式化CST日期的字串
-		      function formatCSTDate(strDate,format){
-		        return formatDate(new Date(strDate),format);
-		      }
-			//格式化日期,
-   		   function formatDate(date,format){
-		        var paddNum = function(num){
-		          num += "";
-		          return num.replace(/^(\d)$/,"0$1");
-		        }
-		        //指定格式字符
-		        var cfg = {
-		           yyyy : date.getFullYear() //年 : 4位
-		          ,yy : date.getFullYear().toString().substring(2)//年 : 2位
-		          ,M  : date.getMonth() + 1  //月 : 如果1位的时候不补0
-		          ,MM : paddNum(date.getMonth() + 1) //月 : 如果1位的时候补0
-		          ,d  : date.getDate()   //日 : 如果1位的时候不补0
-		          ,dd : paddNum(date.getDate())//日 : 如果1位的时候补0
-		          ,hh : date.getHours()  //时
-		          ,mm : date.getMinutes() //分
-		          ,ss : date.getSeconds() //秒
-		        }
-		        format || (format = "yyyy-MM-dd hh:mm:ss");
-		        return format.replace(/([a-z])(\1)*/ig,function(m){return cfg[m];});
-     	 } 
-	    </script>
-	</head>
-	<body>
-		<header class="w-header" mon="type=header">
-			<a class="arrow-wrap" href="javascript:history.back()" mon="content=back">
-			<span class="arrow-left"></span>
-			</a>
-			
-			<a href="http://www.jeewx.com/" class="home" mon="content=home"></a>
-			<div class="text">${cmsData.menu.name }</div>
-		</header>
-		<article class="p-list" mon="action=click">
-		<div id="j-goods-container">
-		</div>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=7,IE=9" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<meta http-equiv="Content-Language" content="utf-8"/> 
+	<meta http-equiv="pragma" content="no-cache"/>
+	<meta http-equiv="cache-control" content="no-cache"/>
+	<meta http-equiv="expires" content="0"/>
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3"/>
+	<meta http-equiv="description" content="This is my page"/>
+	<title>${cmsData.title}</title>
+    <!-- 公共样式表 喜洋洋国际旅行社有限公司-->
+    <link rel="stylesheet" type="text/css" href="template/cms/default/css/common.css">
+    <link rel="stylesheet" type="text/css" href="template/cms/default/css/color.css">
+	<link rel="stylesheet" type="text/css" href="template/cms/default/css/t_index.css">
+	<link rel="stylesheet" type="text/css" href="template/cms/default/css/weixin_cms.css" />
+    <!-- 页面样式表 -->
+    <script type="text/javascript" src="plug-in/jquery/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="plug-in/m/common.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+            WeixinJSBridge.call('hideToolbar');
+        });
 
-		<div class="w-viewmore clearfix" mon="action=click">
-			<a id="j-viewmore" href="javascript:;" class="op-btn more"
-				mon="type=more">查看更多</a>
-			<a href="javascript:;" id="j-gotop" class="op-btn gotop"
-				mon="type=gotop">回到顶部</a>
+    	var rows  = 15;//每页显示记录数
+    	var page  = 1;//当前页
+    	var total = 0;//总记录数
+    	var field = "id,title,columnId,summary,createDate,imageName,imageHref,accountid,price,price_vip";//字段
+    	var sort  = "createDate";
+    	var order = "desc";
+    	var columnId = '${cmsData.menu.id}';//当前栏目id
+    	var $moreBtn = $("#j-viewmore");//显示更多按钮
+    	$(function(){
+    	    //返回顶部按钮逻辑
+    	    $('#j-gotop').on("click", function () {
+    	        window.scrollTo(0, 0); 
+    	    });
+    	    $("#j-viewmore").on("click",function(){
+    	    	loadData();
+	    	});
+    	    $("#j-viewmore").click();
+	    });
+	    //数据加载
+	    function loadData(){
+			if ($("#j-viewmore").hasClass("disabled")) {
+				return;
+			}
+			$("#j-viewmore").html("努力加载中…").addClass("disabled");
+    		$.ajax({
+                type: "GET",
+                url: "cmsController.do?getMenuList",
+                data: {columnid:columnId, field:field, rows:rows, page:page, sort:sort, order:order},
+                dataType: "json",
+                success: function(data){
+					$.each(data, function(key, value){
+						if(key=="rows"){
+							for(var i = 0; i < value.length; i++){
+	                        	console.log("article",value[i]);
+	                           	setData(value[i]);
+                        	}
+                        }
+                        if(key=="total"){
+                        	total = value;
+	                    }
+					});
+       		        if ((page * rows) >= total){
+       		        	$("#j-viewmore").html("已显示全部").addClass("disabled");
+       					$moreBtn.off('click');
+       				} else {
+       					page++;
+       					$("#j-viewmore").html("查看更多").removeClass("disabled");
+       				}
+				}
+            });
+		}
+		//数据填充展示
+		function setData(article){
+			var html = "";
+			html= '<div class="list-item">'
+                + '    <a href="cmsController.do?goPage&page=article&articleid='+article.id+'">'
+                + '        <div class="pic">'
+                + '            <img src="'+article.imageHref+'" alt="">'
+                + '        </div>'
+                + '        <div class="name">'
+                + '            <h4>'+article.title+'</h4>'
+                + '            <p>'
+                + '                <em class="fr" style="display:none">同行：<span class="price">'+article.price_vip+'</span>起</em> <span class="price">'+article.price+'</span>起'
+                + '            </p>'
+                + '        </div>'
+                + '    </a>'
+                + '</div>'
+			$("#t-list").append(html);
+		}
+		//格式化CST日期的字串
+		function formatCSTDate(strDate,format){
+	        return formatDate(new Date(strDate),format);
+		}
+		//格式化日期,
+		function formatDate(date,format){
+	        var paddNum = function(num){
+				num += "";
+				return num.replace(/^(\d)$/,"0$1");
+	        }
+	        //指定格式字符
+	        var cfg = {
+				 yyyy : date.getFullYear() //年 : 4位
+				,yy : date.getFullYear().toString().substring(2)//年 : 2位
+				,M  : date.getMonth() + 1  //月 : 如果1位的时候不补0
+				,MM : paddNum(date.getMonth() + 1) //月 : 如果1位的时候补0
+				,d  : date.getDate()   //日 : 如果1位的时候不补0
+				,dd : paddNum(date.getDate())//日 : 如果1位的时候补0
+				,hh : date.getHours()  //时
+				,mm : date.getMinutes() //分
+				,ss : date.getSeconds() //秒
+	        }
+	        format || (format = "yyyy-MM-dd hh:mm:ss");
+	        return format.replace(/([a-z])(\1)*/ig,function(m){return cfg[m];});
+		} 
+    </script>
+</head>
+<body>
+	<div id="loader" style="display: none;">
+        <div id="wait" style="display: none;"></div>
+    </div>
+	<header class="header"> 
+		<h1 class="es">${ cmsData.menu.name }</h1>
+		<div class="le-head">
+			<a id="goBack" href="javascript:history.go(-1);" class="iconfont icon-left col-1"></a>
 		</div>
-		</article>
-	</body>
+		<div class="rg-head">
+			<a href="javascript:;" class="iconfont icon-more-2 col-1" id="goHome"></a>
+		</div>
+	</header>
+
+    <!-- 页面内容块  喜洋洋国际旅行社有限公司 -->
+    <div class="content">
+        <div id="main">
+            <div class="box-search box-search2">
+                <div class="search-con">
+                    <div class="search-dest search-dest2" id="dest-name" data-page="dest" data-name="搜索">
+                        <i class="iconfont icon-search"></i><span>目的地/关键字</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="t-list"></div>
+
+            <div class="w-viewmore clearfix" mon="action=click">
+				<a id="j-viewmore" href="javascript:;" class="op-btn more" mon="type=more">查看更多</a>
+				<a href="javascript:;" id="j-gotop" class="op-btn gotop" mon="type=gotop">回到顶部</a>
+			</div>
+        </div> <!-- end main -->
+    
+        <div id="page-dest" class="m-page">
+            <!--  搜索 模块 -->
+            <div class="dest-search dest-search2">
+                <h2 class="cf">
+                    <form action="http://www.gxbestone.com/mobile/lvyou/list.html" id="LinesSearch" method="get">
+                        <a class="iconfont icon-left col-1" href="javascript:;" id="dest-close"></a>
+                        <input type="text" name="Name" value="" placeholder="目的地、主题或关键字" class="dest-sea-name" id="s_cName">
+                        <span id="dest-click">搜索</span> <i class="iconfont icon-search"></i>
+                    </form>
+                </h2>
+            </div>
+            <div class="dest-list">
+                <h3>热搜词</h3>
+                <ul class="cf">
+                    <li><a href="http://www.gxbestone.com/mobile/lvyou/list.html?LCid=593">蜈支洲岛</a></li>
+                    <li><a href="http://www.gxbestone.com/mobile/lvyou/list.html?LCid=592">海口</a></li>
+                    <li><a href="http://www.gxbestone.com/mobile/lvyou/list.html?LCid=591">三亚</a></li>
+                    <li><a href="http://www.gxbestone.com/mobile/lvyou/list.html?LCid=590">海南</a></li>
+                    <li><a href="http://www.gxbestone.com/mobile/lvyou/list.html?LCid=579">周边特色游</a></li>
+                    <li><a href="http://www.gxbestone.com/mobile/lvyou/list.html?LCid=577">大新德天</a></li>
+                    <li><a href="http://www.gxbestone.com/mobile/lvyou/list.html?LCid=575">巴马</a></li>
+                    <li><a href="http://www.gxbestone.com/mobile/lvyou/list.html?LCid=575">北海</a></li>
+                </ul>
+            </div>
+        </div>
+    
+        <style type="text/css">
+            #footer
+            {
+                display: none !important;
+            }
+            .topinner
+            {
+                display: none;
+            }
+        </style>
+        <input type="hidden" id="keyword" name="keyword"><!--  关键词 -->
+        <input type="hidden" id="city-hid" name="City" value="1"><!--  出发城市 -->
+        <input type="hidden" name="LCid" id="LCid" value="566"><!-- 目的地 -->
+        <input type="hidden" name="SchedulingDayNumber" id="SchedulingDayNumber" value=""><!-- 排序 -->
+        <input type="hidden" name="SchedulingDay" id="SchedulingDay" value="0"><!-- 出游天数 -->
+        <input type="hidden" name="BasePrice" id="BasePrice" value="0"><!-- 价格区间 -->
+        <input type="hidden" name="SellPrice" id="SellPrice" value="0"><!-- 价格区间 -->
+        <script type="text/javascript" src="plug-in/m/t_list.js"></script>
+
+    </div>
+    <!-- 公共页脚 -->
+    
+    <footer id="footer">
+		<div class="foot-nav cf"> 
+			<a class="fr iconfont icon-top c6" id="goTop" href="javascript:;"></a> 
+			<p>
+			<a href="http://www.gxbestone.com/mobile/member/login.html" class="c6">登录</a>|<a href="http://www.gxbestone.com/mobile/member/reg.html" class="c6">注册</a>|              <a href="http://www.gxbestone.com/mobile/usercenter/home/index.html" class="c6">会员中心</a> |
+            </p> 
+       </div> 
+       <div class="foot-link"> 
+            <p class="foot_com">
+                <a class="c9" href="http://www.gxbestone.com/mobile/help/index.html">帮助中心</a> |
+                <a class="c9" href="http://www.gxbestone.com/mobile/about/index.html">关于我们</a> | 
+                <a class="c9" href="http://www.gxbestone.com/mobile/FeedBack.html">意见反馈</a> 
+            </p> 
+            <p> 服务热线：<a href="tel:0771--- 5603033 4803033 4863033 3943033" class="c9">0771 --- </a></p> 
+            <p>Copyright ? 2017 广西喜洋洋国际旅行运营中心</p> 
+            <p><a href="http://www.miitbeian.gov.cn/" target="_blank" class="c9"></a></p>
+		</div> 
+    </footer>
+    <script type="text/javascript">
+        $("#goTop").on("click touch", function () {
+            $(window).scrollTop(0);
+        });
+    </script>
+    <!-- 移动端第三方代码 -->
+    
+	<!-- End 移动端第三方代码 -->
+    <div class="header-menu">
+        <a href="http://www.gxbestone.com/mobile/index.html"><i class="iconfont icon-home-2"></i>首页1</a> 
+        <a href="http://www.gxbestone.com/mobile/usercenter/home/index.html"><i class="iconfont icon-me"></i>会员中心</a>
+        <a href="http://www.gxbestone.com/mobile/member/login.html"><i class="iconfont icon-pass-2"></i>登录/注册</a>
+        <a href="javascript:location.reload()"><i class="iconfont icon-map-2"></i>刷新</a>
+        <a href="tel:0771--- 5603033 4803033 4863033 3943033" class="col-1"><i class="iconfont icon-tel-2 col-1"></i>联系客服</a>
+    </div>
+
+	<a href="javascript:;" id="return-top" style="display: none;"></a>
+</body>
 </html>

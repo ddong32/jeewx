@@ -112,8 +112,7 @@ public class LoginController extends BaseController{
 	@ResponseBody
 	public AjaxJson checkuser(TSUser user, HttpServletRequest req) {
 		HttpSession session = ContextHolderUtils.getSession();
-		DataSourceContextHolder
-				.setDataSourceType(DataSourceType.dataSource_jeecg);
+		DataSourceContextHolder.setDataSourceType(DataSourceType.dataSource_jeecg);
 		AjaxJson j = new AjaxJson();
         String randCode = req.getParameter("randCode");
         if (StringUtils.isEmpty(randCode)) {

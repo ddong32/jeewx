@@ -46,6 +46,10 @@ public class CmsArticleEntity implements java.io.Serializable {
 	private java.lang.String createBy;
 	/**创建日期*/
 	private java.util.Date createDate;
+	/**价格*/
+	private java.lang.Long price;
+	/**会员价*/
+	private java.lang.Long price_vip;
 	
 	/**
 	 *方法: 取得java.lang.String
@@ -187,7 +191,7 @@ public class CmsArticleEntity implements java.io.Serializable {
 	 *方法: 取得java.lang.String
 	 *@return: java.lang.String  创建人id
 	 */
-	@Column(name ="CREATE_BY",nullable=true,length=255)
+	@Column(name ="CREATE_BY",nullable=true, length=255)
 	public java.lang.String getCreateBy(){
 		return this.createBy;
 	}
@@ -215,4 +219,22 @@ public class CmsArticleEntity implements java.io.Serializable {
 	public void setCreateDate(java.util.Date createDate){
 		this.createDate = createDate;
 	}
+
+	@Column(name ="PRICE",nullable=true,length=36)
+    public java.lang.Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(java.lang.Long price) {
+        this.price = price;
+    }
+
+    @Column(name ="PRICE_VIP",nullable=true,length=36)
+    public java.lang.Long getPrice_vip() {
+        return price_vip;
+    }
+
+    public void setPrice_vip(java.lang.Long price_vip) {
+        this.price_vip = price_vip;
+    }
 }

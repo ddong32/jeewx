@@ -34,8 +34,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	public int getUsersOfThisRole(String id) {
 		Criteria criteria = getSession().createCriteria(TSRoleUser.class);
 		criteria.add(Restrictions.eq("TSRole.id", id));
-		int allCounts = ((Long) criteria.setProjection(
-				Projections.rowCount()).uniqueResult()).intValue();
+		int allCounts = ((Long) criteria.setProjection(Projections.rowCount()).uniqueResult()).intValue();
 		return allCounts;
 	}
 	

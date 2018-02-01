@@ -17,44 +17,43 @@ import freemarker.template.Template;
  * @version V1.0
  */
 public class CmsFreemarkerHelper {
-	private static Configuration _tplConfig = new Configuration();
+    private static Configuration _tplConfig = new Configuration();
 
-	public CmsFreemarkerHelper(String dir) {
-		try {
-			_tplConfig.setDirectoryForTemplateLoading(new File(dir));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    public CmsFreemarkerHelper(String dir) {
+        try {
+            _tplConfig.setDirectoryForTemplateLoading(new File(dir));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * 解析ftl
-	 * 
-	 * @param tplName
-	 *            模板名
-	 * @param encoding
-	 *            编码
-	 * @param paras
-	 *            参数
-	 * @return
-	 */
-	public String parseTemplate(String tplName, String encoding,
-			Map<String, Object> paras) {
-		try {
-			StringWriter swriter = new StringWriter();
-			Template mytpl = null;
-			mytpl = _tplConfig.getTemplate(tplName, encoding);
-			mytpl.process(paras, swriter);
-			return swriter.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return e.toString();
-		}
+    /**
+     * 解析ftl
+     * 
+     * @param tplName
+     *            模板名
+     * @param encoding
+     *            编码
+     * @param paras
+     *            参数
+     * @return
+     */
+    public String parseTemplate(String tplName, String encoding, Map<String, Object> paras) {
+        try {
+            StringWriter swriter = new StringWriter();
+            Template mytpl = null;
+            mytpl = _tplConfig.getTemplate(tplName, encoding);
+            mytpl.process(paras, swriter);
+            return swriter.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
 
-	}
+    }
 
-	public String parseTemplate(String tplName, Map<String, Object> paras) {
-		return this.parseTemplate(tplName, "utf-8", paras);
-	}
+    public String parseTemplate(String tplName, Map<String, Object> paras) {
+        return this.parseTemplate(tplName, "utf-8", paras);
+    }
 }
