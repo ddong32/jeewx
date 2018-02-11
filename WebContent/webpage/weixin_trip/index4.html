@@ -1,0 +1,336 @@
+<!--DOCTYPE html-->
+<html lang="zh-cn" style="font-size: 53.3333px;">
+	<head lang="en">
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta http-equiv="Expires" content="-1">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="screen-orientation" content="portrait">
+		<meta name="x5-orientation" content="portrait">
+		<!-- UC默认竖屏 ，UC强制全屏 -->
+		<meta name="full-screen" content="yes">
+		<meta name="browsermode" content="application">
+		<!-- QQ强制竖屏 QQ强制全屏 -->
+		<meta name="x5-orientation" content="portrait">
+		<meta name="x5-fullscreen" content="true">
+		<meta name="x5-page-mode" content="app">
+		
+		<link rel="stylesheet" href="./2/detail.css" >
+		<link rel="stylesheet" href="./2/addbutton.css" >
+		<script type="text/javascript" src="./2/font.js"></script>
+		<script type="text/javascript" src="./2/jquery-2.1.1.min.js"></script>
+	</head>
+	<body>
+		<!-- 最顶层  detail-content  开始 -->
+		<div class="detail-content">
+			<!-- 此外,二级页面都是拉出来的那种效果 -->
+			<div class="detail uzai-wrapper" id="wrapper" style="display: block;"> 
+				<!-- 头部 开始 -->
+				<header class="white-topbar none ">
+					<!-- 滑动的时候北京变由透明变实 -->
+					<div class="con border-bot">
+						<a class="back fl" ng-click="goBack()"><i class="iconfont icon-back"></i></a>
+						<div class="fr">
+							<a class="share ng-hide">
+								<i class="iconfont icon-share"></i>
+							</a>
+							<a class="more"><i class="iconfont icon-more"></i></a>
+						</div>
+						<div class="title">
+							<h1 class=""></h1>
+						</div>
+					</div>
+					<div class="more-list hide">
+						<ul>
+							<li>
+								<a ng-click="GoMyOrder()"><i class="iconfont icon-order"></i>我的订单</a>
+							</li>
+							<li ng-if="!isApp" class="ng-scope">
+								<a class="history-show" ng-click="history_init()"><i class="iconfont icon-history"></i>浏览历史</a>
+							<li>
+								<a ng-click="GoIndex()"><i class="iconfont icon-home"></i>回到首页</a>
+							</li>
+						</ul>
+					</div>
+				</header>
+				
+				<!-- 行程头部 开始 滚动到相对应的位置才显示 -->
+				<div class="trip-header hide">
+	
+				</div>
+				<!-- 行程头部 结束 -->
+				<!-- 头部 结束 -->
+				
+				<!-- 头部以下全是脚 开始 -->
+				<div class="wrapper-scroll">
+					<!-- 头部背景 开始 -->
+					<nav class="head-bg swiper-container-headbg swiper-container-horizontal swiper-container-android">
+						<ul class="swiper-wrapper" style="transform: translate3d(-2800px, 0px, 0px); transition-duration: 500ms;">
+							<li class="swiper-slide swiper-slide-duplicate swiper-slide-next" find-head-bg="" data-swiper-slide-index="5" style="width: 400px;">
+								<img class="swiper-lazyimages" src="https://r07.uzaicdn.com/sceneryimageupload/224/25685/600x450.jpg?imageView2/3/w/750/h/500/format/jpg">
+							</li>
+							<li class="swiper-slide" find-head-bg="" data-swiper-slide-index="0" style="width: 400px;">
+								<img class="wiper-lazyimages" src="https://r05.uzaicdn.com/sceneryimageupload/13370/36989/600x450.jpg?imageView2/3/w/750/h/500/format/jpg">
+							</li>
+							<li class="swiper-slide" find-head-bg="" data-swiper-slide-index="1" style="width: 400px;">
+								<img class="swiper-lazyimages" src="https://r06.uzaicdn.com/sceneryimageupload/3389/25686/600x450.jpg?imageView2/3/w/750/h/500/format/jpg">
+							</li>
+							<li class="swiper-slide" find-head-bg="" data-swiper-slide-index="2" style="width: 400px;">
+								<img class="swiper-lazyimages" src="https://r08.uzaicdn.com/sceneryimageupload/3389/3379/600x450.jpg?imageView2/3/w/750/h/500/format/jpg">
+							</li>
+							<li class="swiper-slide" find-head-bg="" data-swiper-slide-index="3" style="width: 400px;">
+								<img class="swiper-lazyimages" src="https://r08.uzaicdn.com/sceneryimageupload/3387/3377/600x450.jpg?imageView2/3/w/750/h/500/format/jpg">
+							</li>
+							<li class="swiper-slide" find-head-bg="" data-swiper-slide-index="4" style="width: 400px;">
+								<img class="swiper-lazyimages" src="https://r05.uzaicdn.com/sceneryimageupload/224/25680/600x450.jpg?imageView2/3/w/750/h/500/format/jpg">
+							</li>
+							<li class="swiper-slide swiper-slide-prev" find-head-bg="" data-swiper-slide-index="5" style="width: 400px;">
+								<img class="swiper-lazyimages" src="https://r07.uzaicdn.com/sceneryimageupload/224/25685/600x450.jpg?imageView2/3/w/750/h/500/format/jpg">
+							</li>
+							<li class="swiper-slide swiper-slide-duplicate swiper-slide-active" find-head-bg="" data-swiper-slide-index="0" style="width: 400px;">
+								<img class="ng-scope" src="https://r05.uzaicdn.com/sceneryimageupload/13370/36989/600x450.jpg?imageView2/3/w/750/h/500/format/jpg">
+							</li>
+						</ul>
+					</nav>
+					<!-- 头部背景 结束 -->
+				</div>
+				<!-- 头部以下全是脚  结束 -->
+				<!-- 详情 开始 -->
+				<div class="main">
+					<div class="scroll-head">
+						<!-- 产品类型 -->
+						<div class="red-com-box">
+							<section class="com-box detail-type red-triangle">
+								
+								<div class="title">
+									<span>
+	                                	<i class="iconfont icon-flag "></i> 
+	                                	<em class="ng-binding">线路名称</em>
+	                            	</span>
+								</div>
+								<!--
+								<p class="number " >产品编号：BJF107291</p>
+								-->
+								<p class="con-text " >【一价全含】长沙韶山张家界黄龙洞凤凰古城天门山双高5晚6日游&lt;无购物无自费&gt;</p>
+								<div class="on-shelf">
+									<div class="price-bot border-top">
+										<p class="fl">
+											<span class="price">¥ <i class="big ng-binding">3480</i><em>起</em></span>
+											<span class="gray-under ng-binding" >3480</span>
+											<span class="question-btn" ng-click="QuestionPop()"><i class="iconfont icon-question"></i></span>
+										</p>
+									</div>
+									<div class="com-hr"><i class="l"></i><i class="r"></i></div>
+								</div>
+							</section>
+						</div>
+						<nav class="com-tit">行程介绍<i class="round-ico"></i></nav>
+					</div>
+					
+					<!-- 国内产品的行程介绍 开始 -->
+					<div class="trip periphery">
+						
+						<section find-trip-center="" class="wrap-box">
+							<div class="com-box">
+								<!-- 产品特色  -->
+								<div class="tit-ls border-bot wrap-list-two">
+									<ul class="layout-box">
+										<li class="wrap-two highlights son-box" >
+											<span class="tit">产品特色</span><i></i>
+										</li>
+										<li class="wrap-two days son-box on">
+											<span class="tit ng-binding">6日行程</span><i></i>
+										</li>
+										<li class="wrap-two description son-box">
+											<span class="tit">费用须知</span><i></i>
+										</li>
+									</ul>
+								</div>
+								
+								<!-- 产品特色  -->
+								<div class="wrap-box-two highlights-info hide">
+									<div class="">[]</div>
+								</div>
+								
+								<!-- 14日行程 -->
+								<div class="wrap-box-two days-info on">
+									<div class="com-box">
+										<div class="top">
+											<p><label class="fl">行程天数：</label> <span class="red ng-binding">6天5晚</span></p>
+										</div>
+									</div>
+									<div class="list">
+										<div class="part" >
+											<p class="day-tit ng-binding">
+												<i class="iconfont icon-calendar"></i>第 1 天
+											</p>
+											<p class="tit">
+											<span>
+												<em class="">北京<i class="iconfont icon-vehicle-2" ></i></em>
+												<em class="">长沙<i class="iconfont icon-vehicle-5 ng-hide" ></i></em>
+											</span>
+											</p>
+											<p class="text ng-hide" >
+												<i class=" iconfont icon-timeon"></i>
+												<em class="ng-binding">00:00 --- 23:00</em>
+											</p>
+											<p class="text">
+												<i class="iconfont icon-meal"></i>
+												<span>早餐: <em class="ng-binding">自理</em></span>
+												<span>午餐: <em class="ng-binding">自理</em></span>
+												<span>晚餐: <em class="ng-binding">自理</em></span>
+											</p>
+											<p class="text">
+												<i class="iconfont icon-hotel"></i>
+												特色酒店_参考酒店: <em class="ng-binding">当地标准双人间</em>
+											</p>
+											<div class="box five-line border-top">
+												<p class="ng-binding">高铁北京西客站乘高铁赴长沙。参考车次：（G501 &nbsp;07:30—14:11 &nbsp; G83 09：00-14：40 &nbsp;G503 &nbsp;14：37-21：22 &nbsp;G505 &nbsp;15：40-22：31等）抵达后接站人举“佰汇旅游”旗帜出站口接站，安排入住酒店。后可自由活动（自由活动期间不含导游，司机，用车服务）</p>
+											</div>
+										</div>
+										
+										<div class="part" ng-repeat="Detail in JouneryGroupInfo.JouneryDetail">
+											<p class="day-tit ng-binding">
+												<i class="iconfont icon-calendar"></i>第 2 天
+												<a class="fr ng-hide" href="#/shoppinginformation"><i class="iconfont icon-shopping"></i><span>查看购物信息</span></a>
+											</p>
+											<p class="tit">
+												<span>
+												<em class="ng-binding">长沙<i class="iconfont icon-vehicle-4" ng-show="!$last"></i></em>
+												<em class="ng-binding">韶山<i class="iconfont icon-vehicle-4" ng-show="!$last"></i></em>
+												<em class="ng-binding">张家界<i class="iconfont icon-vehicle-5 ng-hide" ></i></em>
+												</span>
+											</p>
+											<p class="text ng-hide" ng-show="Detail.StartTime!='00:00' &amp;&amp;Detail.EndTime!='23:00'"><i class=" iconfont icon-timeon"></i><em class="ng-binding">00:00 --- 23:00</em></p>
+											<p class="text"><i class="iconfont icon-meal"></i><span>早餐: <em class="ng-binding">包含</em></span><span>午餐: <em class="ng-binding">包含</em></span><span>晚餐: <em class="ng-binding">包含</em></span></p>
+											<p class="text"><i class="iconfont icon-hotel"></i>特色酒店_参考酒店: <em class="ng-binding">当地标准双人间</em></p>
+											<div class="box five-line border-top">
+												<p ng-bind-html="Detail.Content | trustHtml" class="ng-binding">08:30长沙市区统一集合出发，前往长沙橘子洲头。<br><br> 09:00—10:00游【橘子洲头】（游览时间约60分钟），吟*诗词之《橘子洲头 》独立寒江，湘江北去，橘子洲头。。。问苍茫大地，谁主沉浮？可感怀*会当击水三千里的豪情。<br><br> 10:00—12:00乘车赴红太阳升起的地方—韶山。瞻仰一代伟人——【毛*铜像】聆听*一生的丰功伟绩；参观【*同志故居】；“东方红，太阳升，中国出了个*；*同志作为一个伟大的历史人物，属于中国，也属于世界”。
+													<br><br> 12:00—13:00享用中餐（25元/人/餐，为不影响用餐品质，不足6人费用现退客人）。
+													<br><br> 13:30—17:30乘车赴张家界，途经三湘四水，鱼米之乡，身临“湖广熟、天下足”的佳境。
+													<br><br> 18:00—19:00享用晚餐（25元/人/餐，为不影响用餐品质，不足6人费用现退客人）。
+												</p>
+											</div>
+										</div>
+										<!-- end ngRepeat: Detail in JouneryGroupInfo.JouneryDetail -->
+										<div class="part" ng-repeat="Detail in JouneryGroupInfo.JouneryDetail">
+											<p class="day-tit ng-binding">
+												<i class="iconfont icon-calendar"></i>第 3 天
+												<a class="fr ng-hide" ng-click="Shopping_init(JouneryGroupInfo.UzaiJouneryGroupID,Detail.JouneryDetailID)" ng-show="Detail.JouneryShopping.length>0" href="#/shoppinginformation"><i class="iconfont icon-shopping"></i><span>查看购物信息</span></a>
+											</p>
+											<p class="tit"><span><!-- ngRepeat: ProductTravelType in Detail.ProductTravelTypes --><em ng-repeat="ProductTravelType in Detail.ProductTravelTypes" class="ng-binding">张家界<i class="iconfont icon-vehicle-4" ng-show="!$last"></i></em><!-- end ngRepeat: ProductTravelType in Detail.ProductTravelTypes --><em ng-repeat="ProductTravelType in Detail.ProductTravelTypes" class="ng-binding">张家界国家森林公园<i class="iconfont icon-vehicle-4 ng-hide" ng-show="!$last"></i></em><!-- end ngRepeat: ProductTravelType in Detail.ProductTravelTypes --></span></p>
+											<p class="text ng-hide" ><i class=" iconfont icon-timeon"></i><em class="ng-binding">00:00 --- 23:00</em></p>
+											<p class="text"><i class="iconfont icon-meal"></i><span>早餐: <em class="ng-binding">包含</em></span><span>午餐: <em class="ng-binding">包含</em></span><span>晚餐: <em class="ng-binding">包含</em></span></p>
+											<p class="text"><i class="iconfont icon-hotel"></i>特色酒店_参考酒店: <em class="ng-binding">当地双人标准间</em></p>
+											<div class="box five-line border-top">
+												<p ng-bind-html="Detail.Content | trustHtml" class="ng-binding">07:00—08:00酒店叫早，享用酒店自助早餐。<br><br> 08:00—10:30游览武陵源自然遗产的*后一块处女地乘亚洲*梯—【百龙天梯上】山。【袁家界景区】（观光天梯含）：游*桥、迷魂台、五女出征、情人谷等景点.观电影《阿凡达》悬浮山取景景观—乾坤一柱。
+													<br><br> 10:30—11:00游览【杨家界景区】（观光索道含）。杨家界有“峰墙之王”的美称。
+													<br><br> 11:00—12:00享用午餐（25元/人/餐，为不影响用餐品质，不足6人费用现退客人）
+													<br><br> 12:30—13:30赴【金鞭溪景区】（游览时间约30分钟），漫步“世界上*大的自然氧吧”感受天然大氧吧，众多负离子给大家带来的愉悦感。沿途享受鸟语花香、潺潺流水，可谓泉水激石，泠泠作响；好鸟相争，嘤嘤成韵。水皆缥碧，千丈见底。游鱼细石，直视无碍；
+													<br><br> 14:00—16:30游览【黄龙洞景区】（含门票、专用游船及赠送VIP快速专属通道费）：黄龙洞以其庞大的立体结构洞穴空间、丰富的溶洞景观、水陆兼备的游览观光线路独步天下，内中更有天然空调，属典型的喀斯特岩溶地貌。高阔的洞天、幽深的暗河、悬空的瀑布、密集的石笋等特级旅游资源优势构成了国内外独树一帜的大型天然溶洞。洞内空气流通，冬暖夏凉，一年四季，白天晚上都适合观光旅游。
+													<br><br> 17:00—18:00享用晚餐（25元/人/餐，为不影响用餐品质，不足6人费用现退客人）
+													<br><br> 19:00—20:30游览【梦幻张家界】表演（含门票、专用游船及赠送VIP快速专属通道费）：始创于2004年，剧场坐席1638位，是一台专业的、原生态的、以弘扬本土文化为核心的民俗大戏。运用高超的艺术编排方式将张家界本土文化精髓酣畅淋漓的表现出来，让全国各地乃至全世界观众通过一台演出，全面了解湖南张家界的风俗民情。在这里，您可以深入了解湘西的民族文化，享受一顿民族文化的饕餮大餐，您也可以不懂湘西民族文化，尽情欣赏精湛的艺术表演、聆听幽美动人湘西民歌。
+													<br></p>
+											</div>
+										</div>
+										<!-- end ngRepeat: Detail in JouneryGroupInfo.JouneryDetail -->
+										<div class="part" ng-repeat="Detail in JouneryGroupInfo.JouneryDetail">
+											<p class="day-tit ng-binding">
+												<i class="iconfont icon-calendar"></i>第 4 天
+												<a class="fr ng-hide" ng-click="Shopping_init(JouneryGroupInfo.UzaiJouneryGroupID,Detail.JouneryDetailID)" ng-show="Detail.JouneryShopping.length>0" href="#/shoppinginformation"><i class="iconfont icon-shopping"></i><span>查看购物信息</span></a>
+											</p>
+											<p class="tit"><span><!-- ngRepeat: ProductTravelType in Detail.ProductTravelTypes --><em ng-repeat="ProductTravelType in Detail.ProductTravelTypes" class="ng-binding">张家界国家森林公园<i class="iconfont icon-vehicle-4" ng-show="!$last"></i></em><!-- end ngRepeat: ProductTravelType in Detail.ProductTravelTypes --><em ng-repeat="ProductTravelType in Detail.ProductTravelTypes" class="ng-binding">凤凰古城<i class="iconfont icon-vehicle-5 ng-hide" ng-show="!$last"></i></em><!-- end ngRepeat: ProductTravelType in Detail.ProductTravelTypes --></span></p>
+											<p class="text ng-hide" ng-show="Detail.StartTime!='00:00' &amp;&amp;Detail.EndTime!='23:00'"><i class=" iconfont icon-timeon"></i><em class="ng-binding">00:00 --- 23:00</em></p>
+											<p class="text"><i class="iconfont icon-meal"></i><span>早餐: <em class="ng-binding">包含</em></span><span>午餐: <em class="ng-binding">包含</em></span><span>晚餐: <em class="ng-binding">自理</em></span></p>
+											<p class="text"><i class="iconfont icon-hotel"></i>特色酒店_参考酒店: <em class="ng-binding">当地双人标准间</em></p>
+											<div class="box five-line border-top">
+												<p ng-bind-html="Detail.Content | trustHtml" class="ng-binding">07:00—08:00酒店叫早，享用酒店自助早餐。<br><br> 08:30—12:00游览【天门山】（游览时间约4小时，A/B线索道及景区用车已含，扶梯费已含）--以“通天溶洞、通天缆车、通天公路”三绝文明。999级天阶后方可登临，在步步登高的过程中参悟人生真谛。天缆--从喧嚣都市直达天门之巅，丰富的自然美景和博大精深在40分钟的索道过程中和谐交汇、完美体现。观看天路--99湾，海拔200米急剧攀升至1300米，180度急转弯此消彼长，似玉带环绕，层层迭起，直冲云霄。万和生活超市。
+													<br><br> 13:30—14：00享用中餐（25元/人/餐，为不影响用餐品质，不足6人费用现退客人）。
+													<br><br> 14:00—17:30乘车约3.5小时赴美丽的详细古城—【凤凰古城】，途经公路奇观—矮寨悬索大桥：跨越矮寨镇附近的山谷，德夯河流经谷底，桥面设计标高与地面高差达330米左右。悬索桥的主跨为1176m。
+													<br><br> 18:00—19:00酒店check in后，可自由逛遍古城美景酒吧，尝遍古城特色小食。</p>
+											</div>
+										</div>
+										<!-- end ngRepeat: Detail in JouneryGroupInfo.JouneryDetail -->
+										<div class="part" ng-repeat="Detail in JouneryGroupInfo.JouneryDetail">
+											<p class="day-tit ng-binding">
+												<i class="iconfont icon-calendar"></i>第 5 天
+												<a class="fr ng-hide" ng-click="Shopping_init(JouneryGroupInfo.UzaiJouneryGroupID,Detail.JouneryDetailID)" ng-show="Detail.JouneryShopping.length>0" href="#/shoppinginformation"><i class="iconfont icon-shopping"></i><span>查看购物信息</span></a>
+											</p>
+											<p class="tit"><span><!-- ngRepeat: ProductTravelType in Detail.ProductTravelTypes --><em ng-repeat="ProductTravelType in Detail.ProductTravelTypes" class="ng-binding">凤凰古城<i class="iconfont icon-vehicle-4" ng-show="!$last"></i></em><!-- end ngRepeat: ProductTravelType in Detail.ProductTravelTypes --><em ng-repeat="ProductTravelType in Detail.ProductTravelTypes" class="ng-binding">长沙<i class="iconfont icon-vehicle-5 ng-hide" ng-show="!$last"></i></em><!-- end ngRepeat: ProductTravelType in Detail.ProductTravelTypes --></span></p>
+											<p class="text ng-hide" ng-show="Detail.StartTime!='00:00' &amp;&amp;Detail.EndTime!='23:00'"><i class=" iconfont icon-timeon"></i><em class="ng-binding">00:00 --- 23:00</em></p>
+											<p class="text"><i class="iconfont icon-meal"></i><span>早餐: <em class="ng-binding">包含</em></span><span>午餐: <em class="ng-binding">包含</em></span><span>晚餐: <em class="ng-binding">包含</em></span></p>
+											<p class="text"><i class="iconfont icon-hotel"></i>特色酒店_参考酒店: <em class="ng-binding">当地双人标准间</em></p>
+											<div class="box five-line border-top">
+												<p ng-bind-html="Detail.Content | trustHtml" class="ng-binding">07:00—08:00酒店叫早，享用酒店自助早餐。<br><br> 08:00—11:00早上游览【凤凰古城九景】（游览时间约3.5小时，游船已含）探访古城韵风情，寻觅古朴醉湘西；沿沱江两岸漫步，欣赏沙湾吊角楼，古香古色、极富浓郁苗家民族风韵的吊脚楼与两岸，细脚伶仃的木柱立于河中；凤凰古商城民俗特色一条街，该民俗特色街主营湘西特色小吃、姜糖、鸭子、蜡染等当地特色名品；尤其以*有湘西民俗特色的国家非物质文化遗产手工锻造拉丝银（器）饰品为特有。
+													<br><br> 11:30—12:30享用晚餐（25元/人/餐，为不影响用餐品质，不足6人费用现退客人）
+													<br><br> 13:00—18:30乘车约5.5小时赴长沙市区返程。
+												</p>
+											</div>
+										</div>
+										<!-- end ngRepeat: Detail in JouneryGroupInfo.JouneryDetail -->
+										<div class="part" ng-repeat="Detail in JouneryGroupInfo.JouneryDetail">
+											<p class="day-tit ng-binding">
+												<i class="iconfont icon-calendar"></i>第 6 天
+												<a class="fr ng-hide" ng-click="Shopping_init(JouneryGroupInfo.UzaiJouneryGroupID,Detail.JouneryDetailID)" ng-show="Detail.JouneryShopping.length>0" href="#/shoppinginformation"><i class="iconfont icon-shopping"></i><span>查看购物信息</span></a>
+											</p>
+											<p class="tit"><span><!-- ngRepeat: ProductTravelType in Detail.ProductTravelTypes --><em ng-repeat="ProductTravelType in Detail.ProductTravelTypes" class="ng-binding">长沙<i class="iconfont icon-vehicle-2" ng-show="!$last"></i></em><!-- end ngRepeat: ProductTravelType in Detail.ProductTravelTypes --><em ng-repeat="ProductTravelType in Detail.ProductTravelTypes" class="ng-binding">北京<i class="iconfont icon-vehicle-5 ng-hide" ng-show="!$last"></i></em><!-- end ngRepeat: ProductTravelType in Detail.ProductTravelTypes --></span></p>
+											<p class="text ng-hide" ng-show="Detail.StartTime!='00:00' &amp;&amp;Detail.EndTime!='23:00'"><i class=" iconfont icon-timeon"></i><em class="ng-binding">00:00 --- 23:00</em></p>
+											<p class="text"><i class="iconfont icon-meal"></i><span>早餐: <em class="ng-binding">自理</em></span><span>午餐: <em class="ng-binding">自理</em></span><span>晚餐: <em class="ng-binding">自理</em></span></p>
+											<p class="text"><i class="iconfont icon-hotel"></i>特色酒店_参考酒店: <em class="ng-binding">温馨的家</em></p>
+											<div class="box five-line border-top">
+												<p ng-bind-html="Detail.Content | trustHtml" class="ng-binding">根据高铁时间，自由活动，指定时间统一送高铁站，酒店12点前退房，高铁抵达北京！结束愉快的湘西之旅！参考车次：（G84 &nbsp;09：00-14：40 &nbsp;G72 &nbsp;11：13-18：21 &nbsp; G504 &nbsp;14：36-21：13 &nbsp;G506 &nbsp;15：08-21：51）</p>
+											</div>
+										</div>
+									</div>
+	
+									<a href="#/traveldetail" ng-click="JouneryInfo_init(JouneryGroupInfo.UzaiJouneryGroupID)" class="trip-info"><i class="iconfont icon-daohangxianlu"></i>详细行程<i class="iconfont icon-right"></i></a>
+								</div>
+	
+								<!-- 费用说明 -->
+								<div class="wrap-box-two hide description-info">
+									<div class="trip-ls-tit"><span><i class="iconfont icon-costnotinclude"></i>费用包含</span></div>
+									<div class="trip-ls none ng-binding">
+										1、交通：往返高铁二等座往返，当地空调车（以实际接待人数为准核定车型，保证一人一正座）。小交通：景区缆车、索道、游船全含<br> 
+										2、住宿：当地舒适双人标准间， 产生房差需自理。<br> 
+										3、用餐：3早6正餐（酒店含早，无床位者无早餐，正餐30元/人/餐，如自动放弃用餐，费用不退）<br> 
+										4、门票：行程中所含的景点首道大门票<br> 
+										5、导服：当地优秀中文导游<br> 
+										6、儿童价标准：1.2米以下儿童仅含当地车位，用餐（半餐）及导游服务，其余自理。
+									</div>
+	
+									<div class="trip-ls-tit margin-hr border-top" ><span><i class="iconfont icon-costnotincludes"></i>费用不包含</span></div>
+									<div class="trip-ls none" >
+										1、人身意外险，建议游客自行在旅行社购买。<br>
+										2、旅游意外险及航空险、单房差，行程中未提及项目自费项目。<br> 
+										3、因航班、火车取消或交通堵塞等不可 抗力原因所引致的额外费用。<br> 
+										4、酒店内洗衣、理发、电话、传真、收费电视、饮品、烟酒等个人消费。<br> 
+										5、“费用包含”所列内容以外的所有费用。
+									</div>
+								</div>
+							</div>
+							
+							<div class="list-con">
+								<a href="#/ownitemjounery" class="com-box ownpay-btn ng-hide" ><i class="iconfont icon-ownpay"></i>自费项目说明<span class="right-btn iconfont icon-right"></span></a>
+								<a href="#/purchasenoticejounery" class="com-box buyinfo-btn ">
+									<i class="iconfont icon-booking-notice"></i>购买须知<span class="right-btn iconfont icon-right"></span>
+								</a>
+							</div>
+							
+						</section>
+					</div>
+				</div>
+				
+			</div> 
+		</div> <!-- 最顶层  detail-content 结束  -->
+
+		<script src="./2/swiper-3.3.1.min.js"></script>
+		<script src="./2/detail.js"></script>
+		<script src="./2/angular.min.js"></script>
+		
+	</body>
+</html>

@@ -23,267 +23,314 @@
   <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
   <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
   <script type="text/javascript" charset="utf-8" src="plug-in/ueditor/lang/zh-cn/zh-cn.js"></script>
-  <script type="text/javascript">
-  //编写自定义JS代码
-  /*jslint unparam: true, regexp: true */
-  /*global window, $ */
-  $(function () {
-      'use strict';
-      // Change this to the location of your server-side upload handler:
-      var url = 'weixinArticleController.do?upload',uploadButton = $('<button/>')
-	      .addClass('btn btn-primary')
-	      .prop('disabled', true)
-	      .text('上传中...')
-	      .on('click', function () {
-	          var $this = $(this), data = $this.data();
-	          $this.off('click').text('正在上传...').on('click', function () {
-	                  $this.remove();
-	                  data.abort();
-	          });
-	          data.submit().always(function () {
-	              $this.remove();
-	          });
-	      });
-      $('#fileupload').fileupload({
-          url: url,
-          dataType: 'json',
-          autoUpload: false,
-          acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-          maxFileSize: 2000000, // 2 MB
-          disableImageResize: /Android(?!.*Chrome)|Opera/
-              .test(window.navigator.userAgent),
-          previewMaxWidth: 290,
-          previewMaxHeight: 160,
-          previewCrop: true
-      }).on('fileuploadadd', function (e, data) {
-          $("#files").text("");
-          data.context = $('<div/>').appendTo('#files');
-          $.each(data.files, function (index, file) {
-              //var node = $('<p/>').append($('<span/>').text(file.name));
-              //fileupload
-              var node = $('<p/>');
-              if (!index) {
-                  node.append('<br>').append(uploadButton.clone(true).data(data));
-              }
-              node.appendTo(data.context);
-          });
-      }).on('fileuploadprocessalways', function (e, data) {
-          var index = data.index,
-              file = data.files[index],
-              node = $(data.context.children()[index]);
-          if (file.preview) {
-              node.prepend('<br>').prepend(file.preview);
-          }
-          if (file.error) {
-              node.append('<br>')
-                  .append($('<span class="text-danger"/>').text(file.error));
-          }
-          if (index + 1 === data.files.length) {
-              data.context.find('button')
-                  .text('上传')
-                  .prop('disabled', !!data.files.error);
-          }
-      }).on('fileuploadprogressall', function (e, data) {
-          var progress = parseInt(data.loaded / data.total * 100, 10);
-          $('#progress .progress-bar').css(
-              'width',
-              progress + '%'
-          );
-      }).on('fileuploaddone', function (e, data) {
-          console.info(data);
-          var  file = data.files[0];
-          //var delUrl = "<a class=\"js_removeCover\" onclick=\"return false;\" href=\"javascript:void(0);\">删除</a>";
-          $("#imgName").text("").append(file.name);
-          $("#imageName").val(file.name);
-          $("#progress").hide();
-          var d =data.result;
-          if (d.success) {
-			  var link = $('<a>').attr('target', '_blank').prop('href', d.attributes.viewhref);
-		      $(data.context.children()[0]).wrap(link);
-		      console.info(d.attributes.viewhref);
-		      $("#imageHref").val(d.attributes.url);
-          }else{
-			  var error = $('<span class="text-danger"/>').text(d.msg);
-			  $(data.context.children()[0]).append('<br>').append(error);
-          }
-      }).on('fileuploadfail', function (e, data) {
-          $.each(data.files, function (index, file) {
-              var error = $('<span class="text-danger"/>').text('File upload failed.');
-              $(data.context.children()[index])
-                  .append('<br>')
-                  .append(error);
-          });
-      }).prop('disabled', !$.support.fileInput)
-        .parent().addClass($.support.fileInput ? undefined : 'disabled');
-      
-      //编辑时初始化图片预览
-      var name = "${cmsArticlePage.title}", imageHref = "${cmsArticlePage.imageHref}";
-      if(name != ""){
-          $("#imageTitle").html(name);
-      }
-      if(imageHref != ""){
-          $("#imageShow").html('<img src="${cmsArticlePage.imageHref}" width="100%" height="160" />');
-      }
-  });
-  function setimageTitle(obj){
-	  $("#imageTitle").html($(obj).val());
+  <script type="text/javascript" src="webpage/weixin/cms/js/cmsArticle.js"></script>
+  <style type="text/css">
+  td.trafficbox select{
+  	width:68px;
   }
-  </script>
+  #cmsPhotoUploadButton{
+  	display:none;
+  	position:absolute;
+  	z-index:9;
+  	left:0;
+  	top:0;
+  	opacity:0;
+  	filter:alpha(opacity=0);
+  }
+  #cmsPhotoUploadButton, #cmsPhotoUploadButton input{
+  	width:64px;
+  	height:32px;
+  	overflow:hidden;
+  }
+  
+  .uploadButtonWrapper{
+    position:relative;
+  }
+  input.uploadButton{
+    position:relative;
+    left:0;
+    top:0;
+    padding:0;
+    width:48px;
+    height:20px;
+  }
+  </style>
  </head>
  <body>
- 	<div class="easyui-layout" fit="true">
-		
-		<div data-options="region:'west',split:true" style="width:575px;">
-			<div class="easyui-layout" data-options="fit:true">
-				<div data-options="region:'north'" title="头部图片" style="height:300px">
-					<t:datagrid name="cmsArticleList" actionUrl="cmsArticleController.do?datagrid" idField="id" fit="true" sortName="createDate" sortOrder="desc" queryMode="group">
-					   <t:dgCol title="编号" field="id" hidden="false"></t:dgCol>
-					   <t:dgCol title="图片名称" field="imageName"></t:dgCol>
-					   <t:dgCol title="创建时间" field="createDate" formatter="yyyy-MM-dd hh:mm:ss"></t:dgCol>
-					   <t:dgCol title="操作" field="opt"></t:dgCol>
-					   <t:dgDelOpt title="删除" url="cmsArticleController.do?del&id={id}" />
-					   <t:dgToolBar title="录入" icon="icon-add" url="cmsArticleController.do?addorupdate" funname="add" width="100%" height="100%"></t:dgToolBar>
-					   <t:dgToolBar title="编辑" icon="icon-edit" url="cmsArticleController.do?addorupdate" funname="update" width="100%" height="100%"></t:dgToolBar>
-					   <t:dgToolBar title="查看" icon="icon-search" url="cmsArticleController.do?addorupdate" funname="detail" width="100%" height="100%"></t:dgToolBar>
-					</t:datagrid></div>
-				</div>
-				<div data-options="region:'center',title:'1111111',iconCls:'icon-ok'">
-					<div class="media_edit_area" id="js_appmsg_editor">	
-						<div class="appmsg_editor" style="margin-top: 0px;">
-					 		<div class="inner">
-								<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="cmsArticleController.do?save">
-								<input id="id" name="id" type="hidden" value="${cmsArticlePage.id }">
-								<input type="hidden" name="accountid" value="${cmsArticlePage.accountid}">
-								<input type="hidden" name="imageName" id="imageName" value="${cmsArticlePage.imageName}">
-								<table cellpadding="0" cellspacing="1" class="formtable">
-									<tr>
-										<td align="right">
-											<label class="Validform_label">
-												标题:
-											</label>
-										</td>
-										<td class="value">
-											<input class="inputxt" id="title" name="title" style="width: 300px" value="${cmsArticlePage.title}" datatype="*" onblur="setimageTitle(this)">
-											<span class="Validform_checktip"></span>
-											<label class="Validform_label" style="display: none;">标题</label>
-										</td>
-									</tr>
-									<tr>
-										<td align="right">
-											<label class="Validform_label">
-												所属栏目:
-											</label>
-										</td>
-										<td class="value">
-											<t:dictSelect field="columnId" dictTable="weixin_cms_menu where accountid='${sessionScope.WEIXIN_ACCOUNT.id}'" dictField="id" dictText="name" defaultVal="${cmsArticlePage.columnId}"></t:dictSelect>
-											<span class="Validform_checktip"></span>
-											<label class="Validform_label" style="display: none;">所属栏目</label>
-										</td>
-									</tr>
-									<tr>
-										<td align="right">
-											<label class="Validform_label">
-												价格:
-											</label>
-										</td>
-										<td class="value">
-											<input class="inputxt" id="title" name="title" style="width: 300px" value="" >
-											<span class="Validform_checktip"></span>
-											<label class="Validform_label" style="display: none;">价格</label>
-										</td>
-									</tr>
-									<tr>
-									<td align="right">
-											<label class="Validform_label">
-												会员价:
-											</label>
-										</td>
-										<td class="value">
-											<input class="inputxt" id="title" name="title" style="width: 300px" value="" >
-											<span class="Validform_checktip"></span>
-											<label class="Validform_label" style="display: none;">会员价</label>
-										</td>
-									</tr>
-									<tr>
-										<td align="right">
-											<label class="Validform_label">
-												上传图片:
-											</label>
-										</td>
-										<td class="value">
-											<span class="btn btn-success fileinput-button">
-										        <i class="glyphicon glyphicon-plus"></i>
-										        <span>浏览</span>
-										        <input id="fileupload" type="file" name="files[]" multiple>
-										    </span>
-										    <input id="imageHref" name="imageHref" type="hidden" nullmsg="请添加图片" value="${cmsArticlePage.imageHref}">
-										    <span id="imgName"></span> 
-											<span class="Validform_checktip"></span>
-											<label class="Validform_label" style="display: none;">图片链接</label>
-										</td>
-									</tr>
-									<tr>
-										<td align="right">
-											<label class="Validform_label">
-												摘要:
-											</label>
-										</td>
-										<td class="value">
-											<textarea class="inputxt" id="summary" name="summary" style="width: 300px" datatype="*">${cmsArticlePage.summary}</textarea>
-											<span class="Validform_checktip"></span>
-											<label class="Validform_label" style="display: none;">摘要</label>
-										</td>
-									</tr>
-									<tr>
-										<td align="right">
-											<label class="Validform_label">
-												行程天数:
-											</label>
-										</td>
-										<td class="value">
-											<textarea class="inputxt" id="summary" name="summary" style="width: 300px" datatype="*">${cmsArticlePage.summary}</textarea>
-											<span class="Validform_checktip"></span>
-											<label class="Validform_label" style="display: none;">行程天数</label>
-										</td>
-									</tr>
-								</table>
-								</t:formvalid>
-							</div>
-						</div>
+
+	<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="cmsArticleController.do?save" beforeSubmit="beforeSubmit_formobj">
+		<div id="s1" class="easyui-panel" data-options="title:'基本信息'" style="height:300px;">
+			<div id="js_appmsg_editor">	
+				<div style="margin-top: 0px;">
+			 		<div>
+						<input id="id" name="id" type="hidden" value="${cmsArticlePage.id }">
+						<input type="hidden" name="accountid" value="${cmsArticlePage.accountid}">
+						<input type="hidden" name="imageName" id="imageName" value="${cmsArticlePage.imageName}">
+						<input type="hidden" name="photosId" >
+						<input type="hidden" name="routesId" >
+						<table cellpadding="0" cellspacing="0" class="formtable" style="background-color:transparent;">
+							<tr>
+								<td align="right" style="width:10em">
+									<label class="Validform_label">
+										标题:
+									</label>
+								</td>
+								<td class="value">
+									<input class="inputxt" id="title" name="title" style="width: 300px" value="${cmsArticlePage.title}" datatype="*" onblur="setimageTitle(this)">
+									<span class="Validform_checktip"></span>
+									<label class="Validform_label" style="display: none;">标题</label>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">
+									<label class="Validform_label">
+										所属栏目:
+									</label>
+								</td>
+								<td class="value">
+									<t:dictSelect field="columnId" dictTable="weixin_cms_menu where accountid='${sessionScope.WEIXIN_ACCOUNT.id}'" dictField="id" dictText="name" defaultVal="${cmsArticlePage.columnId}"></t:dictSelect>
+									<span class="Validform_checktip"></span>
+									<label class="Validform_label" style="display: none;">所属栏目</label>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">
+									<label class="Validform_label">
+										价格:
+									</label>
+								</td>
+								<td class="value">
+									<input class="inputxt" id="price" name="price" style="width: 300px" value="${cmsArticlePage.price}" >
+									<span class="Validform_checktip"></span>
+									<label class="Validform_label" style="display: none;">价格</label>
+								</td>
+							</tr>
+							<tr>
+							<td align="right">
+									<label class="Validform_label">
+										会员价:
+									</label>
+								</td>
+								<td class="value">
+									<input class="inputxt" id="price_vip" name="price_vip" style="width: 300px" value="${cmsArticlePage.price_vip}" >
+									<span class="Validform_checktip"></span>
+									<label class="Validform_label" style="display: none;">会员价</label>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">
+									<label class="Validform_label">
+										上传图片:
+									</label>
+								</td>
+								<td class="value">
+									<span class="btn btn-success fileinput-button">
+								        <i class="glyphicon glyphicon-plus"></i>
+								        <span>浏览</span>
+								        <input id="fileupload" type="file" name="files[]" multiple
+								         style="left:0;top:0;padding:0;width:48px!important;height:20px;font-size:12px">
+								    </span>
+								    <input id="imageHref" name="imageHref" type="hidden" nullmsg="请添加图片" value="${cmsArticlePage.imageHref}">
+								    <span id="imgName"></span> 
+									<span class="Validform_checktip"></span>
+									<label class="Validform_label" style="display: none;">图片链接</label>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">
+									<label class="Validform_label">
+										摘要:
+									</label>
+								</td>
+								<td class="value">
+									<textarea class="inputxt" id="summary" name="summary" style="width: 300px;height:80px;">${cmsArticlePage.summary}</textarea>
+									<span class="Validform_checktip"></span>
+									<label class="Validform_label" style="display: none;">摘要</label>
+								</td>
+							</tr><%--  --%>
+							<tr>
+								<td align="right">
+									<label class="Validform_label">
+										行程天数:
+									</label>
+								</td>
+								<td class="value">
+									<%-- <textarea class="inputxt" id="summary" name="summary" style="width: 300px" datatype="*">${cmsArticlePage.summary}</textarea>
+									<span class="Validform_checktip"></span>
+									<label class="Validform_label" style="display: none;">行程天数</label> --%>
+									<input class="inputxt" id="days" name="days" style="width: 40px" value="${cmsArticlePage.days}" >天
+									<input class="inputxt" id="nights" name="nights" style="width: 40px" value="${cmsArticlePage.nights}" >晚
+								</td>
+							</tr>
+						</table>
 					</div>
 				</div>
 			</div>
 		</div>
 		
-		<div data-options="region:'center',title:'Main Title',iconCls:'icon-ok'">
-			<t:datagrid name="picList" actionUrl="cmsArticleController.do?datagrid" idField="id" fit="true" sortName="createDate" sortOrder="desc" queryMode="group">
+		<div id="s2" class="easyui-panel" data-options="title:'头部图片',style:{marginTop:'1em'}" style="height:300px">
+			<t:datagrid name="cmsPhotoList" actionUrl="cmsPhotoController.do?datagrid&articleId=${cmsArticlePage.id}" idField="id" fit="true" sortName="createdate" sortOrder="asc" queryMode="group" pagination="false">
 			   <t:dgCol title="编号" field="id" hidden="false"></t:dgCol>
-			   <t:dgCol title="图片名称" field="imageName"></t:dgCol>
-			   <t:dgCol title="创建时间" field="createDate" formatter="yyyy-MM-dd hh:mm:ss"></t:dgCol>
-			   <t:dgCol title="操作" field="opt"></t:dgCol>
-			   <t:dgDelOpt title="删除" url="cmsArticleController.do?del&id={id}" />
-			   <t:dgToolBar title="录入" icon="icon-add" url="cmsArticleController.do?addorupdate" funname="add" width="100%" height="100%"></t:dgToolBar>
-			   <t:dgToolBar title="编辑" icon="icon-edit" url="cmsArticleController.do?addorupdate" funname="update" width="100%" height="100%"></t:dgToolBar>
-			   <t:dgToolBar title="查看" icon="icon-search" url="cmsArticleController.do?addorupdate" funname="detail" width="100%" height="100%"></t:dgToolBar>
+			   <t:dgCol title="图片名称" field="attachmenttitle" width="160"></t:dgCol>
+			   <t:dgCol title="创建时间" field="createdate" width="120" formatter="yyyy-MM-dd hh:mm:ss"></t:dgCol>
+			   <t:dgCol title="操作" field="opt" width="80"></t:dgCol>
+			   
+			   <%-- <t:dgFunOpt title="查看" funname="viewPhoto" /> --%>
+			   <t:dgFunOpt title="删除" funname="delPhoto" />
+			   
+			   <t:dgToolBar title="上传" icon="icon-add" onclick="uploadPhoto()" width="100%" height="100%"></t:dgToolBar>
+			   <%-- <t:dgToolBar title="编辑" icon="icon-edit" url="cmsArticleController.do?addorupdate" funname="update" width="100%" height="100%"></t:dgToolBar> --%>
+			   <t:dgToolBar title="查看" icon="icon-search" onclick="viewPhoto()" width="100%" height="100%"></t:dgToolBar>
 			</t:datagrid></div>
 		</div>
-		<div data-options="region:'east',split:true" title="East" style="width:400px;">
-			<div class="appmsg_content" id="js_appmsg_preview">
-				<h4 class="appmsg_title">
-					<a target="_blank" href="javascript:void(0);" onclick="return false;" id="imageTitle">标题</a>
-				</h4>
-				<div class="appmsg_info">
-					<em class="appmsg_date"></em>
-				</div>
-				<div id="files" class="files">
-					<i class="appmsg_thumb default" id="imageShow">栏目图片</i>
-				</div>
-				 <div id="progress" class="progress">
-			        <div class="progress-bar progress-bar-success"></div>
-			    </div>
-				<p class="appmsg_desc"></p>
+
+		<div id="s3" class="easyui-panel" data-options="title:'详细行程',style:{marginTop:'1em'}" style="height:300px">
+			<t:datagrid name="cmsRouteList" actionUrl="cmsRouteController.do?datagrid&articleId=${cmsArticlePage.id}"
+			 idField="id" fit="true" sortName="createDate" sortOrder="asc" queryMode="group" pagination="false"
+			 onLoadSuccess="onLoad_cmsRouteList">
+			   <t:dgCol title="编号" field="id" hidden="false"></t:dgCol>
+			   <t:dgCol title="线路" field="articleId" hidden="false"></t:dgCol>
+			   <t:dgCol title="行程" field="traffic" hidden="false"></t:dgCol>
+			   <t:dgCol title="行程" field="traffic_trim" width="160"></t:dgCol>
+			   <t:dgCol title="录入时间" field="createDate" width="120" formatter="yyyy-MM-dd hh:mm:ss"></t:dgCol>
+			   <t:dgCol title="操作" field="opt" width="80"></t:dgCol>
+			   
+			   <%-- <t:dgFunOpt title="编辑" funname="editRoute" /> --%>
+			   <t:dgFunOpt title="删除" funname="delRoute" />
+			   
+			   <t:dgToolBar title="录入" icon="icon-add" onclick="addRoute()" width="100%" height="100%"></t:dgToolBar>
+			   <t:dgToolBar title="编辑" icon="icon-edit" onclick="editRoute()" width="100%" height="100%"></t:dgToolBar>
+			   <%-- <t:dgToolBar title="查看" icon="icon-search" onclick="viewRoute()" width="100%" height="100%"></t:dgToolBar> --%>
+			</t:datagrid></div>
+		</div>
+
+		<div id="s4" class="easyui-panel" data-options="title:'注意事项',style:{marginTop:'1em'}" style="height:310px">
+			<%-- <textarea class="inputxt" id="notice" name="notice" style="margin:1px auto;width: 99%;height:220px"></textarea> --%>
+			<script id="notice" name="notice" type="text/plain">
+            ${cmsArticlePage.notice}
+        	</script>
+		</div>
+
+		<div id="s5" class="easyui-panel" data-options="title:'购买须知',style:{marginTop:'1em'}" style="height:460px">
+			<div>费用包含</div>
+			<%-- <textarea class="inputxt" id="expense_contain" name="expense_contain" style="margin:1px auto;width: 99%;height:138px"></textarea> --%>
+			<script id="expense_contain" name="expense_contain" type="text/plain">
+            ${cmsArticlePage.expense_contain}
+        	</script>
+			<div>费用不包含</div>
+			<%-- <textarea class="inputxt" id="expense_ncontain" name="expense_ncontain" style="margin:1px auto;width: 99%;height:138px"></textarea> --%>
+			<script id="expense_ncontain" name="expense_ncontain" type="text/plain">
+            ${cmsArticlePage.expense_ncontain}
+        	</script>
+		</div>
+	
+	</t:formvalid>
+		
+	<div class="easyui-window" data-options="title:'East',closed:true">
+		<div class="appmsg_content" id="js_appmsg_preview">
+			<h4 class="appmsg_title">
+				<a target="_blank" href="javascript:void(0);" onclick="return false;" id="imageTitle">标题</a>
+			</h4>
+			<div class="appmsg_info">
+				<em class="appmsg_date"></em>
 			</div>
+			<div id="files" class="files">
+				<i class="appmsg_thumb default" id="imageShow">栏目图片</i>
+			</div>
+			 <div id="progress" class="progress">
+		        <div class="progress-bar progress-bar-success"></div>
+		    </div>
+			<p class="appmsg_desc"></p>
 		</div>
 	</div>
- 
+	
+	<%-- 编辑行程窗口 --%>
+	<div id="routeWindow" class="easyui-window"
+	 data-options="title:'编辑行程',closed:true,collapsible:false,minimizable:false,maximizable:false,modal:false"
+	 style="width:700px;height:450px">
+		<div class="appmsg_content">
+		<form name="routeForm" action="./cmsRouteController.do?save" method="post">
+			<input type="hidden" name="articleId" value="${cmsArticlePage.id}" />
+			<input type="hidden" name="id" />
+			<table cellpadding="0" cellspacing="0" class="formtable" style="background-color:transparent;">
+				<tr>
+					<td align="right" style="width:10em">
+						<label class="Validform_label">
+							行程:
+						</label>
+					</td>
+					<td class="value">
+						<input class="inputxt" name="traffic_place" style="width: 60px" placeholder="输入地点" >
+						<span id="traffic_box"></span>
+						<img src="./plug-in/easyui/themes/default/images/blank.gif" alt="添加地点"
+						 class="icon-add" style="width:16px;height:16px;margin-left:2px"
+						 onclick="preparePlace()" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right" style="width:10em">
+						<label class="Validform_label">
+							用餐:
+						</label>
+					</td>
+					<td class="value trafficbox">
+						早餐
+						<t:dictSelect field="breakfast" dictTable="t_s_type where typegroupid in (select id from t_s_typegroup where typegroupcode='ycap')"
+						 dictField="typecode" dictText="typename" defaultVal="0"></t:dictSelect>
+						, 午餐
+						<t:dictSelect field="lunch" dictTable="t_s_type where typegroupid in (select id from t_s_typegroup where typegroupcode='ycap')"
+						 dictField="typecode" dictText="typename" defaultVal="0"></t:dictSelect>
+						, 晚餐
+						<t:dictSelect field="dinner" dictTable="t_s_type where typegroupid in (select id from t_s_typegroup where typegroupcode='ycap')"
+						 dictField="typecode" dictText="typename" defaultVal="0"></t:dictSelect>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" style="width:10em">
+						<label class="Validform_label">
+							住宿:
+						</label>
+					</td>
+					<td class="value">
+						<input class="inputxt" name="stay" style="width: 300px" >
+					</td>
+				</tr>
+				<%--<tr>
+					<td align="right" style="width:10em">
+						<label class="Validform_label">
+							图片<span class="uploadButtonWrapper"><input type="button" value="上传" />:
+                                <input id="cmsRoutePhotoupload" type="file" name="cmsRoutePhotoFile" class="uploadButton"></span>
+						</label>
+					</td>
+					<td class="value">
+						<div><ul id="cmsRoutePhotoList"></ul></div>
+					</td>
+				</tr>--%>
+				<tr>
+					<td align="right" style="width:10em">
+						<label class="Validform_label">
+							行程描述:
+						</label>
+					</td>
+					<td class="value">
+						<script id="routeDetail" name="detail" type="text/plain"></script>
+					</td>
+				</tr>
+			</table>
+			<div style="padding:2px 0;text-align:center;">
+				<input type="button" value="保存行程" class="ui_state_highlight" onclick="saveRoute()">
+			</div>
+		</form>
+		</div>
+	</div>
+	<%-- 查看头部图片窗口 --%>
+	<div id="viewPhotoWindow" class="easyui-window"
+	 data-options="title:'预览图片',closed:true,collapsible:false,minimizable:false,maximizable:false,modal:false"
+	 style="width:700px;height:450px">
+	 	<img id="photoViewer" alt="" onload="resizePhotoViewer()" width="400" height="400" style="margin:0 auto;" />
+	</div>
+	
+	<div id="cmsPhotoUploadButton">
+		<input type="file" id="cmsPhotoFile" name="cmsPhotoFile" class="uploadButton" />
+	</div>
  </body>

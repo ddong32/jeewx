@@ -1,4 +1,7 @@
 package weixin.cms.controller;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +14,7 @@ import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
+import org.jeecgframework.p3.core.utils.common.StringUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +25,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import weixin.cms.entity.CmsArticleEntity;
 import weixin.cms.entity.CmsMenuEntity;
+import weixin.cms.entity.CmsPhotoEntity;
+import weixin.cms.entity.CmsRouteEntity;
 import weixin.cms.service.CmsArticleServiceI;
+import weixin.cms.service.CmsPhotoServiceI;
+import weixin.cms.service.CmsRouteServiceI;
 import weixin.guanjia.account.service.WeixinAccountServiceI;
 
 /**   
@@ -46,6 +54,13 @@ public class CmsArticleController extends BaseController {
 	private SystemService systemService;
 	@Autowired
 	private WeixinAccountServiceI weixinAccountService;
+	
+	@Autowired
+	private CmsRouteServiceI cmsRouteServiceI;
+	
+	@Autowired
+	private CmsPhotoServiceI cmsPhotoServiceI;
+
 	private String message;
 	
 	
@@ -156,6 +171,26 @@ public class CmsArticleController extends BaseController {
 				cmsArticleService.save(cmsArticle);
 				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 			}
+			//更新新增头部图片的关联
+			String photosId = request.getParameter("photosId");
+			if(StringUtils.isNotBlank(photosId)) {
+				String[] photosIds = photosId.split(",");
+				for(String id : photosIds) {
+					CmsPhotoEntity photo = cmsPhotoServiceI.get(CmsPhotoEntity.class, id);
+					photo.setArticleId(cmsArticle.getId());
+					cmsPhotoServiceI.updateEntitie(photo);
+				}
+			}
+			//更新新增行程的关联
+			String routesId = request.getParameter("routesId");
+			if(StringUtils.isNotBlank(routesId)) {
+				String[] routesIds = routesId.split(",");
+				for(String id : routesIds) {
+					CmsRouteEntity route = cmsRouteServiceI.get(CmsRouteEntity.class, id);
+					route.setArticleId(cmsArticle.getId());
+					cmsRouteServiceI.updateEntitie(route);
+				}
+			}
 		}
 		j.setMsg(message);
 		return j;
@@ -174,6 +209,11 @@ public class CmsArticleController extends BaseController {
 		}
 		req.setAttribute("accountid", ResourceUtil.getWeiXinAccountId());
 		return new ModelAndView("weixin/cms/cmsArticle");
+	}
+	@RequestMapping(params = "addorupdate0")
+	public ModelAndView addorupdate0(CmsArticleEntity cmsArticle, HttpServletRequest req) {
+
+		return new ModelAndView("weixin/cms/cmsArticle180203");
 	}
 	
 	/**

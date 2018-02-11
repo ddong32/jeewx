@@ -50,6 +50,16 @@ public class CmsArticleEntity implements java.io.Serializable {
 	private java.lang.Long price;
 	/**会员价*/
 	private java.lang.Long price_vip;
+	/**行程天数*/
+	private Integer days;
+	/**行程夜数*/
+	private Integer nights;
+	/**注意事项*/
+	private String notice;
+	/**费用包含*/
+	private String expense_contain;
+	/**费用不包含*/
+	private String expense_ncontain;
 	
 	/**
 	 *方法: 取得java.lang.String
@@ -237,4 +247,46 @@ public class CmsArticleEntity implements java.io.Serializable {
     public void setPrice_vip(java.lang.Long price_vip) {
         this.price_vip = price_vip;
     }
+    
+	@Column(name ="DAYS",nullable=true,length=36)
+	public Integer getDays() {
+		return days;
+	}
+	public void setDays(Integer days) {
+		this.days = days;
+	}
+
+	@Column(name ="NIGHTS",nullable=true,length=36)
+	public Integer getNights() {
+		return nights;
+	}
+	public void setNights(Integer nights) {
+		this.nights = nights;
+	}
+
+	@Column(name ="NOTICE",nullable=true,length=36)
+	public String getNotice() {
+		return notice;
+	}
+	public void setNotice(String notice) {
+		this.notice = notice;
+	}
+
+	@Column(name ="EXPENSE_CONTAIN",nullable=true,length=36)
+	public String getExpense_contain() {
+		return expense_contain;
+	}
+	public void setExpense_contain(String expense_contain) {
+		this.expense_contain = expense_contain;
+	}
+
+	@Column(name ="EXPENSE_NCONTAIN",nullable=true,length=36)
+	public String getExpense_ncontain() {
+		return expense_ncontain;
+	}
+
+	public void setExpense_ncontain(String expense_ncontain) {
+		this.expense_ncontain = expense_ncontain;
+	}
+
 }
