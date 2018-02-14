@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import weixin.cms.entity.CmsPhotoEntity;
 import weixin.cms.entity.CmsRouteEntity;
 import weixin.cms.service.AdServiceI;
 import weixin.cms.service.CmsPhotoServiceI;
@@ -46,6 +47,9 @@ public class CmsRouteController extends BaseController {
 	private CmsRouteServiceI service;
 	@Autowired
 	private SystemService systemService;
+    
+    @Autowired
+    private CmsPhotoServiceI cmsPhotoServiceI;
 
 	private String message;
 	
@@ -77,6 +81,8 @@ public class CmsRouteController extends BaseController {
 		if(StringUtils.isNotBlank(entity.getArticleId())) {
 			org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, entity, request.getParameterMap());
 			this.service.getDataGridReturn(cq, true);
+			//
+			service.trans_TSType(dataGrid.getResults());
 		} else {
 			dataGrid.setResults(Collections.emptyList());
 		}
@@ -115,6 +121,8 @@ public class CmsRouteController extends BaseController {
 		
 		CmsRouteEntity entity = systemService.getEntity(CmsRouteEntity.class, id);
 		j.setObj(entity);
+		
+		service.trans_TSType(java.util.Arrays.asList(entity));
 		
 		return j;
 	}
@@ -170,6 +178,17 @@ public class CmsRouteController extends BaseController {
 		entity.setDetail(null);
 		j.setObj(entity);
 		
+		//保存图片
+		String routePhotosId = request.getParameter("routePhotosId");
+		if(StringUtils.isNotBlank(routePhotosId)) {
+		    String[] routePhotosIds = routePhotosId.split(",");
+		    for(String id : routePhotosIds) {
+		        CmsPhotoEntity photo = cmsPhotoServiceI.get(CmsPhotoEntity.class, id);
+		        photo.setRouteId(entity.getId());
+                cmsPhotoServiceI.updateEntitie(photo);
+		    }
+		}
+				
 		j.setMsg(message);
 		return j;
 	}

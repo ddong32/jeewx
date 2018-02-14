@@ -2,7 +2,7 @@
 <%@include file="/context/mytags.jsp"%>
 <c:url var="trip_res" value="/webpage/weixin_trip" />
 <!--DOCTYPE html-->
-<html lang="zh-cn" style="font-size: 53.3333px;">
+<html ng-app="mainApp" lang="zh-cn" style="font-size: 53.3333px;">
 	<head lang="en">
 		<meta charset="utf-8">
 		
@@ -27,8 +27,15 @@
 		<link rel="stylesheet" href="${trip_res}/2/addbutton.css" >
 		<script type="text/javascript" src="${trip_res}/2/font.js"></script>
 		<script type="text/javascript" src="${trip_res}/2/jquery-2.1.1.min.js"></script>
+		<style type="text/css">
+		.description-info{
+		  background-color:white;
+		  margin-bottom:.2rem;
+		  border-radius:.1rem;
+		}
+		</style>
 	</head>
-	<body>
+	<body ng-controller="content">
 		<!-- 最顶层  detail-content  开始 -->
 		<div class="detail-content">
 			<!-- 此外,二级页面都是拉出来的那种效果 -->
@@ -66,31 +73,25 @@
 				<div class="trip-header hide">
 	
 				</div>
-				<!-- 行程头部 结束 -->
-				<!-- 头部 结束 -->
+                <!-- 行程头部 结束 -->
+                <!-- 头部 结束 -->
 				
 				<!-- 头部以下全是脚 开始 -->
 				<div class="wrapper-scroll">
 					<!-- 头部背景 开始 -->
-					<nav class="head-bg swiper-container-headbg swiper-container-horizontal swiper-container-android">
-						<ul class="swiper-wrapper" style="transform: translate3d(-2800px, 0px, 0px); transition-duration: 500ms;">
-						
-							<c:forEach var="e" items="${cmsPhotos}"><%--  swiper-slide-duplicate swiper-slide-next --%>
-								<li class="swiper-slide" find-head-bg="" data-swiper-slide-index="5" style="width: 400px;">
-									<img class="swiper-lazyimages" src="./cmsPhotoController.do?view&fileid=${e['id']}"/>
-								</li>
-							</c:forEach>
-						    <%--<li class="swiper-slide" ng-repeat="ProductImg in ProductImgs " find-head-bg>
+					<nav class="head-bg swiper-container-headbg">
+						<ul class="swiper-wrapper">
+                        <li class="swiper-slide" ng-repeat="ProductImg in ProductImgs " find-head-bg>
                             <div ng-if="$index>0" class="swiper-lazy-preloader"></div>
-                            <img ng-if="$index==0" ng-src="{{ ProductImg.ImgUrl }}" >
-                            <img ng-if="$index>0" class="swiper-lazy" data-src="{{ ProductImg.ImgUrl }}" >--%>
+                            <img ng-if="$index==0" ng-src="{{ ProductImg.ImgUrl }}" onerror="onerror=null;src='about:blank'">
+                            <img ng-if="$index>0" class="swiper-lazy" data-src="{{ ProductImg.ImgUrl }}" onerror="onerror=null;src='about:blank'">
                         </li>
 						</ul>
 					</nav>
 					<!-- 头部背景 结束 -->
 				</div>
-				<!-- 头部以下全是脚  结束 -->
-				<!-- 详情 开始 -->
+                <!-- 头部以下全是脚  结束 -->
+                <!-- 详情 开始 -->
 				<div class="main">
 					<div class="scroll-head">
 						<!-- 产品类型 -->
@@ -104,14 +105,14 @@
 	                            	</span>
 								</div>
 								<!--
-								<p class="number " >产品编号：BJF107291</p>
+								<p class="number " >产品编号：</p>
 								-->
-								<p class="con-text " >${cmsArticle.title}</p>
+								<p class="con-text " ng-bind-html="ProductInfo.ProductName | trustHtml"></p>
 								<div class="on-shelf">
 									<div class="price-bot border-top">
 										<p class="fl">
-											<span class="price">¥ <i class="big ng-binding">${cmsArticle.price}</i><em>起</em></span>
-											<span class="gray-under ng-binding" >${cmsArticle.price_vip}</span>
+											<span class="price">¥ <i class="big ng-binding" ng-bind="ProductInfo.BenefitedPrice"></i><em>起</em></span>
+											<span class="gray-under ng-binding" ng-bind="ProductInfo.Price"></span>
 											<span class="question-btn" ng-click="QuestionPop()"><i class="iconfont icon-question"></i></span>
 										</p>
 									</div>
@@ -125,28 +126,25 @@
 					<!-- 国内产品的行程介绍 开始 -->
 					<div class="trip periphery">
 						
-						<section find-trip-center="" class="wrap-box">
+						<section ng-repeat="JouneryGroupInfo in JouneryGroups" ng-class="$index == 0? 'wrap-box':'wrap-box hide'" find-trip-center>
 							<div class="com-box">
 								<!-- 14日行程 -->
 								<div class="wrap-box-two days-info on">
 									<div class="com-box">
 										<div class="top">
-											<p><label class="fl">行程天数：</label> <span class="red ng-binding">${cmsArticle.days}天${cmsArticle.nights}晚</span></p>
+											<p><label class="fl">行程天数</label> <span class="red ng-binding">{{JouneryGroupInfo.Days}}天{{JouneryGroupInfo.Nights}}晚</span></p>
 										</div>
 									</div>
 									<div class="list">
-										<c:forEach var="e" items="${cmsRoutes}" varStatus="s">
-										<div class="part" >
+										<div class="part" ng-repeat="Detail in JouneryGroupInfo.JouneryDetail">
 											<p class="day-tit ng-binding">
-												<i class="iconfont icon-calendar"></i>第 ${s.count}天
+												<i class="iconfont icon-calendar"></i>第 {{Detail.Days}} 天
 											</p>
 											<p class="tit">
-											<span>
-												<c:set var="traffic" value="${e['trafficLine']}" />
-												<c:forEach items="${traffic}" var="te">
-												<c:if test="${not empty te['tool']}"><i class="iconfont icon-vehicle-${te['tool']}" ></i></c:if>
-												<em class="">${te['place']}</em></c:forEach>
-											</span>
+											 <span>
+											     <em ng-repeat="ProductTravelType in Detail.ProductTravelTypes">
+											     <i class="iconfont icon-vehicle-{{ProductTravelType.Type}}" ng-show="!$first"></i>{{ProductTravelType.TreeName}}</em>
+											 </span>
 											</p>
 											<p class="text ng-hide" >
 												<i class=" iconfont icon-timeon"></i>
@@ -154,23 +152,22 @@
 											</p>
 											<p class="text">
 												<i class="iconfont icon-meal"></i>
-												<span>早餐: <em class="ng-binding">${e['breakfast']}</em></span>
-												<span>午餐: <em class="ng-binding">${e['lunch']}</em></span>
-												<span>晚餐: <em class="ng-binding">${e['dinner']}</em></span>
+												<span>早餐: <em class="ng-binding">{{Detail.Breakfast}}</em></span>
+												<span>午餐: <em class="ng-binding">{{Detail.HaveLunch}}</em></span>
+												<span>晚餐: <em class="ng-binding">{{Detail.Dinner}}</em></span>
 											</p>
 											<p class="text">
 												<i class="iconfont icon-hotel"></i>
-												特色酒店_参考酒店: <em class="ng-binding">${e['stay']}</em>
+												特色酒店_参考酒店: <em class="ng-binding">{{Detail.HotelList}}</em>
 											</p>
 											<div class="box five-line border-top">
-												<p class="ng-binding">${e['detail']}</p>
+												<p class="ng-binding" ng-bind-html="Detail.Content | trustHtml"></p>
 											</div>
 										</div>
-										</c:forEach>
+										
 									</div>
 	
-									<%--<a href="#/traveldetail" ng-click="JouneryInfo_init(JouneryGroupInfo.UzaiJouneryGroupID)" class="trip-info"><i class="iconfont icon-daohangxianlu"></i>详细行程<i class="iconfont icon-right"></i></a>--%>
-									<a href="#/traveldetail" ng-click="JouneryInfo_init(JouneryGroupInfo.UzaiJouneryGroupID)" onclick="JouneryInfo_init('${cmsArticle.id}')" class="trip-info"><i class="iconfont icon-daohangxianlu"></i>详细行程<i class="iconfont icon-right"></i></a>
+									<a href="javascript:void(0)" ng-click="JouneryInfo_init(JouneryGroupInfo.UzaiJouneryGroupID)" class="trip-info"><i class="iconfont icon-daohangxianlu"></i>详细行程<i class="iconfont icon-right"></i></a>
 								</div>
 	
 							</div>
@@ -180,10 +177,8 @@
 									<i class="iconfont icon-booking-notice"></i>注意事项<span class="right-btn iconfont icon-right"></span>
 								</a>
 								<!-- 费用说明 -->
-								<div class="wrap-box-two description-info">
-									<%-- <div class="trip-ls-tit"><span><i class="iconfont icon-costnotinclude"></i>费用包含</span></div> --%>
-									<div class="trip-ls none ng-binding">
-										${cmsArticle['notice']}
+								<div class="wrap-box-two description-info" ng-hide="JouneryGroupInfo.Notice==''">
+									<div class="trip-ls none" ng-bind-html="JouneryGroupInfo.Notice | trustHtml">
 									</div>
 								</div>
 							</div>
@@ -192,17 +187,13 @@
 								<a href="#/purchasenoticejounery" class="com-box buyinfo-btn ">
 									<i class="iconfont icon-booking-notice"></i>购买须知<span class="right-btn iconfont icon-right"></span>
 								</a>
-								<!-- 费用说明 -->
+								<!-- è´¹ç¨è¯´æ -->
 								<div class="wrap-box-two description-info">
 									<div class="trip-ls-tit"><span><i class="iconfont icon-costnotinclude"></i>费用包含</span></div>
-									<div class="trip-ls none ng-binding">
-										${cmsArticle['expense_contain']}
-									</div>
+									<div class="trip-ls none" ng-show="JouneryGroupInfo.CostInclude!=''" ng-bind-html="JouneryGroupInfo.CostInclude | trustHtml"></div>
 	
 									<div class="trip-ls-tit margin-hr border-top" ><span><i class="iconfont icon-costnotincludes"></i>费用不包含</span></div>
-									<div class="trip-ls none" >
-										${cmsArticle['expense_ncontain']}
-									</div>
+									<div class="trip-ls none" ng-show="JouneryGroupInfo.CostNotInclude!=''" ng-bind-html="JouneryGroupInfo.CostNotInclude | trustHtml"></div>
 								</div>
 							</div>
 							
@@ -211,15 +202,14 @@
 				</div>
 				
 			</div> 
-		
-		    <div class="J-router-traveldetail uzai-wrapper j-router" id="detail_wrapper" style="display: none;">
-		    
-		    </div>
 		</div> <!-- 最顶层  detail-content 结束  -->
+		
+		<!-- 详细行程 -->
+        <div class="J-router-traveldetail uzai-wrapper j-router" id="detail_wrapper" style="display: none;"></div>
 
 		<script src="${trip_res}/2/swiper-3.3.1.min.js"></script>
-		<script src="${trip_res}/2/detail.js"></script>
 		<script src="${trip_res}/2/angular.min.js"></script>
+		<script src="${trip_res}/2/detail.js"></script>
 		
 	</body>
 </html>

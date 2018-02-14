@@ -1,3 +1,4 @@
+
 package weixin.cms.entity;
 
 import java.util.ArrayList;
@@ -11,6 +12,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -177,7 +181,7 @@ public class CmsRouteEntity implements java.io.Serializable {
 		this.detail = detail;
 	}
 	/**
-	 * 
+	 * 地点和交通
 	 */
 	private List<Map<String, String>> trafficLine;
 	/**
@@ -207,7 +211,9 @@ public class CmsRouteEntity implements java.io.Serializable {
 	 * 图片
 	 */
 	private List<CmsPhotoEntity> photos;
-	@Transient
+	//@Transient
+	@OneToMany
+	@JoinColumn(name="ROUTE_ID", referencedColumnName="ID")
 	public List<CmsPhotoEntity> getPhotos() {
 		return photos;
 	}
@@ -215,4 +221,31 @@ public class CmsRouteEntity implements java.io.Serializable {
 		this.photos = photos;
 	}
 	
+    /**
+     * 早 中 晚餐
+     */
+    private String breakfastLabel, lunchLabel, dinnerLabel;
+    @Transient
+    public String getBreakfastLabel() {
+        return breakfastLabel;
+    }
+    public void setBreakfastLabel(String breakfastLabel) {
+        this.breakfastLabel = breakfastLabel;
+    }
+    
+    @Transient
+    public String getLunchLabel() {
+        return lunchLabel;
+    }
+    public void setLunchLabel(String lunchLabel) {
+        this.lunchLabel = lunchLabel;
+    }
+    
+    @Transient
+    public String getDinnerLabel() {
+        return dinnerLabel;
+    }
+    public void setDinnerLabel(String dinnerLabel) {
+        this.dinnerLabel = dinnerLabel;
+    }
 }

@@ -21,7 +21,7 @@ import org.jeecgframework.web.system.pojo.base.TSAttachment;
 @SuppressWarnings("serial")
 public class CmsPhotoEntity extends TSAttachment implements java.io.Serializable {
 	/**主键*/
-	private java.lang.String articleId;
+	private java.lang.String articleId, routeId;
 	
 	private Date createDate;
 
@@ -42,4 +42,13 @@ public class CmsPhotoEntity extends TSAttachment implements java.io.Serializable
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
+
+    @Column(name = "route_id")
+    public java.lang.String getRouteId() {
+        return routeId;
+    }
+
+    public void setRouteId(java.lang.String routeId) {
+        this.routeId = routeId;
+    }
 }

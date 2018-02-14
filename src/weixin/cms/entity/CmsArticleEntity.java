@@ -1,10 +1,13 @@
 package weixin.cms.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -288,5 +291,22 @@ public class CmsArticleEntity implements java.io.Serializable {
 	public void setExpense_ncontain(String expense_ncontain) {
 		this.expense_ncontain = expense_ncontain;
 	}
+	
+	private List<CmsPhotoEntity> photos;
+    @Transient
+    public List<CmsPhotoEntity> getPhotos() {
+        return photos;
+    }
+    public void setPhotos(List<CmsPhotoEntity> photos) {
+        this.photos = photos;
+    }
 
+    private List<CmsRouteEntity> routes;
+    @Transient
+    public List<CmsRouteEntity> getRoutes() {
+        return routes;
+    }
+    public void setRoutes(List<CmsRouteEntity> routes) {
+        this.routes = routes;
+    }
 }

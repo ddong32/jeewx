@@ -1,5 +1,6 @@
 package weixin.cms.controller;
 import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,9 +72,19 @@ public class CmsPhotoController extends BaseController {
 		CriteriaQuery cq = new CriteriaQuery(CmsPhotoEntity.class, dataGrid);
 		//cq.eq("accountid", ResourceUtil.getWeiXinAccountId());
 		//查询条件组装器
-		if(StringUtils.isNotBlank(entity.getArticleId())) {
+		final String articleId = entity.getArticleId(), routeId = entity.getRouteId();
+		if(StringUtils.isNotBlank(articleId) || StringUtils.isNotBlank(routeId)) {
 			org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, entity, request.getParameterMap());
 			this.service.getDataGridReturn(cq, true);
+			//临时处理路径问题
+			List<CmsPhotoEntity> photos = dataGrid.getResults();
+			if(null != photos) {
+			    final String path = request.getContextPath();
+			    for(CmsPhotoEntity pe : photos) {
+			        pe.setRealpath(path);
+			    }
+			}
+			
 		} else {
 			dataGrid.setResults(Collections.emptyList());
 		}
@@ -150,8 +161,9 @@ public class CmsPhotoController extends BaseController {
 		String fileid =oConvertUtils.getString(request.getParameter("fileid"));
 		try {
 			String clazzName = CmsPhotoEntity.class.getName();
-			String imgSrc = "/commonController.do?viewFile&subclassname=" + clazzName + "&fileid=" + fileid;
-			request.getRequestDispatcher(imgSrc).forward(request, response);
+			String imgSrc = "./commonController.do?viewFile&subclassname=" + clazzName + "&fileid=" + fileid;
+			//request.getRequestDispatcher(imgSrc).forward(request, response);
+			response.sendRedirect(imgSrc);
 		} catch (Exception err) {
 			logger.error(err, err);
 		}

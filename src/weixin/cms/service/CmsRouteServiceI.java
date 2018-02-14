@@ -16,5 +16,9 @@ public interface CmsRouteServiceI extends CommonService {
 	/*public List<CmsRouteEntity> list(Map params, int page, int rows);
 
 	public List<CmsRouteEntity> list(Map params);*/
-
+	/**
+	 * 
+	 * @param routes
+	 */
+	public void trans_TSType(List<CmsRouteEntity> routes);
 }

@@ -105,17 +105,19 @@
       //在线编辑器通用配置
       var ueditorConfig = {elementPathEnabled: false, wordCount: false, autoHeightEnabled: false};
       //注意事项编辑
-      UE.getEditor('notice', $.extend({initialFrameHeight: 240}, ueditorConfig));
+      noticeEditor = UE.getEditor('notice', $.extend({initialFrameHeight: 240}, ueditorConfig));
       //购买须知编辑
       $.each(['expense_contain', 'expense_ncontain'], function(i, e) {
-	      UE.getEditor(e, $.extend({initialFrameHeight: 158}, ueditorConfig));
+	      window[e + 'Editor'] = UE.getEditor(e, $.extend({initialFrameHeight: 158}, ueditorConfig));
       });
       //形成描述编辑
       routeDetailEditor = UE.getEditor('routeDetail', $.extend({initialFrameHeight: 240}, ueditorConfig));
       //支持上传头部图片
       enableUploadPhoto();
       //行程图片
-      //enableRouteUploadPhoto();
+      enableRouteUploadPhoto();
+      //
+      previewListener();
   });
   function setimageTitle(obj){
 	  $("#imageTitle").html($(obj).val());
@@ -124,7 +126,7 @@
   * 重新布局页面
   * @returns
   */
-function layoutThePage() {
+function layoutThePage() {return;
 	var panelLayoutOpts = {width: document.body.clientWidth - 4};
 	$.each([1, 2, 3, 4, 5], function(i, n) {
 		$('#s' + n).panel('resize', panelLayoutOpts)
@@ -154,7 +156,6 @@ function enableUploadPhoto() {
         previewMaxHeight: 160,
         previewCrop: true
     }).on('fileuploaddone', function (e, data) {
-    	console.info(data);
         /*var files = data? data['files'] : null;
         if(files && files.length) {
         	var dg = $('#cmsPhotoList');
@@ -168,6 +169,8 @@ function enableUploadPhoto() {
     	if(rs && (entity = rs['obj'])) {
     		entity['createdate'] = new Date(entity['createdate']).fmt2Str();
     		$('#cmsPhotoList').datagrid('appendRow', entity);
+    		
+    		preparePreview();
     	}
     });
 	
@@ -178,7 +181,7 @@ function enableUploadPhoto() {
  */
 function enableRouteUploadPhoto() {
 	//
-	$('#cmsPhotoFile').fileupload({
+	$('#cmsRoutePhotoupload').fileupload({
 		url: './cmsPhotoController.do?save',
 		dataType: 'json',
 		autoUpload: true,
@@ -193,9 +196,7 @@ function enableRouteUploadPhoto() {
 		console.info(data);
 		var rs = data? data['result'] : null, entity;
 		if(rs && (entity = rs['obj'])) {
-			var ls = $('#cmsRoutePhotoList');
-			entity['createdate'] = new Date(entity['createdate']).fmt2Str();
-			ls.datagrid('appendRow', entity);
+    		buildRoutePhoto(entity, $('#cmsRoutePhotoList'));
 		}
 	});
 	
@@ -220,43 +221,68 @@ function viewPhoto(rowi) {
 		$.messager.alert('提示', '请选择浏览的一张图片.');
 		return;
 	}
-	var imgSrc = './cmsPhotoController.do?view&fileid=' + r['id'];
+	openPhotoViewer(r['id']);
+}
+/**
+ * 打开图片查看窗口
+ */
+function openPhotoViewer(id) {
+	var imgSrc = './cmsPhotoController.do?view&fileid=' + id;
 	var img = $('#photoViewer');
 	img.css({width: 'auto', height: 'auto'}).attr('src', imgSrc);
 	
 	$('#viewPhotoWindow').window('open').window('center');
-}
-function resizePhotoViewer() {return;
-	var img = $('#photoViewer');
-	var ori = new Image();
-	ori.src = img.attr('src');
-	ori.onload = function() {
-		//var mw = 680, mh = 430;
-		img.width(ori.width).height(ori.height);
-	}
 }
 /**
   * 删除头部图片
   */
 function delPhoto(rowi) {
 	var dg = $('#cmsPhotoList'), r = dg.datagrid('getRows')[rowi];
+ 	affirmDelPhoto(r['id'], function() {$('#cmsPhotoList').datagrid('deleteRow', rowi);});
+ 	
+ 	preparePreview();
+}
+/**
+ * 确认删除
+ * @param id 图片id
+ * @param cb 回调
+ */
+function affirmDelPhoto(id, cb) {
 	$.messager.confirm('确认', '是否确定删除?', function(v) {
 		if(v) {
 			var ajaxOpts = {
 					dataType: 'json'
 					, success: function(rs) {
 						if(rs && rs['success']) {
-							dg.datagrid('deleteRow', rowi);
+							cb();
 						}
 					}
 			};
-			$.ajax('./cmsPhotoController.do?del&id=' + r['id'], ajaxOpts);
+			$.ajax('./cmsPhotoController.do?del&id=' + id, ajaxOpts);
 		}
 	});
- 	 
+}
+/**
+ * 删除行程图片
+ */
+function delRoutePhoto(id) {
+	affirmDelPhoto(id, function() {$('#cmsRoutePhotoList').find('[cache-id="' + id + '"]').remove();});
+}
+/**
+ * 行程图片列表
+ * @returns
+ */
+function buildRoutePhoto(photo, ul) {
+	var photo_id = photo['id'], photo_name = photo['attachmenttitle'];
+	var itm = ['<li cache-id="' + photo_id + '">'];
+	//itm.push('<img src="' + photo['attachmentcontent'] + '" alt="" rid="' + photo_id + '" />');
+	itm.push('<span class="routePhotoItem" onclick="openPhotoViewer(\'' + photo_id + '\')" title=\"点击查看\">' + photo_name + '</span>');
+	itm.push('<span class="routePhotoDel" onclick="delRoutePhoto(\'' + photo_id + '\')" title=\"点击删除\">X</span>');
+	itm.push('</li>');
+	return $(itm.join('')).appendTo(ul);
 }
 //
-var routeDetailEditor;
+var routeDetailEditor, noticeEditor, expense_containEditor, expense_ncontainEditor;
 /**
 * 添加行程
 */
@@ -329,6 +355,14 @@ function editRoute(rowi) {
 						}
 					}
 				}
+				//
+				var photos = entity['photos'];
+				if(photos && photos.length) {
+					var ul = $('#cmsRoutePhotoList');
+					for(var i = 0; i < photos.length; i ++) {
+						buildRoutePhoto(photos[i], ul);
+					}
+				}
 			}
 	};
 	$.ajax('./cmsRouteController.do?get&id=' + rid, ajaxOpts);
@@ -347,6 +381,8 @@ function delRoute(rowi) {
 					, success: function(rs) {
 						if(rs && rs['success']) {
 							dg.datagrid('deleteRow', rowi);
+							
+							preparePreview();
 						}
 					}
 			};
@@ -359,13 +395,25 @@ function delRoute(rowi) {
  * @returns
  */
 function openRouteDialog() {
+	$('#cmsRoutePhotoList').empty();
+	
 	return $('#routeWindow').window('open').window('center');
 }
 /**
 * 保存行程
 */
 function saveRoute() {
-	 var frm = document.routeForm;//.submit();
+	 var frm = document.routeForm;
+	 //
+	 var routePhotosId = [], routePhotos = [];
+	 $('#cmsRoutePhotoList').find('[cache-id]').each(function() {
+		 var phoid = $(this).attr('cache-id');
+		 routePhotosId.push(phoid);
+		 //预览用
+		 routePhotos.push({id: phoid});
+	 });
+	 frm['routePhotosId'].value = routePhotosId.join(',');
+	 //提交
 	 $(frm).form('submit', {
 	    url: frm.action
 	    , onSubmit: function(){
@@ -384,35 +432,22 @@ function saveRoute() {
 	        			+ ' ' + cd.getHours() + ':' + cd.getMinutes() + ':' + cd.getSeconds();
 	        		entity['traffic_trim'] = fmt_cmsRouteList_traffic(entity['traffic']);
 	        	}
-	        	$('#cmsRouteList').datagrid('appendRow', entity);
+	        	//
+	        	var dg = $('#cmsRouteList');
+	        	if(!frm['id'].value) {
+	        		dg.datagrid('appendRow', entity);
+	        	} else {
+	        		var rowi = dg.datagrid('getRowIndex', entity['id']);
+	        		dg.datagrid('updateRow', {index: rowi, row: entity});
+	        	}
+	        	//更新预览
+	        	entity['photos'] = routePhotos;
+	        	preparePreview();
+	        	
 	        	$('#routeWindow').window('close');
 	        }
 	    }
 	});
-	/*var postData = serializeObject($(frm));
-	var ajaxOpts = {
-			dataType: 'json'
-			, data: postData
-			, success: function(rs){
-		        if(!rs) {
-		        	return;
-		        }
-		        //rs = 'string' == $.type(rs)? eval('(' + rs + ')') : rs;
-		        if(rs['success']) {
-		        	//$('#cmsRouteList').datagrid('reload');
-		        	var entity = rs['obj'], cd = parseInt(entity['createDate']);
-		        	if(cd) {
-		        		cd = new Date(cd);
-		        		entity['createDate'] = cd.getFullYear() + '-' + (cd.getMonth() + 1) + '-' + cd.getDate()
-		        			+ ' ' + cd.getHours() + ':' + cd.getMinutes() + ':' + cd.getSeconds();
-		        	}
-		        	entity['traffic_trim'] = fmt_cmsRouteList_traffic(entity['traffic']);
-		        	$('#cmsRouteList').datagrid('appendRow', entity);
-		        	$('#routeWindow').window('close');
-		        }
-		    }
-	};
-	$.ajax(frm.action, ajaxOpts);*/
 }
 /**
 * 查看行程
@@ -434,7 +469,7 @@ function viewRoute(evt) {
 	
 }
 /**
- * 
+ * 行程加载完成触发
  * @param dat
  * @returns
  */
@@ -449,8 +484,19 @@ function onLoad_cmsRouteList(dat) {
 		r['traffic_trim'] = fmt_cmsRouteList_traffic(r['traffic']);
 		dg.datagrid('updateRow', {index: i, row: r});
 	}
+	
+	preparePreview();
 }
-
+/**
+ * 图片列表加载完成触发
+ */
+function onLoad_cmsPhotoList(dat) {
+	preparePreview();
+}
+/**
+ * 识别线路的目的地, 乘坐交通工具
+ * 将'南宁>1:北海'替换为'南宁>北海'显示
+ */
 var re_trimTraffic = /(\>|\&gt\;)[a-zA-Z0-9]+\:/g;
 function fmt_cmsRouteList_traffic(val, row, rowi) {
 	if(val) {
@@ -547,4 +593,96 @@ function beforeSubmit_formobj() {
 		frm['routesId'].value = routesId.join(',');
 	}
 }
+//
+var pat_editor = /notice|expense_contain|expense_ncontain/;
+/**
+ * 预览的表单元素
+ */
+var previewItems = ['title', 'price', 'price_vip', 'days', 'nights', 'notice', 'expense_contain', 'expense_ncontain'];
+/**
+ * 触发预览动作
+ */
+function previewListener() {
+	var frm = document['formobj'];
+	//修改标题, 价格, 行程天数触发
+	$.each(previewItems, function(i, ele) {
+		if(pat_editor.test(ele)) {
+			var editor = window[ele + 'Editor'];
+			//编辑器创建后触发
+			editor.ready(preparePreview);
+			//编辑器内容改变触发
+			editor.addListener('contentChange', preparePreview)
+						
+			return true;
+		}
+		$('#' + ele).change(preparePreview);
+	});
+}
+//
+var timerPreview;
+/**
+ * 延迟触发预览
+ */
+function preparePreview() {
+	if(timerPreview) {
+		clearTimeout(timerPreview);
+	}
 
+	timerPreview = setTimeout(preview, 800);
+}
+/**
+ * 预览
+ */
+function preview() {
+	//获取iframe窗体
+	var ver = window.frames['cmsArticlePreviewer'];
+	var fn = 'onLoadArticle'
+	if(!ver || 'function' != $.type(ver[fn])) {
+		return;
+	}
+	
+	var frm = document['formobj'];
+	//文章基本信息
+	var cmsArticle = {};
+	$.each(previewItems, function(i, ele) {
+		var fele = frm[ele], val;
+		if(!fele) {
+			return true;
+		}
+		if(pat_editor.test(ele)) {
+			try {
+				val = window[ele + 'Editor'].getContent();
+			} catch(err) {
+				console.log(err);
+			}
+		} else {
+			val = fele.value;
+		}
+		cmsArticle[ele] = val;
+	});
+	//头部图片
+	var dg = $('#cmsPhotoList');
+	try {
+		cmsArticle['photos'] = dg.datagrid('getRows');
+	} catch (err) {
+		console.log(err);
+		return;
+	}
+	//行程
+	dg = $('#cmsRouteList');
+	try {
+		var routesRows = dg.datagrid('getRows'), routes = [];
+		var rajax = {async: false, dataType: 'json', success: function(dat) {routes.push(dat['obj']);}};
+		for(var i = 0, n = routesRows? routesRows.length : 0; i < n; i ++) {
+			$.ajax('./cmsRouteController.do?get&id=' + routesRows[i]['id'], rajax)
+		}
+		cmsArticle['routes'] = routes;
+	} catch (err) {
+		console.log(err);
+		return;
+	}
+	//
+	//routeDetailEditor, noticeEditor, expense_containEditor, expense_ncontainEditor
+	//调用更新
+	ver[fn](cmsArticle);
+}

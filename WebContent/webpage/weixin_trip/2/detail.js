@@ -122,56 +122,247 @@ var Detail_content = {
 
 var detailInterval;
 jQuery(function() {
+	//读取
+	readDetail();
+
 	detailInterval = new DetailInterval();
 	detailInterval.init();
-	
 });
-/**
- * 读取详细行程
- * @param articleId
- * @returns
- */
-function JouneryInfo_init(articleId) {
-	$('#wrapper').hide();
-	$('#detail_wrapper').show().css({left: 0}).load('./cruiseController.do?traveldetail', {'id': articleId}, function() {
-		$('#ondays_title').click(function() {
-			//$('#j-drop-wrapper').show();//.toggle('fast');
-			var jdw = $('#j-drop-wrapper'), t;
-			if(jdw.offset().top >= 0) {
-				t = -15;//jdw.height();
-			} else {
-				t = 0;
-			}
-			jdw.animate({'top': t + 'rem'});//.toggle('fast');
-		});
-	});
-}
-/**
- * 详细行程 展开顶部每天行程
- * @param index
- * @returns
- */
-function JouneryInfo_days(index){
-	//0===index?document.getElementById("t-wrapper").scrollTop=1:document.getElementById("t-wrapper").scrollTop=document.getElementsByClassName("tsection")[index].offsetTop+10;
-	var showday=document.getElementById("showday")
-		, j_drop_wrapper=document.getElementById("j-drop-wrapper")
-		, j_t_wrapper=document.getElementById("t-wrapper");
-	
-	var jdw = $(j_drop_wrapper), h = jdw.height();
-	jdw.animate({'top': (0 - h) + 'px'});
-	
-	j_t_wrapper.scrollTop = 0===index? 1 : document.getElementsByClassName("tsection")[index].offsetTop+10;
 
-	showday.innerHTML=index+1;
-	j_drop_wrapper.classList.remove("hover");
-	j_t_wrapper.classList.remove("t-wrapper-scroll");
+/**
+ * 从地址栏获取id, 如果有就读取
+ */
+function readDetail() {
+	var pat_id = /\bid=([^&]+)\b/, id = pat_id.test(location.search)? RegExp.$1 : null;
+	if(!id) {
+		return;
+	}
+	
+	var ajaxUrl = './cruiseController.do?detailcontent';
+	var ajaxOpts = {
+			async: false
+			, type: 'POSt'
+			, dataType: 'json'
+			, data: {id: id}
+			, success: function(dat) {
+				onLoadArticle(dat['obj']);
+			}
+	};
+	$.ajax(ajaxUrl, ajaxOpts)
 }
 /**
- * 详细行程返回
+ * angularjs
  */
-function routerGoBack() {
-	$('#wrapper').show();
-	var dw = $('#detail_wrapper');
-	dw.css({left: dw.width() + 'px'});
-	
+try {
+	/**
+	 * 创建angularjs module
+	 */
+	var mainApp = angular.module("mainApp", []);
+	/**
+	 * 创建路由
+	 */
+	/**
+	 * 创建angularjs controller
+	 */
+	mainApp.controller('content', ['$scope','$compile',function($scope, $compile) {
+	   /*$scope.ProductInfo = {
+	       ProductName: new Date()
+	   };*/
+		/**
+		 * 读取详细行程
+		 * @param articleId
+		 * @returns
+		 */
+		$scope.JouneryInfo_init = function (articleId) {
+			//
+			$('#wrapper').hide();
+			
+			$('#detail_wrapper').show().css({left: 0});
+			
+			var td = $('#j_traveldetail_hd');
+			if(td && td.length) {
+				return;
+			}
+			
+			$.get('./cruiseController.do?traveldetail', function(dat) {
+					var tpl = angular.element(dat);
+					var ele = $compile(tpl)($scope);
+					angular.element('#detail_wrapper').append(ele);
+					
+					$scope.$apply();
+			});
+		};
+		
+		/**
+		 * 详细行程 展开顶部每天行程
+		 * @param index
+		 * @returns
+		 */
+		$scope.JouneryInfo_days = function(index) {
+            0 === index ? document.getElementById("t-wrapper").scrollTop = 1 : document.getElementById("t-wrapper").scrollTop = document.getElementsByClassName("tsection")[index].offsetTop + 10;
+            var showday = document.getElementById("showday"),
+                j_drop_wrapper = document.getElementById("j-drop-wrapper"),
+                j_t_wrapper = document.getElementById("t-wrapper");
+            showday.innerHTML = index + 1, j_drop_wrapper.classList.remove("hover"), j_t_wrapper.classList.remove("t-wrapper-scroll")		
+        };
+		/**
+		 * 详细行程返回
+		 */
+		$scope.routerGoBack = function() {
+			$('#wrapper').show();
+			var dw = $('#detail_wrapper');
+			dw.css({left: dw.width() + 'px'});
+			
+		};
+		
+	}]);
+	/**
+	 * html实体转码
+	 */
+	mainApp.filter("trustHtml",function($sce){
+		return function(input){
+			if(void 0!==input){
+				var txt=input.replace(/\r/g,"</br>");
+				return txt.replace(/\n/g,"&nbsp;"),$sce.trustAsHtml(txt)
+			}
+			return $sce.trustAsHtml(input)}
+	});
+} catch (err) {
+	console.log(err);
+}
+/**
+ * 更新angularjs model
+ */
+function onLoadArticle(cmsArticle) {
+    //获得module
+    var app = getAppScope();
+    if(!app) {
+    	console.log('获取angularjs失败')
+    	return;
+    }
+    //通知angularjs更新绑定
+    app.$apply(function() {
+    	//将cmsArticle转换
+    	//基本信息
+    	var ProductInfo = {
+    			'ProductName': cmsArticle['title']
+    			, 'BenefitedPrice': cmsArticle['price']
+    			, 'Price': cmsArticle['price_vip']
+    	};
+    	app.ProductInfo = ProductInfo;
+    	//头部图片
+    	var ProductImgs = [];
+    	var photos = cmsArticle['photos'];
+    	if(photos && photos.length) {
+    		for(var i = 0, itm; i < photos.length; i ++) {
+    			itm = photos[i];
+    			ProductImgs.push({
+    				'ImgUrl': './cmsPhotoController.do?view&fileid=' + itm['id']
+    			});
+    		}
+    	}
+    	app.ProductImgs = ProductImgs;
+    	//行程分组
+    	var JouneryGroups = [];
+    	//行程天数
+    	var JouneryGroupInfo = {
+    			'Days': cmsArticle['days']
+    			, 'Nights': cmsArticle['nights']
+    	};
+        //app.JouneryGroupInfo = JouneryGroupInfo;
+        //行程安排
+        var JouneryDetail = [];
+        var routes = cmsArticle['routes'];
+        if(routes && routes.length) {
+        	var pat_traffic = new RegExp('(?:\\>(\\d+)\\:)?([\\w\\W]+?(?=\\>\\d+\\:)|[\\w\\W]+?$)', 'gi');
+    		for(var i = 0, itm, tt, travelTypes, travelPhotos; i < routes.length; i ++) {
+    			itm = routes[i];
+    			//交通, 地点
+    			travelTypes = [];
+    			pat_traffic.lastIndex = -1;
+    			while((tt = pat_traffic.exec(itm['traffic']))) {
+    				travelTypes.push({
+    					'Type': tt[1]
+    					, 'TreeName': tt[2]
+    				});
+    			}
+    			//图片
+    			travelPhotos = [];
+    			tt = itm['photos'];
+    			if(tt && tt.length) {
+    				for(var j = 0; j < tt.length; j ++) {
+    					travelPhotos.push({
+    						'ImgUrl': './cmsPhotoController.do?view&fileid=' + tt[j]['id']
+    					});
+    				}
+    			}
+    			//
+    			JouneryDetail.push({
+    				'Days': (1 + i)
+    				, 'ProductTravelTypes': travelTypes
+    				, 'Breakfast': itm['breakfastLabel']
+    				, 'HaveLunch': itm['lunchLabel']
+    				, 'Dinner': itm['dinnerLabel']
+    				, 'HotelList': itm['stay']
+    				, 'Content': itm['detail']
+    				, 'JouneryImgInfo': travelPhotos
+    			});
+    		}
+        }
+        JouneryGroupInfo['JouneryDetail'] = JouneryDetail;
+        //注意事项
+        JouneryGroupInfo['Notice'] = cmsArticle['notice'];
+        //费用
+        JouneryGroupInfo['CostInclude'] = cmsArticle['expense_contain'];
+        JouneryGroupInfo['CostNotInclude'] = cmsArticle['expense_ncontain'];
+        //添加到行程分组
+        JouneryGroups.push(JouneryGroupInfo);
+        //
+        app.JouneryGroups = JouneryGroups;
+        //详细行程
+        buildJouneryDayInfo();
+        
+    });
+}
+/**
+ * 生成详细行程
+ */
+function buildJouneryDayInfo() {
+	var app = getAppScope();
+	var JouneryGroups = app.JouneryGroups;
+    /*
+     * 取出文章的行程, 拷贝
+     * 
+     */
+    var JouneryDayInfo = [], JouneryInfo, ProductTravelTypes;
+    var JouneryGroupInfo, JouneryDetail, Detail;
+    for(var i = 0; i < JouneryGroups.length; i ++) {
+    	JouneryGroupInfo = JouneryGroups[i];
+    	JouneryDetail = JouneryGroupInfo['JouneryDetail'];
+    	for(var j = 0; j < JouneryDetail.length; j ++) {
+    		Detail = JouneryDetail[j];
+    		//
+    		JouneryInfo = {};
+    		for(var k in Detail) {
+    			if(/(?:Breakfast|HaveLunch|Dinner)$/.test(k)) {
+    				continue;
+    			}
+    			JouneryInfo[k] = Detail[k];
+    		}
+    		//用餐
+    		JouneryInfo['Lunch'] = '早餐(' + Detail['Breakfast'] + ')午餐(' + Detail['HaveLunch'] + ')晚餐(' + Detail['Dinner'] + ')';
+    		
+    		JouneryDayInfo.push(JouneryInfo);
+    	}
+    	//设计缺陷只支持一个行程
+    	break;
+    }
+    
+    app.JouneryDayInfo = JouneryDayInfo;
+}
+/**
+ * 
+ */
+function getAppScope() {
+	return angular.element("body").scope();
 }
