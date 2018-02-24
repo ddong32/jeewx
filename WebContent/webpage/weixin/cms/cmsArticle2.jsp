@@ -138,19 +138,19 @@
 		<div class="media_preview_area">
 			<div class="appmsg editing">
 				<div class="appmsg_content" id="js_appmsg_preview">
-						<h4 class="appmsg_title">
-							<a target="_blank" href="javascript:void(0);" onclick="return false;" id="imageTitle">标题</a>
-						</h4>
-						<div class="appmsg_info">
-							<em class="appmsg_date"></em>
-						</div>
-						<div id="files" class="files">
-							<i class="appmsg_thumb default" id="imageShow">栏目图片</i>
-						</div>
-						 <div id="progress" class="progress">
-					        <div class="progress-bar progress-bar-success"></div>
-					    </div>
-						<p class="appmsg_desc"></p>
+					<h4 class="appmsg_title">
+						<a target="_blank" href="javascript:void(0);" onclick="return false;" id="imageTitle">标题</a>
+					</h4>
+					<div class="appmsg_info">
+						<em class="appmsg_date"></em>
+					</div>
+					<div id="files" class="files">
+						<i class="appmsg_thumb default" id="imageShow">栏目图片</i>
+					</div>
+					 <div id="progress" class="progress">
+				        <div class="progress-bar progress-bar-success"></div>
+				    </div>
+					<p class="appmsg_desc"></p>
 				</div>
 			</div>
 		</div>
