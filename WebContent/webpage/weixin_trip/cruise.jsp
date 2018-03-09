@@ -57,9 +57,12 @@
 					</div>
 					<div class="more-list hide">
 						<ul>
-							<li>
-								<a ng-click="GoMyOrder()"><i class="iconfont icon-order"></i>我的订单</a>
-							</li>
+                            <li>
+                                <a ng-click="signup()"><i class="iconfont icon-comfooter-wode"></i>注册会员</a>
+                            </li>
+                            <li>
+                                <a ng-click="GoMyOrder()"><i class="iconfont icon-order"></i>我的订单</a>
+                            </li>
 							<li ng-if="!isApp" class="ng-scope">
 								<a class="history-show" ng-click="history_init()"><i class="iconfont icon-history"></i>浏览历史</a>
 							<li>

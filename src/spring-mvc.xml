@@ -137,7 +137,11 @@
 						<value>cmsPhotoController.do?view</value>
 						<value>commonController.do?viewFile</value>
 						<value>cruiseController.do?detail</value>
-						<value>cruiseController.do?traveldetail</value>
+                        <value>cruiseController.do?traveldetail</value>
+                        <value>cruiseController.do?detailcontent</value>
+                        <value>cmsMemberController.do?signup</value>
+                        <value>cmsMemberController.do?save</value>
+                        <value>weixinUserinfoController.do?getUserinfo</value>
 					</list>
 				</property>
 				<!-- 模糊匹配 -->

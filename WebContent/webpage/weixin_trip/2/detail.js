@@ -214,7 +214,12 @@ try {
 			dw.css({left: dw.width() + 'px'});
 			
 		};
-		
+		/**
+		 * 注册
+		 */
+		$scope.signup = function() {
+			location.href = './cmsMemberController.do?signup';
+		};
 	}]);
 	/**
 	 * html实体转码
@@ -244,11 +249,17 @@ function onLoadArticle(cmsArticle) {
     app.$apply(function() {
     	//将cmsArticle转换
     	//基本信息
+    	var price = cmsArticle['price'], price_vip = cmsArticle['price_vip'];
     	var ProductInfo = {
     			'ProductName': cmsArticle['title']
-    			, 'BenefitedPrice': cmsArticle['price']
-    			, 'Price': cmsArticle['price_vip']
+    			, 'BenefitedPrice': price
+    			, 'Price': price_vip
     	};
+    	if(price_vip) {
+    		ProductInfo['BenefitedPrice'] = price_vip;
+    		ProductInfo['Price'] = price;
+    		$('.price-bot .gray-under').css('cssText', 'display: inline !important');
+    	}
     	app.ProductInfo = ProductInfo;
     	//头部图片
     	var ProductImgs = [];

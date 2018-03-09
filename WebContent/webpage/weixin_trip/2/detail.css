@@ -800,6 +800,10 @@ ng\:form {
 	content: "\e66e"
 }
 
+.icon-comfooter-wode:before {
+    content: "\e63f";
+}
+
 input {
 	white-space: nowrap;
 	-moz-user-select: text;

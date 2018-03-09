@@ -1,0 +1,1319 @@
+@charset "UTF-8"; 
+
+* {
+	padding: 0;
+	margin: 0;
+	-webkit-user-select: none;
+	user-select: none;
+	font-family: STHeiti, 'Microsoft YaHei', Helvetica, Arial, sans-serif
+}
+
+input[type=text] {
+	-webkit-user-select: text;
+	user-select: text;
+	-webkit-appearance: none;
+	outline: 0
+}
+
+a, body, div, em, footer, form, h1, h2, h3, h4, h5, h6, header, html, i,
+	iframe, label, li, menu, nav, p, section, span, strong, ul {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font: inherit;
+	vertical-align: baseline;
+	word-wrap: break-word
+}
+
+li, ol, ul {
+	list-style: none
+}
+
+.fl {
+	float: left
+}
+
+.fr {
+	float: right
+}
+
+.clear {
+	clear: both
+}
+
+a {
+	text-decoration: none;
+	border: 0;
+	outline: 0;
+	-webkit-tap-highlight-color: transparent;
+	tap-highlight-color: transparent;
+	-webkit-focus-ring-color: transparent;
+	focus-ring-color: transparent
+}
+
+a:visited {
+	color: inherit
+}
+
+html {
+	font-size: 50px
+}
+
+body, html {
+	background: #f7f7f7
+}
+
+body {
+	font-size: 16px;
+	color: #333;
+	text-align: left;
+	margin: 0 auto;
+	font-family: STHeiti, 'Microsoft YaHei', Helvetica, Arial, sans-serif;
+	-webkit-tap-highlight-color: transparent
+}
+
+.ng-cloak, .ng-hide, .x-ng-cloak, [data-ng-cloak], [ng-cloak], [ng\:cloak],
+	[x-ng-cloak] {
+	display: none !important
+}
+
+ng\:form {
+	display: block
+}
+
+.ng-animate-start {
+	clip: rect(0, auto, auto, 0);
+	-ms-zoom: 1.0001
+}
+
+.ng-animate-active {
+	clip: rect(-1px, auto, auto, 0);
+	-ms-zoom: 1
+}
+
+.txt-cut {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap
+}
+
+.border-bot, .border-left, .border-right, .border-top {
+	position: relative
+}
+
+.border-bot:after, .border-top:after {
+	left: 0;
+	right: 0
+}
+
+.border-left:after, .border-right:after {
+	top: 0;
+	bottom: 0
+}
+
+.border-left:after {
+	left: 0
+}
+
+.border-right:after {
+	right: 0
+}
+
+.border-bot:after, .border-top:after {
+	-webkit-transform: scaleY(0.5);
+	-moz-transform: scaleY(0.5);
+	-ms-transform: scaleY(0.5);
+	-o-transform: scaleY(0.5);
+	transform: scaleY(0.5);
+	-webkit-transform-origin: 100% 0;
+	-moz-transform-origin: 100% 0;
+	-ms-transform-origin: 100% 0;
+	-o-transform-origin: 100% 0;
+	transform-origin: 100% 0;
+	content: '';
+	position: absolute;
+	border-top: 1px solid #ddd;
+	box-sizing: border-box;
+	width: 100%
+}
+
+.border-left:after, .border-right:after {
+	-webkit-transform: scaleX(0.5);
+	-moz-transform: scaleX(0.5);
+	-ms-transform: scaleX(0.5);
+	-o-transform: scaleX(0.5);
+	transform: scaleX(0.5);
+	-webkit-transform-origin: 0 100%;
+	-moz-transform-origin: 0 100%;
+	-ms-transform-origin: 0 100%;
+	-o-transform-origin: 0 100%;
+	transform-origin: 0 100%;
+	content: '';
+	position: absolute;
+	border-right: 1px solid #ddd
+}
+
+.border-top:after {
+	top: 0;
+	bottom: auto
+}
+
+.border-bot:after {
+	bottom: 0;
+	top: auto
+}
+
+.layout-box {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex
+}
+
+.layout-box .son-box {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	width: 100%;
+	position: relative
+}
+
+.J-router {
+	display: block;
+	left: 7.5rem;
+	top: 0;
+	-webkit-transition: .2s all linear;
+	transition: .2s all linear;
+	background: #f0f0f0
+}
+
+.J-router-show {
+	left: 0 !important
+}
+
+.five-line, .one-line, .three-line, .two-line {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 5;
+	-webkit-box-orient: vertical
+}
+
+.five-line p, .one-line p, .three-line p, .two-line p {
+	display: inline
+}
+
+.three-line {
+	-webkit-line-clamp: 3
+}
+
+.two-line {
+	-webkit-line-clamp: 2
+}
+
+.one-line {
+	-webkit-line-clamp: 1
+}
+
+.five-line.auto, .three-line.auto {
+	-webkit-line-clamp: 1000
+}
+
+.hide {
+	display: none !important
+}
+
+.clearfix:after, .clearfix:before {
+	display: block;
+	content: ""
+}
+
+.clearfix:after {
+	clear: both
+}
+
+.clearfix {
+	zoom: 1
+}
+
+.loading {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, .8);
+	-webkit-transition: .3s all ease;
+	transition: .3s all ease
+}
+
+.endloading-opacity-0 {
+	z-index: -1;
+	opacity: 0
+}
+
+.loading-return-btn {
+	display: block;
+	width: .62rem;
+	height: .62rem;
+	position: absolute;
+	top: .15rem;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/custom/back_ico.png)
+		no-repeat;
+	background-size: 100% auto;
+	left: .19rem
+}
+
+.loading .loader {
+	position: relative;
+	width: 300px;
+	height: 115px;
+	top: 50%;
+	left: 50%;
+	margin: -52px 0 0 -150px;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/loading.gif)
+		no-repeat center;
+	background-size: 50px auto
+}
+
+.loading .loader p {
+	font-size: .28rem;
+	color: #666;
+	text-align: center;
+	padding-top: 96px
+}
+
+.common-pop {
+	position: fixed;
+	top: 70%;
+	left: 50%;
+	z-index: 99999;
+	margin: -.5rem 0 0 -2.8rem;
+	width: 5rem;
+	padding: .2rem .3rem;
+	font-size: .32rem;
+	line-height: .36rem;
+	text-align: center;
+	border-radius: .2rem;
+	-webkit-border-radius: .2rem;
+	background: rgba(0, 0, 0, .5);
+	color: #FFF
+}
+
+body .uzai-down-pop {
+	position: relative;
+	top: 0;
+	left: 0;
+	z-index: 9999;
+	width: 7.5rem;
+	height: 1.2rem
+}
+
+body .sale-content .main {
+	padding-top: 2.25rem
+}
+
+body .uzai-down-pop .con {
+	width: 7.5rem;
+	height: 1.2rem;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/mcbg.png)
+		no-repeat;
+	background-size: 100% auto;
+	position: static;
+	margin: 0;
+	padding: 0
+}
+
+body .sale-content .banner {
+	height: 2.25rem;
+	overflow: hidden;
+	width: 100%;
+	position: absolute
+}
+
+body .sale-content {
+	margin-top: .88rem
+}
+
+body .detail .top120 {
+	top: 1.2rem
+}
+
+body .mt88 {
+	margin-top: .88rem
+}
+
+body .content .top120 {
+	top: 1.2rem
+}
+
+body .sale-content .head-top {
+	display: none
+}
+
+body .uzai-shelves-header .top120 {
+	top: 1.2rem
+}
+
+.uzai-down-pop .con a {
+	height: .6rem;
+	width: 3.06rem;
+	line-height: .58rem;
+	text-align: center;
+	display: block;
+	margin-bottom: .2rem;
+	color: #7b6c5a;
+	font-size: 0
+}
+
+.uzai-down-pop .con .mc-dec1 {
+	position: absolute;
+	color: #fff;
+	left: 1.9rem;
+	top: .165rem;
+	text-align: left;
+	font-size: .32rem
+}
+
+.uzai-down-pop .con .mc-dec2 {
+	position: absolute;
+	color: #fff;
+	left: 1.9rem;
+	top: .6rem;
+	font-size: .24rem;
+	text-align: left
+}
+
+.uzai-down-pop .con .down-btn {
+	width: 2rem;
+	height: .8rem;
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/openappbtn.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	position: absolute;
+	top: .2rem;
+	right: .28rem
+}
+
+.uzai-down-pop a.top-btn {
+	width: .6rem;
+	height: .6rem;
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/mcclose.png);
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background-size: 100%
+}
+
+.cal-mask {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	z-index: 101;
+	background: rgba(0, 0, 0, .8);
+	top: 0
+}
+
+.payment-common-pop {
+	width: 95%;
+	position: fixed;
+	left: 2.5%;
+	top: 25%;
+	z-index: 101
+}
+
+.payment-common-pop .container {
+	background: #fff;
+	padding-top: 1.2rem;
+	-webkit-border-radius: 6px;
+	border-radius: 6px
+}
+
+.payment-common-pop .container .title {
+	position: absolute;
+	left: 50%;
+	top: -.65rem;
+	width: 1.3rem;
+	height: 1.3rem;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	margin-left: -.65rem;
+	text-align: center;
+	background: -webkit-linear-gradient(30deg, #ff1a62, #ff745a);
+	background: -o-linear-gradient(30deg, #ff1a62, #ff745a);
+	background: linear-gradient(30deg, #ff1a62, #ff745a);
+	box-shadow: 0 6px 5px -3px rgba(255, 77, 119, .6);
+	-webkit-box-shadow: 0 6px 5px -3px rgba(255, 77, 119, .6)
+}
+
+.payment-common-pop .container .title .iconfont {
+	font-size: .88rem;
+	color: #fff;
+	line-height: 1.3rem
+}
+
+.payment-common-pop .container .title .icon-cost {
+	font-size: 1rem
+}
+
+.payment-common-pop .container h4 {
+	text-align: center;
+	font-weight: 400;
+	margin-bottom: .25rem;
+	font-size: .36rem;
+	color: #666
+}
+
+.payment-common-pop .container .tips {
+	color: #969799;
+	font-size: .28rem;
+	width: 90%;
+	line-height: .36rem;
+	margin: 0 auto;
+	padding-bottom: .6rem
+}
+
+.payment-common-pop .container .tips .price-tit {
+	border: 1px dotted #ddd;
+	border-radius: .1rem;
+	margin-bottom: .25rem;
+	font-size: .28rem;
+	padding: .15rem .3rem;
+	text-indent: 0;
+	color: #666
+}
+
+.payment-common-pop .container .tips .price-tit .red {
+	color: #ff485e
+}
+
+.payment-common-pop .container .tips .cen {
+	text-align: center;
+	text-indent: 0
+}
+
+.payment-common-pop .container .tips .gray {
+	font-size: .26rem;
+	color: #999;
+	padding-bottom: .1rem
+}
+
+.payment-common-pop .container .tips .btn {
+	width: 80%;
+	display: block;
+	margin: .3rem auto;
+	font-size: .3rem;
+	line-height: .78rem;
+	position: relative
+}
+
+.payment-common-pop .container .tips .btn:after {
+	content: '';
+	position: absolute;
+	width: 200%;
+	height: 200%;
+	border: 1px solid #7aedc9;
+	border-radius: .78rem;
+	-webkit-border-radius: .78rem;
+	-webkit-transform-origin: 0 0;
+	-moz-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	-o-transform-origin: 0 0;
+	transform-origin: 0 0;
+	-webkit-transform: scale(0.5, .5);
+	-ms-transform: scale(0.5, .5);
+	-o-transform: scale(0.5, .5);
+	transform: scale(0.5, .5);
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	top: -1px;
+	left: 0
+}
+
+.payment-common-pop .container .bottom {
+	margin: 0 .2rem;
+	padding: .25rem 0;
+	line-height: .6rem;
+	font-size: .36rem;
+	text-align: center
+}
+
+.payment-common-pop .container .bottom .cancel-btn {
+	color: #999
+}
+
+.payment-common-pop .container .bottom .ok-btn {
+	color: #ff485e
+}
+
+.payment-common-pop .icon-guanbi {
+	color: #C1C1C1;
+	font-size: .8rem;
+	text-align: center;
+	margin: .2rem auto 0;
+	width: .8rem;
+	display: block
+}
+
+@font-face {
+	font-family: iconfont;
+	src:
+		url(//r03.uzaicdn.com/content/hybrid/fonts/login/iconfont.eot?t=1496647466887);
+	src:
+		url(//r03.uzaicdn.com/content/hybrid/fonts/login/iconfont.eot?t=1496647466887#iefix)
+		format("embedded-opentype"),
+		url(//r03.uzaicdn.com/content/hybrid/fonts/login/iconfont.woff?t=1496647466887)
+		format("woff"),
+		url(//r03.uzaicdn.com/content/hybrid/fonts/login/iconfont.ttf?t=1496647466887)
+		format("truetype"),
+		url(//r03.uzaicdn.com/content/hybrid/fonts/login/iconfont.svg?t=1496647466887#iconfont)
+		format("svg")
+}
+
+.iconfont {
+	font-family: iconfont !important;
+	font-size: 16px;
+	font-style: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale
+}
+
+.icon-arrow-right:before {
+	content: "\e688"
+}
+
+.icon-close:before {
+	content: "\e632"
+}
+
+.icon-pingjiaguanli:before {
+	content: "\e69d"
+}
+
+.icon-wallet:before {
+	content: "\e664"
+}
+
+.icon-jifen:before {
+	content: "\e64e"
+}
+
+.icon-xinxi:before {
+	content: "\e62c"
+}
+
+.icon-dingdan:before {
+	content: "\e648"
+}
+
+.icon-ciqia01:before {
+	content: "\e62b"
+}
+
+.icon-youhuiquan:before {
+	content: "\e69b"
+}
+
+.icon-collection:before {
+	content: "\e60d"
+}
+
+.icon-ditu:before {
+	content: "\e602"
+}
+
+.icon-back:before {
+	content: "\e62d"
+}
+
+.icon-yanjing:before {
+	content: "\e656"
+}
+
+.icon-yuanquan:before {
+	content: "\e600"
+}
+
+.icon-shizhong:before {
+	content: "\e670"
+}
+
+.icon-zhongxin:before {
+	content: "\e637"
+}
+
+.icon-VIP:before {
+	content: "\e638"
+}
+
+.icon-zuojiantou:before {
+	content: "\e636"
+}
+
+.icon-biyan:before {
+	content: "\e60f"
+}
+
+.icon-baggage:before {
+	content: "\e60e"
+}
+
+.icon--:before {
+	content: "\e615"
+}
+
+b {
+	font-weight: 400
+}
+
+.clearfix {
+	clear: both
+}
+
+input {
+	-webkit-user-select: text;
+	user-select: text
+}
+
+.uzai-logining-header, .uzai-nologin-header {
+	height: 4rem;
+	border-top: 1px solid transparent;
+	background: -webkit-linear-gradient(30deg, #fe476c, #fe5e6d);
+	background: linear-gradient(30deg, #fe476c, #fe5e6d)
+}
+
+.uzai-logining-header .header-img, .uzai-nologin-header .header-img {
+	width: 1.6rem;
+	height: 1.6rem;
+	margin: .74rem auto .3rem;
+	background: #fe8490;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	position: relative
+}
+
+.uzai-logining-header .header-img img, .uzai-nologin-header .header-img img
+	{
+	width: 1.42rem;
+	height: 1.42rem;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate3d(-50%, -50%, 0);
+	transform: translate3d(-50%, -50%, 0)
+}
+
+.uzai-logining-header .header-img .level-img, .uzai-nologin-header .header-img .level-img
+	{
+	width: 1.06rem;
+	height: .3rem;
+	-webkit-transform: translate3d(-50%, 0, 0);
+	transform: translate3d(-50%, 0, 0);
+	position: absolute;
+	left: 50%;
+	bottom: 0
+}
+
+.uzai-logining-header .header-img .level-img img, .uzai-nologin-header .header-img .level-img img
+	{
+	width: 100%;
+	height: 100%;
+	-webkit-border-radius: initial;
+	border-radius: initial
+}
+
+.uzai-logining-header .use-name, .uzai-nologin-header .use-name {
+	color: #fff;
+	font-size: .36rem;
+	width: 4.12rem;
+	text-align: center;
+	margin: 0 auto;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis
+}
+
+.uzai-logining-header .use-name a, .uzai-nologin-header .use-name a {
+	color: #fff
+}
+
+.uzai-logining-header .login-register, .uzai-nologin-header .login-register
+	{
+	width: 2.65rem;
+	height: .7rem;
+	line-height: .7rem;
+	text-align: center;
+	background: #fe90a5;
+	color: #fff;
+	font-size: .36rem;
+	margin: 0 auto;
+	-webkit-border-radius: .4rem;
+	border-radius: .4rem
+}
+
+.uzai-logining-header .login-register a, .uzai-nologin-header .login-register a
+	{
+	color: #fff
+}
+
+.uzai-logining-header .level, .uzai-nologin-header .level {
+	background: #fff;
+	width: .65rem;
+	height: .3rem;
+	line-height: .3rem;
+	text-align: center;
+	font-size: .26rem;
+	color: #fe496c;
+	-webkit-border-radius: .2rem;
+	border-radius: .2rem;
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	-webkit-transform: translate3d(-50%, 0, 0);
+	transform: translate3d(-50%, 0, 0)
+}
+
+.uzai-login-list {
+	background: #fff;
+	padding: .35rem .4rem
+}
+
+.uzai-login-list .list-each {
+	position: relative;
+	width: 100%;
+	display: block;
+	height: .9rem;
+	line-height: .9rem;
+	color: #666;
+	font-size: .24rem;
+	border-bottom: 1px solid #eee
+}
+
+.uzai-login-list .list-each:last-child {
+	border-bottom: 0
+}
+
+.uzai-login-list .left {
+	width: .48rem;
+	height: .48rem;
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	line-height: .48rem
+}
+
+.uzai-login-list .right {
+	width: .48rem;
+	height: .48rem;
+	text-align: center;
+	line-height: .48rem;
+	position: absolute;
+	top: 50%;
+	right: 0;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0)
+}
+
+.uzai-login-list .icon-VIP {
+	font-size: .16rem
+}
+
+.uzai-login-list .icon-zhongxin {
+	font-size: .48rem
+}
+
+.uzai-login-list .icon-zhongxin:before {
+	left: -.24rem;
+	position: relative
+}
+
+.uzai-login-list .icon-hotcard {
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/login/xindongka.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%
+}
+
+.uzai-login-discount {
+	padding: 0 .2rem;
+	margin: .2rem auto;
+	overflow: hidden
+}
+
+.uzai-login-discount .coupon {
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/login/bg1.png)
+}
+
+.uzai-login-discount .integral {
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/login/bg2.png)
+}
+
+.uzai-login-discount .coupon, .uzai-login-discount .integral {
+	width: 3.45rem;
+	height: 1.7rem;
+	display: block;
+	float: left;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	position: relative;
+	background-repeat: no-repeat;
+	background-size: 100% 100%
+}
+
+.uzai-login-discount .coupon i, .uzai-login-discount .integral i {
+	width: .79rem;
+	height: .63rem;
+	position: absolute;
+	top: 50%;
+	left: .4rem;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0);
+	background-repeat: no-repeat;
+	background-size: 100% 100%
+}
+
+.uzai-login-discount .coupon .youhuiquan, .uzai-login-discount .integral .youhuiquan
+	{
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/login/youhui.png)
+}
+
+.uzai-login-discount .coupon .jifen, .uzai-login-discount .integral .jifen
+	{
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/login/jifen.png)
+}
+
+.uzai-login-discount .coupon .tips, .uzai-login-discount .integral .tips
+	{
+	position: absolute;
+	top: 50%;
+	left: 1.3rem;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0)
+}
+
+.uzai-login-discount .coupon .tips b, .uzai-login-discount .integral .tips b
+	{
+	color: #666;
+	font-size: .28rem;
+	display: block
+}
+
+.uzai-login-discount .coupon .tips em, .uzai-login-discount .integral .tips em
+	{
+	color: #bbb;
+	font-size: .28rem
+}
+
+.uzai-login-discount .integral {
+	float: right
+}
+
+.uzai-login-bg {
+	background-repeat: no-repeat;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	z-index: 999;
+	background-size: 100% 100%;
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/login/bg.jpg)
+}
+
+.fixed-bg {
+	height: 100%;
+	width: 7.5rem;
+	overflow: hidden;
+	position: relative
+}
+
+.uzai-find-password .find-paw .tel-header, .uzai-find-password .paw-login .tel-header,
+	.uzai-find-password .tel-login .tel-header, .uzai-login-bg .find-paw .tel-header,
+	.uzai-login-bg .paw-login .tel-header, .uzai-login-bg .tel-login .tel-header,
+	.uzai-password-login .find-paw .tel-header, .uzai-password-login .paw-login .tel-header,
+	.uzai-password-login .tel-login .tel-header {
+	margin: .65rem auto .5rem;
+	text-align: center;
+	color: #fff;
+	position: relative;
+	padding: 0 .3rem
+}
+
+.uzai-find-password .find-paw .tel-header .left, .uzai-find-password .paw-login .tel-header .left,
+	.uzai-find-password .tel-login .tel-header .left, .uzai-login-bg .find-paw .tel-header .left,
+	.uzai-login-bg .paw-login .tel-header .left, .uzai-login-bg .tel-login .tel-header .left,
+	.uzai-password-login .find-paw .tel-header .left, .uzai-password-login .paw-login .tel-header .left,
+	.uzai-password-login .tel-login .tel-header .left {
+	float: left
+}
+
+.uzai-find-password .find-paw .tel-header .center, .uzai-find-password .paw-login .tel-header .center,
+	.uzai-find-password .tel-login .tel-header .center, .uzai-login-bg .find-paw .tel-header .center,
+	.uzai-login-bg .paw-login .tel-header .center, .uzai-login-bg .tel-login .tel-header .center,
+	.uzai-password-login .find-paw .tel-header .center,
+	.uzai-password-login .paw-login .tel-header .center,
+	.uzai-password-login .tel-login .tel-header .center {
+	font-size: .36rem;
+	display: block
+}
+
+.uzai-find-password .find-paw .tel-header .paw, .uzai-find-password .paw-login .tel-header .paw,
+	.uzai-find-password .tel-login .tel-header .paw, .uzai-login-bg .find-paw .tel-header .paw,
+	.uzai-login-bg .paw-login .tel-header .paw, .uzai-login-bg .tel-login .tel-header .paw,
+	.uzai-password-login .find-paw .tel-header .paw, .uzai-password-login .paw-login .tel-header .paw,
+	.uzai-password-login .tel-login .tel-header .paw {
+	font-size: .3rem;
+	color: #fff;
+	float: right;
+	position: absolute;
+	top: 0;
+	right: .3rem
+}
+
+.uzai-find-password .find-paw .tel-header .icon-back,
+	.uzai-find-password .paw-login .tel-header .icon-back,
+	.uzai-find-password .tel-login .tel-header .icon-back, .uzai-login-bg .find-paw .tel-header .icon-back,
+	.uzai-login-bg .paw-login .tel-header .icon-back, .uzai-login-bg .tel-login .tel-header .icon-back,
+	.uzai-password-login .find-paw .tel-header .icon-back,
+	.uzai-password-login .paw-login .tel-header .icon-back,
+	.uzai-password-login .tel-login .tel-header .icon-back {
+	font-size: .56rem;
+	position: absolute;
+	top: 50%;
+	left: .2rem;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0)
+}
+
+.uzai-find-password .find-paw .logo, .uzai-find-password .paw-login .logo,
+	.uzai-find-password .tel-login .logo, .uzai-login-bg .find-paw .logo,
+	.uzai-login-bg .paw-login .logo, .uzai-login-bg .tel-login .logo,
+	.uzai-password-login .find-paw .logo, .uzai-password-login .paw-login .logo,
+	.uzai-password-login .tel-login .logo {
+	width: 2.65rem;
+	height: .95rem;
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/login/logo.png);
+	margin: 0 auto;
+	background-repeat: no-repeat;
+	background-size: 100% 100%
+}
+
+.uzai-find-password .find-paw .tel-conts, .uzai-find-password .paw-login .tel-conts,
+	.uzai-find-password .tel-login .tel-conts, .uzai-login-bg .find-paw .tel-conts,
+	.uzai-login-bg .paw-login .tel-conts, .uzai-login-bg .tel-login .tel-conts,
+	.uzai-password-login .find-paw .tel-conts, .uzai-password-login .paw-login .tel-conts,
+	.uzai-password-login .tel-login .tel-conts {
+	width: 6.95rem;
+	margin: .7rem auto 0;
+	padding: .2rem 0;
+	background: #fff;
+	-webkit-border-radius: 9px;
+	border-radius: 9px
+}
+
+.uzai-find-password .find-paw .tel-conts p, .uzai-find-password .paw-login .tel-conts p,
+	.uzai-find-password .tel-login .tel-conts p, .uzai-login-bg .find-paw .tel-conts p,
+	.uzai-login-bg .paw-login .tel-conts p, .uzai-login-bg .tel-login .tel-conts p,
+	.uzai-password-login .find-paw .tel-conts p, .uzai-password-login .paw-login .tel-conts p,
+	.uzai-password-login .tel-login .tel-conts p {
+	width: 5.93rem;
+	border-bottom: 1px solid #eee;
+	padding: .125rem 0;
+	margin: 0 auto;
+	position: relative
+}
+
+.uzai-find-password .find-paw .tel-conts input, .uzai-find-password .paw-login .tel-conts input,
+	.uzai-find-password .tel-login .tel-conts input, .uzai-login-bg .find-paw .tel-conts input,
+	.uzai-login-bg .paw-login .tel-conts input, .uzai-login-bg .tel-login .tel-conts input,
+	.uzai-password-login .find-paw .tel-conts input, .uzai-password-login .paw-login .tel-conts input,
+	.uzai-password-login .tel-login .tel-conts input {
+	height: .4rem;
+	font-size: .3rem;
+	outline: 0;
+	-webkit-appearance: none;
+	border: 0;
+	width: 100%;
+	padding: .2rem 0 .2rem .3rem;
+	letter-spacing: .02rem
+}
+
+.uzai-find-password .find-paw .tel-conts input::-webkit-input-placeholder,
+	.uzai-find-password .paw-login .tel-conts input::-webkit-input-placeholder,
+	.uzai-find-password .tel-login .tel-conts input::-webkit-input-placeholder,
+	.uzai-login-bg .find-paw .tel-conts input::-webkit-input-placeholder,
+	.uzai-login-bg .paw-login .tel-conts input::-webkit-input-placeholder,
+	.uzai-login-bg .tel-login .tel-conts input::-webkit-input-placeholder,
+	.uzai-password-login .find-paw .tel-conts input::-webkit-input-placeholder,
+	.uzai-password-login .paw-login .tel-conts input::-webkit-input-placeholder,
+	.uzai-password-login .tel-login .tel-conts input::-webkit-input-placeholder
+	{
+	font-size: .3rem;
+	color: #999
+}
+
+.uzai-find-password .find-paw .tel-conts .squ, .uzai-find-password .paw-login .tel-conts .squ,
+	.uzai-find-password .tel-login .tel-conts .squ, .uzai-login-bg .find-paw .tel-conts .squ,
+	.uzai-login-bg .paw-login .tel-conts .squ, .uzai-login-bg .tel-login .tel-conts .squ,
+	.uzai-password-login .find-paw .tel-conts .squ, .uzai-password-login .paw-login .tel-conts .squ,
+	.uzai-password-login .tel-login .tel-conts .squ {
+	width: .2rem;
+	height: .2rem;
+	line-height: .2rem;
+	font-size: .2rem;
+	color: #fe476c;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0)
+}
+
+.uzai-find-password .find-paw .tel-conts .btn, .uzai-find-password .paw-login .tel-conts .btn,
+	.uzai-find-password .tel-login .tel-conts .btn, .uzai-login-bg .find-paw .tel-conts .btn,
+	.uzai-login-bg .paw-login .tel-conts .btn, .uzai-login-bg .tel-login .tel-conts .btn,
+	.uzai-password-login .find-paw .tel-conts .btn, .uzai-password-login .paw-login .tel-conts .btn,
+	.uzai-password-login .tel-login .tel-conts .btn {
+	width: 1.8rem;
+	height: .65rem;
+	line-height: .65rem;
+	text-align: center;
+	font-size: .24rem;
+	color: #999;
+	background: #f2f2f2;
+	z-index: 9;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	position: absolute;
+	top: 50%;
+	right: 0;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0)
+}
+
+.uzai-find-password .find-paw .tel-conts .btn.canclick,
+	.uzai-find-password .paw-login .tel-conts .btn.canclick,
+	.uzai-find-password .tel-login .tel-conts .btn.canclick, .uzai-login-bg .find-paw .tel-conts .btn.canclick,
+	.uzai-login-bg .paw-login .tel-conts .btn.canclick, .uzai-login-bg .tel-login .tel-conts .btn.canclick,
+	.uzai-password-login .find-paw .tel-conts .btn.canclick,
+	.uzai-password-login .paw-login .tel-conts .btn.canclick,
+	.uzai-password-login .tel-login .tel-conts .btn.canclick {
+	background: -webkit-linear-gradient(30deg, #fe476c, #ff8764);
+	background: linear-gradient(30deg, #fe476c, #ff8764);
+	color: #fff
+}
+
+.uzai-find-password .find-paw .tel-conts p.tel-input:last-child,
+	.uzai-find-password .paw-login .tel-conts p.tel-input:last-child,
+	.uzai-find-password .tel-login .tel-conts p.tel-input:last-child,
+	.uzai-login-bg .find-paw .tel-conts p.tel-input:last-child,
+	.uzai-login-bg .paw-login .tel-conts p.tel-input:last-child,
+	.uzai-login-bg .tel-login .tel-conts p.tel-input:last-child,
+	.uzai-password-login .find-paw .tel-conts p.tel-input:last-child,
+	.uzai-password-login .paw-login .tel-conts p.tel-input:last-child,
+	.uzai-password-login .tel-login .tel-conts p.tel-input:last-child {
+	border-bottom: 0
+}
+
+.uzai-find-password .find-paw .tel-conts .paw-eye, .uzai-find-password .paw-login .tel-conts .paw-eye,
+	.uzai-find-password .tel-login .tel-conts .paw-eye, .uzai-login-bg .find-paw .tel-conts .paw-eye,
+	.uzai-login-bg .paw-login .tel-conts .paw-eye, .uzai-login-bg .tel-login .tel-conts .paw-eye,
+	.uzai-password-login .find-paw .tel-conts .paw-eye,
+	.uzai-password-login .paw-login .tel-conts .paw-eye,
+	.uzai-password-login .tel-login .tel-conts .paw-eye {
+	font-size: .12rem;
+	color: #999;
+	width: .8rem;
+	height: .8rem;
+	line-height: .8rem;
+	text-align: center;
+	position: absolute;
+	top: 50%;
+	right: 0;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0)
+}
+
+.uzai-find-password .find-paw .tel-conts .icon-yanjing,
+	.uzai-find-password .paw-login .tel-conts .icon-yanjing,
+	.uzai-find-password .tel-login .tel-conts .icon-yanjing, .uzai-login-bg .find-paw .tel-conts .icon-yanjing,
+	.uzai-login-bg .paw-login .tel-conts .icon-yanjing, .uzai-login-bg .tel-login .tel-conts .icon-yanjing,
+	.uzai-password-login .find-paw .tel-conts .icon-yanjing,
+	.uzai-password-login .paw-login .tel-conts .icon-yanjing,
+	.uzai-password-login .tel-login .tel-conts .icon-yanjing {
+	font-size: .45rem
+}
+
+.uzai-find-password .find-paw .tel-conts .icon-biyan,
+	.uzai-find-password .paw-login .tel-conts .icon-biyan,
+	.uzai-find-password .tel-login .tel-conts .icon-biyan, .uzai-login-bg .find-paw .tel-conts .icon-biyan,
+	.uzai-login-bg .paw-login .tel-conts .icon-biyan, .uzai-login-bg .tel-login .tel-conts .icon-biyan,
+	.uzai-password-login .find-paw .tel-conts .icon-biyan,
+	.uzai-password-login .paw-login .tel-conts .icon-biyan,
+	.uzai-password-login .tel-login .tel-conts .icon-biyan {
+	font-size: .25rem
+}
+
+.uzai-find-password .find-paw .tel-conts .img-paw, .uzai-find-password .paw-login .tel-conts .img-paw,
+	.uzai-find-password .tel-login .tel-conts .img-paw, .uzai-login-bg .find-paw .tel-conts .img-paw,
+	.uzai-login-bg .paw-login .tel-conts .img-paw, .uzai-login-bg .tel-login .tel-conts .img-paw,
+	.uzai-password-login .find-paw .tel-conts .img-paw,
+	.uzai-password-login .paw-login .tel-conts .img-paw,
+	.uzai-password-login .tel-login .tel-conts .img-paw {
+	width: 1.8rem;
+	height: .65rem;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	position: absolute;
+	top: 50%;
+	right: 0;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0)
+}
+
+.uzai-find-password .find-paw .tel-conts .img-paw img,
+	.uzai-find-password .paw-login .tel-conts .img-paw img,
+	.uzai-find-password .tel-login .tel-conts .img-paw img, .uzai-login-bg .find-paw .tel-conts .img-paw img,
+	.uzai-login-bg .paw-login .tel-conts .img-paw img, .uzai-login-bg .tel-login .tel-conts .img-paw img,
+	.uzai-password-login .find-paw .tel-conts .img-paw img,
+	.uzai-password-login .paw-login .tel-conts .img-paw img,
+	.uzai-password-login .tel-login .tel-conts .img-paw img {
+	width: 100%;
+	height: 100%
+}
+
+.uzai-find-password .find-paw .tel-conts .paw-btn, .uzai-find-password .paw-login .tel-conts .paw-btn,
+	.uzai-find-password .tel-login .tel-conts .paw-btn, .uzai-login-bg .find-paw .tel-conts .paw-btn,
+	.uzai-login-bg .paw-login .tel-conts .paw-btn, .uzai-login-bg .tel-login .tel-conts .paw-btn,
+	.uzai-password-login .find-paw .tel-conts .paw-btn,
+	.uzai-password-login .paw-login .tel-conts .paw-btn,
+	.uzai-password-login .tel-login .tel-conts .paw-btn {
+	background: -webkit-linear-gradient(30deg, #fe476c, #ff8764);
+	background: linear-gradient(30deg, #fe476c, #ff8764);
+	color: #fff
+}
+
+.uzai-find-password .find-paw .friend-tips, .uzai-find-password .paw-login .friend-tips,
+	.uzai-find-password .tel-login .friend-tips, .uzai-login-bg .find-paw .friend-tips,
+	.uzai-login-bg .paw-login .friend-tips, .uzai-login-bg .tel-login .friend-tips,
+	.uzai-password-login .find-paw .friend-tips, .uzai-password-login .paw-login .friend-tips,
+	.uzai-password-login .tel-login .friend-tips {
+	color: #999;
+	font-size: .24rem;
+	line-height: .36rem;
+	margin: .35rem 0 .35rem .5rem
+}
+
+.uzai-find-password .find-paw .friend-tips b, .uzai-find-password .find-paw .friend-tips b a,
+	.uzai-find-password .paw-login .friend-tips b, .uzai-find-password .paw-login .friend-tips b a,
+	.uzai-find-password .tel-login .friend-tips b, .uzai-find-password .tel-login .friend-tips b a,
+	.uzai-login-bg .find-paw .friend-tips b, .uzai-login-bg .find-paw .friend-tips b a,
+	.uzai-login-bg .paw-login .friend-tips b, .uzai-login-bg .paw-login .friend-tips b a,
+	.uzai-login-bg .tel-login .friend-tips b, .uzai-login-bg .tel-login .friend-tips b a,
+	.uzai-password-login .find-paw .friend-tips b, .uzai-password-login .find-paw .friend-tips b a,
+	.uzai-password-login .paw-login .friend-tips b, .uzai-password-login .paw-login .friend-tips b a,
+	.uzai-password-login .tel-login .friend-tips b, .uzai-password-login .tel-login .friend-tips b a
+	{
+	color: #ff4063
+}
+
+.uzai-find-password .login-now, .uzai-find-password .paw-new-sure,
+	.uzai-find-password .paw-next, .uzai-find-password .paw-now,
+	.uzai-find-password .paw-sure, .uzai-login-bg .login-now,
+	.uzai-login-bg .paw-new-sure, .uzai-login-bg .paw-next, .uzai-login-bg .paw-now,
+	.uzai-login-bg .paw-sure, .uzai-password-login .login-now,
+	.uzai-password-login .paw-new-sure, .uzai-password-login .paw-next,
+	.uzai-password-login .paw-now, .uzai-password-login .paw-sure {
+	width: 5.9rem;
+	height: .8rem;
+	line-height: .8rem;
+	text-align: center;
+	font-size: .3rem;
+	color: #fff;
+	display: block;
+	margin: 0 auto;
+	background: #ddd;
+	-webkit-border-radius: 20px;
+	border-radius: 20px
+}
+
+.uzai-find-password .login-now.active, .uzai-find-password .paw-new-sure.active,
+	.uzai-find-password .paw-next.active, .uzai-find-password .paw-now.active,
+	.uzai-find-password .paw-sure.active, .uzai-login-bg .login-now.active,
+	.uzai-login-bg .paw-new-sure.active, .uzai-login-bg .paw-next.active,
+	.uzai-login-bg .paw-now.active, .uzai-login-bg .paw-sure.active,
+	.uzai-password-login .login-now.active, .uzai-password-login .paw-new-sure.active,
+	.uzai-password-login .paw-next.active, .uzai-password-login .paw-now.active,
+	.uzai-password-login .paw-sure.active {
+	background: -webkit-linear-gradient(30deg, #fe476c, #ff8764);
+	background: linear-gradient(30deg, #fe476c, #ff8764)
+}
+
+.uzai-find-password .paw-new-sure, .uzai-find-password .paw-now,
+	.uzai-find-password .paw-sure, .uzai-login-bg .paw-new-sure,
+	.uzai-login-bg .paw-now, .uzai-login-bg .paw-sure, .uzai-password-login .paw-new-sure,
+	.uzai-password-login .paw-now, .uzai-password-login .paw-sure {
+	margin-top: .5rem
+}
+
+.uzai-find-password .pass, .uzai-login-bg .pass, .uzai-password-login .pass
+	{
+	width: .75rem;
+	text-align: center;
+	border-bottom: 1px solid #999;
+	margin: .5rem auto 0;
+	display: block;
+	color: #999
+}
+
+.uzai-find-password .froget-paw, .uzai-login-bg .froget-paw,
+	.uzai-password-login .froget-paw {
+	float: right;
+	font-size: .3rem;
+	color: #999;
+	margin: .45rem .5rem 0 0
+}
+
+.J-router {
+	background-repeat: no-repeat;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	z-index: 999;
+	background-size: 100% 100%;
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/login/bg.jpg);
+	position: absolute
+}
+
+.uzai-down-pop {
+	display: none !important
+}
+
+.loading {
+	z-index: 1000
+}
+
+.zHide {
+	display: none
+}
+
+.com-footer-nav {
+	position: fixed
+}
