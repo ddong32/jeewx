@@ -141,6 +141,7 @@
                         <value>cruiseController.do?detailcontent</value>
                         <value>cmsMemberController.do?signup</value>
                         <value>cmsMemberController.do?save</value>
+                        <value>cmsMemberController.do?getCurrent</value>
                         <value>weixinUserinfoController.do?getUserinfo</value>
 					</list>
 				</property>

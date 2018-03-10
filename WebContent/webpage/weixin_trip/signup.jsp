@@ -40,7 +40,7 @@
         <div class="tel-login">
             <div class="tel-header">
                 <a ng-click="historyBack()"><i class="iconfont left icon-close"></i></a>
-                <b class="center">登录</b>
+                <b class="center">会员信息</b>
                 <!-- <a href="#/passwordlogin" class="paw">密码登录</a> -->
             </div>
             <div class="logo" style="background-image:none">
@@ -86,6 +86,7 @@
     </div>
 
     <script type="text/javascript" src="${trip_res}/2/api.js"></script>
+    <script type="text/javascript" src="${trip_res}/2/api-weixin.js"></script>
     <%--<script type="text/javascript" src="${trip_res}/2/api-map.js"></script>--%>
     <script type="text/javascript" src="${trip_res}/2/app-bridge.js"></script>
     <script type="text/javascript" src="${trip_res}/2/angular.min.js"></script>

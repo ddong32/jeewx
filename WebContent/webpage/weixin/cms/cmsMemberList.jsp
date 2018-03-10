@@ -5,10 +5,10 @@
   <div region="center" style="padding:1px;">
   <t:datagrid name="datasheet" title="会员管理" actionUrl="cmsMemberController.do?datagrid" idField="id" fit="true" sortName="createDate" sortOrder="desc" queryMode="group">
    <t:dgCol title="编号" field="id" hidden="false"></t:dgCol>
-   <t:dgCol title="微信账号" field="openid" width="120"></t:dgCol>
-   <t:dgCol title="姓名" field="name" width="100"></t:dgCol>
-   <t:dgCol title="电话号码" field="tel" width="120"></t:dgCol>
-   <t:dgCol title="公司名称" field="corpName" width="120"></t:dgCol>
+   <t:dgCol title="微信账号" field="openid" query="true" width="120"></t:dgCol>
+   <t:dgCol title="姓名" field="name" query="true" width="100"></t:dgCol>
+   <t:dgCol title="电话号码" field="tel" query="true" width="120"></t:dgCol>
+   <t:dgCol title="公司名称" field="corpName" query="true" width="120"></t:dgCol>
    <t:dgCol title="注册时间" field="createDate" formatter="yyyy-MM-dd hh:mm:ss" width="120"></t:dgCol>
    <t:dgCol title="审核状态" field="state" width="80"></t:dgCol>
    <t:dgCol title="审核时间" field="approvalDate" formatter="yyyy-MM-dd hh:mm:ss" width="120"></t:dgCol>

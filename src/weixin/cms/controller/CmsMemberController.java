@@ -13,6 +13,7 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.datatable.SortDirection;
 import org.jeecgframework.web.system.pojo.base.TSType;
@@ -139,7 +140,7 @@ public class CmsMemberController extends BaseController {
 
 	/**
 	 * 读取当前微信会员信息
-	 * 
+	 * @see weixin.cms.controller.WeixinUserinfoController
 	 * @return
 	 */
 	@RequestMapping(params = "getCurrent")
@@ -147,7 +148,7 @@ public class CmsMemberController extends BaseController {
 	public AjaxJson getCurrent(String id, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		
-		String openid = WeixinUserinfoUtils.getUserInfo(request);
+		String openid = ResourceUtil.getUserOpenId();//WeixinUserinfoUtils.getUserInfo(request);
 		
 		/*
 		 * 是否存在审批中或已通过的, 存在则返回
@@ -186,7 +187,7 @@ public class CmsMemberController extends BaseController {
 			
 		}
 		
-		String openid = WeixinUserinfoUtils.getUserInfo(request);
+		String openid = ResourceUtil.getUserOpenId();//WeixinUserinfoUtils.getUserInfo(request);
 		if(null == openid) {
 			j.setSuccess(Boolean.FALSE);
 			j.setMsg("获取微信号失败,请确认是在微信打开网页进行注册.");
@@ -259,12 +260,5 @@ public class CmsMemberController extends BaseController {
 		j.setMsg("审核完成.");
 		
 		return j;
-	}
-	/**
-	 * 获取微信客户段的用户
-	 */
-    @RequestMapping(params = "getCustomer")
-	public void getWinXinUser(HttpServletRequest request) {
-    	WeixinUserinfoUtils.getUserInfo(request);
 	}
 }

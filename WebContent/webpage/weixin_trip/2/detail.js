@@ -138,17 +138,19 @@ function readDetail() {
 		return;
 	}
 	
-	var ajaxUrl = './cruiseController.do?detailcontent';
-	var ajaxOpts = {
-			async: false
-			, type: 'POSt'
-			, dataType: 'json'
-			, data: {id: id}
-			, success: function(dat) {
-				onLoadArticle(dat['obj']);
-			}
-	};
-	$.ajax(ajaxUrl, ajaxOpts)
+	api_weixin.run(function() {
+		var ajaxUrl = './cruiseController.do?detailcontent';
+		var ajaxOpts = {
+				async: false
+				, type: 'POSt'
+				, dataType: 'json'
+				, data: {id: id}
+				, success: function(dat) {
+					onLoadArticle(dat['obj']);
+				}
+		};
+		$.ajax(ajaxUrl, ajaxOpts)
+	});
 }
 /**
  * angularjs

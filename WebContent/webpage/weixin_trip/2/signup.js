@@ -135,7 +135,9 @@ var _createClass = function() {
     var $myApp = angular.module("myApp", []);
     $myApp.controller("myCtrl", function($http, $scope, $compile, $filter, $location, $timeout) {
         angular.element(document).ready(function() {
-            api.router($http, $scope, $compile, 0)
+            api.router($http, $scope, $compile, 0);
+            //
+            $scope.appoval_state();
         }), $scope.showImageCode = !1, $scope.fpv_showImageCode = !1, $scope.imageUrl = "randCodeImage?a=" + new Date().getTime();
         var _userId = null === api.getUserId() ? "" : api.getUserId();
         if (window.location.pathname.indexOf("index") > -1) {
@@ -326,14 +328,21 @@ var _createClass = function() {
             };
             /*$http.post("./cmsMemberController.do?save", param)
             	.then(successCallback, errorCallback);*/
-            var u = "./cmsMemberController.do?save";
-            var p = {
-            		dataType: "JSON"
-            		, type: "POST"
-            		, data: param
-            		, success: successCallback
-            };
-            $.ajax(u, p);
+            /*
+             * 先获得用户微信标识, 再提交注册信息
+             */
+            api_weixin.run(function(resp) {
+    			//
+	           	var u = "./cmsMemberController.do?save";
+	           	var p = {
+	            		dataType: "JSON"
+	            		, type: "POST"
+	            		, data: param
+	            		, success: successCallback
+	            };
+	            $.ajax(u, p);
+    		});
+            
         }, $scope.passwordVerification = function() {
             var _mobile = $doc.getElementById("fpv_mobile").value,
                 _authCode = $doc.getElementById("fpv_authCode").value,
@@ -379,30 +388,58 @@ var _createClass = function() {
             }, !1, !1)
         }, $scope.updateMobile = function() {
             var _mobile = $doc.getElementById("mobile").value,
-                _authCode = $doc.getElementById("authCode").value;
-            if (!$scope.verificationSubmit()) return !1;
-            if ("" === _mobile) return api.toast("请输入手机号", 1500), !1;
-            if ("" === _authCode) return api.toast("请输入验证码", 1500), !1;
-            "" === _userId && (api.toast("登录信息过期,请重新登录", 1500), setTimeout(function() {
-                window.location.href = "/Member/login.html"
-            }, 2e3));
-            var param = JSON.stringify({
-                Mobile: _mobile,
-                AuthCode: _authCode,
-                PhoneType: 20,
-                UserId: _userId,
-                ImgCode: ""
-            });
-            api.post($http, $scope, api.path.mhomelogic, "User", "UpdateMobile", param, function(data) {
-                if (api.endloading(), $doc.getElementById("loading").classList.add("zHide"), 200 === data.ErrorCode) api.toast("手机号绑定成功", 1500), setTimeout(function() {
-                    window.location.href = "/Member/index.html"
-                }, 2e3);
-                else {
-                    if (-3 === data.ErrorCode) return api.toast("网络不给力，请检查网络设置", 1500), !1;
-                    api.toast(data.ErrorMsg, 1500)
-                }
-            }, !1, !1)
-        }
+            _authCode = $doc.getElementById("authCode").value;
+        if (!$scope.verificationSubmit()) return !1;
+        if ("" === _mobile) return api.toast("请输入手机号", 1500), !1;
+        if ("" === _authCode) return api.toast("请输入验证码", 1500), !1;
+        "" === _userId && (api.toast("登录信息过期,请重新登录", 1500), setTimeout(function() {
+            window.location.href = "/Member/login.html"
+        }, 2e3));
+        var param = JSON.stringify({
+            Mobile: _mobile,
+            AuthCode: _authCode,
+            PhoneType: 20,
+            UserId: _userId,
+            ImgCode: ""
+        });
+        api.post($http, $scope, api.path.mhomelogic, "User", "UpdateMobile", param, function(data) {
+            if (api.endloading(), $doc.getElementById("loading").classList.add("zHide"), 200 === data.ErrorCode) api.toast("手机号绑定成功", 1500), setTimeout(function() {
+                window.location.href = "/Member/index.html"
+            }, 2e3);
+            else {
+                if (-3 === data.ErrorCode) return api.toast("网络不给力，请检查网络设置", 1500), !1;
+                api.toast(data.ErrorMsg, 1500)
+            }
+        }, !1, !1)
+    }, $scope.appoval_state = function() {
+    	/*
+    	 * 是否已经注册
+    	 */
+        var successCallback = function(resp) {
+        	var mem;//注册信息
+        	if(resp && (mem = resp['obj'])) {
+        		//angular绑定
+        		$scope.$apply(function() {
+        			$scope.name = mem['name'] || '';
+        			$scope.tel = mem['tel'] || '';
+        			$scope.corpName = mem['corpName'] || '';
+        		});
+        		//审核状态
+        		var state = mem['state']
+        			, stateText = '-1' == state? '会员审核不通过' : ('1' == state? '会员审核通过' : '会员审核中');
+        		api.toast(stateText, 6000);
+        	}
+        };
+        api_weixin.run(function(resp) {
+	        var u = "./cmsMemberController.do?getCurrent";
+	        var p = {
+	        		dataType: "JSON"
+	        		, type: "GET"
+	        		, success: successCallback
+	        };
+	        $.ajax(u, p);
+        });
+	}
     }), $myApp.directive("script", function($compile) {
         return {
             restrict: "E",

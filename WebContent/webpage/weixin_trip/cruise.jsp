@@ -210,6 +210,8 @@
 		<!-- 详细行程 -->
         <div class="J-router-traveldetail uzai-wrapper j-router" id="detail_wrapper" style="display: none;"></div>
 
+		<script src="${trip_res}/2/api.js"></script>
+		<script src="${trip_res}/2/api-weixin.js"></script>
 		<script src="${trip_res}/2/swiper-3.3.1.min.js"></script>
 		<script src="${trip_res}/2/angular.min.js"></script>
 		<script src="${trip_res}/2/detail.js"></script>
