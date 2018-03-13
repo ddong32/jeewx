@@ -38,3 +38,35 @@ Date.prototype.format = function (format,value) {
 	}
 	return format;
 };
+
+/**
+ * 日期格式化为字符串
+ */
+Date.prototype.fmt2Str = function (format) {
+	if (!format) {
+		format = "yyyy-MM-dd hh:mm:ss";
+	}
+	var date= this;
+	var o = {
+		"M+" : date.getMonth() + 1, // month
+		"d+" : date.getDate(), // day
+		"h+" : date.getHours(), // hour
+		"m+" : date.getMinutes(), // minute
+		"s+" : date.getSeconds(), // second
+		"q+" : Math.floor((date.getMonth() + 3) / 3), // quarter
+		"S" : date.getMilliseconds()
+		// millisecond
+	};
+	
+	if (/(y+)/.test(format)) {
+		var y = date.getFullYear() + '';
+		format = format.replace(RegExp.$1, y.substr(4-RegExp.$1.length,RegExp.$1.length));
+	}
+	
+	for (var k in o) {
+		if (new RegExp("(" + k + ")").test(format)) {
+			format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+		}
+	}
+	return format;
+}
