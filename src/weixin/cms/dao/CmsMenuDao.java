@@ -18,8 +18,7 @@ public interface CmsMenuDao{
 
 	@Arguments( { "cmsMenuEntity", "page", "rows" })
 	@ResultType(CmsMenuEntity.class)
-	public List<CmsMenuEntity> list(CmsMenuEntity cmsMenuEntity, int page,
-			int rows);
+	public List<CmsMenuEntity> list(CmsMenuEntity cmsMenuEntity, int page, int rows);
 
 	@Arguments( { "params" })
 	@ResultType(CmsMenuEntity.class)

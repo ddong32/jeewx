@@ -1,6 +1,4 @@
 package weixin.cms.controller;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +28,6 @@ import weixin.cms.entity.CmsRouteEntity;
 import weixin.cms.service.CmsArticleServiceI;
 import weixin.cms.service.CmsPhotoServiceI;
 import weixin.cms.service.CmsRouteServiceI;
-import weixin.guanjia.account.service.WeixinAccountServiceI;
 
 /**   
  * @Title: Controller
@@ -50,11 +47,10 @@ public class CmsArticleController extends BaseController {
 
 	@Autowired
 	private CmsArticleServiceI cmsArticleService;
+	
 	@Autowired
 	private SystemService systemService;
-	@Autowired
-	private WeixinAccountServiceI weixinAccountService;
-	
+
 	@Autowired
 	private CmsRouteServiceI cmsRouteServiceI;
 	

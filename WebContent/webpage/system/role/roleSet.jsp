@@ -18,16 +18,16 @@
 			}
 		});
 		$("#functionListPanel").panel(
-				{
-					title :"菜单列表",
-					tools:[{iconCls:'icon-save',handler:function(){mysubmit();}}]
-				}
+			{
+				title :"菜单列表",
+				tools:[{iconCls:'icon-save',handler:function(){mysubmit();}}]
+			}
 		);
 		$("#operationListpanel").panel(
-				{
-					title :"操作按钮列表",
-					tools:[{iconCls:'icon-save',handler:function(){submitOperation();}}]
-				}
+			{
+				title :"操作按钮列表",
+				tools:[{iconCls:'icon-save',handler:function(){submitOperation();}}]
+			}
 		);
 	});
 	function mysubmit() {

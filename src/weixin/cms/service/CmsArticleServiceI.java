@@ -13,8 +13,7 @@ import weixin.guanjia.account.entity.WeixinAccountEntity;
 public interface CmsArticleServiceI extends CommonService {
 	public List<CmsArticleEntity> list(CmsArticleEntity cmsArticleEntity);
 
-	public List<CmsArticleEntity> list(CmsArticleEntity cmsArticleEntity,
-			int page, int rows);
+	public List<CmsArticleEntity> list(CmsArticleEntity cmsArticleEntity, int page, int rows);
 
 	@SuppressWarnings("unchecked")
 	public List<CmsArticleEntity> listByMap(Map params);

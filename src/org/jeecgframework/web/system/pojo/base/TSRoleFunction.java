@@ -3,13 +3,10 @@ package org.jeecgframework.web.system.pojo.base;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.jeecgframework.core.common.entity.IdEntity;
 
 /**
@@ -19,12 +16,16 @@ import org.jeecgframework.core.common.entity.IdEntity;
 @Entity
 @Table(name = "t_s_role_function")
 public class TSRoleFunction extends IdEntity implements java.io.Serializable {
-	private TSFunction TSFunction;
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private TSFunction TSFunction;
 	private TSRole TSRole;
 	private String operation;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "functionid")
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "functionid", referencedColumnName = "id")
 	public TSFunction getTSFunction() {
 		return this.TSFunction;
 	}
@@ -33,8 +34,8 @@ public class TSRoleFunction extends IdEntity implements java.io.Serializable {
 		this.TSFunction = TSFunction;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "roleid")
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "roleid", referencedColumnName = "id")
 	public TSRole getTSRole() {
 		return this.TSRole;
 	}

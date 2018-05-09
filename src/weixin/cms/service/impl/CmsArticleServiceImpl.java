@@ -36,8 +36,7 @@ public class CmsArticleServiceImpl extends CommonServiceImpl implements
 	}
 
 	@Override
-	public List<CmsArticleEntity> list(CmsArticleEntity cmsArticleEntity,
-			int page, int rows) {
+	public List<CmsArticleEntity> list(CmsArticleEntity cmsArticleEntity, int page, int rows) {
 		// TODO Auto-generated method stub
 		return cmsArticleDao.list(cmsArticleEntity);
 	}

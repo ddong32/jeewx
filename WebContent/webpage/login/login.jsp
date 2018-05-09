@@ -71,10 +71,9 @@ label.iPhoneCheckLabelOn span {
 		<span>登陆成功!请稍后....</span>
 	</div>
 	<div id="login">
-		<div class="ribbon" style="background-image: url(plug-in/login/images/typelogin.png);"></div>
 		<div class="inner">
 			<div class="logo">
-				<img src="plug-in/weixin/logo/logo_weixin.png" />
+				<img src="plug-in/weixin/logo/logo_weixin.gif" />
 			</div>
 			<div class="formLogin">
 				<form name="formLogin" id="formLogin" action="loginController.do?login" check="loginController.do?checkuser" method="post">

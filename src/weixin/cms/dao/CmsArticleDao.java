@@ -18,8 +18,7 @@ public interface CmsArticleDao{
 
 	@Arguments( { "cmsArticleEntity", "page", "rows" })
 	@ResultType(CmsArticleEntity.class)
-	public List<CmsArticleEntity> list(CmsArticleEntity cmsArticleEntity,
-			int page, int rows);
+	public List<CmsArticleEntity> list(CmsArticleEntity cmsArticleEntity, int page, int rows);
 
 	@Arguments( { "params" })
 	@ResultType(CmsArticleEntity.class)

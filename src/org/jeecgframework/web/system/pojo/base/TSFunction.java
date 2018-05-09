@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
 import org.jeecgframework.core.common.entity.IdEntity;
 
 /**
@@ -22,7 +21,8 @@ import org.jeecgframework.core.common.entity.IdEntity;
 @Entity
 @Table(name = "t_s_function")
 public class TSFunction extends IdEntity implements java.io.Serializable {
-	private TSFunction TSFunction;//父菜单
+    private static final long serialVersionUID = 1L;
+    private TSFunction TSFunction;//父菜单
 	private String functionName;//菜单名称
 	private Short functionLevel;//菜单等级
 	private String functionUrl;//菜单地址

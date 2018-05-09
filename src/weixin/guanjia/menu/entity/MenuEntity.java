@@ -2,7 +2,6 @@ package weixin.guanjia.menu.entity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.jeecgframework.core.common.entity.IdEntity;
 
 @Entity
@@ -26,13 +27,13 @@ public class MenuEntity extends IdEntity {
 	private String orders;
 	private MenuEntity menuEntity;
 	private List<MenuEntity> menuList; 
-	
 	private String accountId;
 	
 	@Column(name="name")
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -41,6 +42,7 @@ public class MenuEntity extends IdEntity {
 	public String getMenuKey() {
 		return menuKey;
 	}
+	
 	public void setMenuKey(String menuKey) {
 		this.menuKey = menuKey;
 	}
@@ -53,23 +55,27 @@ public class MenuEntity extends IdEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
+	
 	@Column(name="url")
 	public String getUrl() {
 		return url;
 	}
+	
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	
 	@Column(name="orders")
 	public String getOrders() {
 		return orders;
 	}
+	
 	public void setOrders(String orders) {
 		this.orders = orders;
 	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fatherid")
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "fatherid", referencedColumnName = "id")
 	public MenuEntity getMenuEntity() {
 		return menuEntity;
 	}
@@ -77,20 +83,27 @@ public class MenuEntity extends IdEntity {
 	public void setMenuEntity(MenuEntity menuEntity) {
 		this.menuEntity = menuEntity;
 	}
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "menuEntity")
+	
+	//@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "menuEntity")
+    @OneToMany(mappedBy = "menuEntity", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
 	public List<MenuEntity> getMenuList() {
 		return menuList;
 	}
+    
 	public void setMenuList(List<MenuEntity> menuList) {
 		this.menuList = menuList;
 	}
+	
 	@Column(name="msgtype")
 	public String getMsgType() {
 		return msgType;
 	}
+	
 	public void setMsgType(String msgType) {
 		this.msgType = msgType;
 	}
+	
 	@Column(name="templateid")
 	public String getTemplateId() {
 		return templateId;
@@ -98,10 +111,12 @@ public class MenuEntity extends IdEntity {
 	public void setTemplateId(String templateId) {
 		this.templateId = templateId;
 	}
+	
 	@Column(name="accountid")
 	public String getAccountId() {
 		return accountId;
 	}
+	
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
