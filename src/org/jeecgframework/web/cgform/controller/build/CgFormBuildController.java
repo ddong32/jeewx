@@ -25,9 +25,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.model.json.AjaxJson;
-import org.jeecgframework.core.util.DBTypeUtil;
-import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.core.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -74,7 +71,7 @@ public class CgFormBuildController extends BaseController {
 		try {
 			long start = System.currentTimeMillis();
 			String tableName =request.getParameter("tableName");
-			Template template = templetContext.getTemplate(tableName);
+			Template template = templetContext.getTemplate(tableName, "");
 			StringWriter stringWriter = new StringWriter();
 			BufferedWriter writer = new BufferedWriter(stringWriter);
 	        Map<String, Object> data = new HashMap<String, Object>();
@@ -83,7 +80,7 @@ public class CgFormBuildController extends BaseController {
 	        String version = cgFormFieldService.getCgFormVersionByTableName(tableName);
 	        //装载表单配置
 	    	Map configData = cgFormFieldService.getFtlFormConfig(tableName,version);
-	    	data = new HashMap(configData);
+	    	data = new HashMap<String, Object>(configData);
 	    	//如果该表是主表查出关联的附表
 	    	CgFormHeadEntity head = (CgFormHeadEntity)data.get("head");
 	        Map<String, Object> dataForm = new HashMap<String, Object>();

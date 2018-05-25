@@ -1,33 +1,6 @@
 package org.jeecgframework.core.common.dao.impl;
 
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.pojo.base.TSRoleFunction;
-import org.jeecgframework.web.system.pojo.base.TSRoleUser;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -44,23 +17,23 @@ import org.jeecgframework.core.common.model.json.TreeGrid;
 import org.jeecgframework.core.extend.swftools.SwfToolsUtil;
 import org.jeecgframework.core.extend.template.DataSourceMap;
 import org.jeecgframework.core.extend.template.Template;
-import org.jeecgframework.core.util.DataUtils;
-import org.jeecgframework.core.util.FileUtils;
-import org.jeecgframework.core.util.GenericsUtils;
-import org.jeecgframework.core.util.PasswordUtil;
-import org.jeecgframework.core.util.PinyinUtil;
-import org.jeecgframework.core.util.ReflectHelper;
-import org.jeecgframework.core.util.ResourceUtil;
-import org.jeecgframework.core.util.StreamUtils;
-import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.core.util.oConvertUtils;
+import org.jeecgframework.core.util.*;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
+import org.jeecgframework.web.system.pojo.base.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * 公共扩展方法
@@ -79,6 +52,33 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 		Query queryObject = getSession().createQuery(query);
 		queryObject.setParameter("username", user.getUserName());
 		queryObject.setParameter("passowrd", password);
+		List<TSUser> users = queryObject.list();
+
+		if (users != null && users.size() > 0) {
+			return users.get(0);
+		} else {
+			queryObject = getSession().createQuery(query);
+			queryObject.setParameter("username", user.getUserName());
+			queryObject.setParameter("passowrd", user.getPassword());
+			users = queryObject.list();
+			if(users != null && users.size() > 0){
+				return users.get(0);
+			}
+		}
+
+		return null;
+	}
+	
+	/**
+	 * 检查用户是否存在
+	 * */
+	public TSUser findUserByAccountAndPassword(String username,String inpassword) {
+		String password = PasswordUtil.encrypt(username, inpassword, PasswordUtil.getStaticSalt());
+		String query = "from TSUser u where u.userName = :username and u.password=:passowrd";
+		Query queryObject = getSession().createQuery(query);
+		queryObject.setParameter("username", username);
+		queryObject.setParameter("passowrd", password);
+		@SuppressWarnings("unchecked")
 		List<TSUser> users = queryObject.list();
 		if (users != null && users.size() > 0) {
 			return users.get(0);
@@ -153,8 +153,8 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				}
 			}
 			else {
-				realPath += DataUtils.getDataString(DataUtils.yyyyMMdd) + "/";
-				path += DataUtils.getDataString(DataUtils.yyyyMMdd) + "/";
+				realPath += DateUtils.getDataString(DateUtils.yyyyMMdd) + "/";
+				path += DateUtils.getDataString(DateUtils.yyyyMMdd) + "/";
 				file = new File(realPath);
 				if (!file.exists()) {
 					file.mkdir();// 创建文件时间子目录
@@ -181,7 +181,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				if(uploadFile.isRename())
 				{
 				   
-				   noextfilename=DataUtils.getDataString(DataUtils.yyyymmddhhmmss)+StringUtil.random(8);//自定义文件名称
+				   noextfilename=DateUtils.getDataString(DateUtils.yyyymmddhhmmss)+StringUtil.random(8);//自定义文件名称
 				   myfilename=noextfilename+"."+extend;//自定义文件名称
 				}
 				else {
@@ -199,7 +199,9 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				}
 				if (uploadFile.getByteField() != null) {
 					// 二进制文件保存在数据库中
-					reflectHelper.setMethodValue(uploadFile.getByteField(), StreamUtils.InputStreamTOByte(mf.getInputStream()));
+
+//					reflectHelper.setMethodValue(uploadFile.getByteField(), StreamUtils.InputStreamTOByte(mf.getInputStream()));
+
 				}
 				File savefile = new File(savePath);
 				if (uploadFile.getRealPath() != null) {
@@ -208,7 +210,46 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				}
 				saveOrUpdate(object);
 				// 文件拷贝到指定硬盘目录
-				FileCopyUtils.copy(mf.getBytes(), savefile);
+
+					if("txt".equals(extend)){
+						//利用utf-8字符集的固定首行隐藏编码原理
+						//Unicode:FF FE   UTF-8:EF BB   
+						byte[] allbytes = mf.getBytes();
+						try{
+							String head1 = toHexString(allbytes[0]);
+							//System.out.println(head1);
+							String head2 = toHexString(allbytes[1]);
+							//System.out.println(head2);
+							if("ef".equals(head1) && "bb".equals(head2)){
+								//UTF-8
+								String contents = new String(mf.getBytes(),"UTF-8");
+								if(StringUtils.isNotBlank(contents)){
+									OutputStream out = new FileOutputStream(savePath);
+									out.write(contents.getBytes());
+									out.close();
+								}
+							}  else {
+
+								//GBK
+								String contents = new String(mf.getBytes(),"GBK");
+								OutputStream out = new FileOutputStream(savePath);
+								out.write(contents.getBytes());
+								out.close();
+
+							}
+						  } catch(Exception e){
+							  String contents = new String(mf.getBytes(),"UTF-8");
+								if(StringUtils.isNotBlank(contents)){
+									OutputStream out = new FileOutputStream(savePath);
+									out.write(contents.getBytes());
+									out.close();
+								}
+						}
+				} else {
+					FileCopyUtils.copy(mf.getBytes(), savefile);
+				}
+
+				
 //				if (uploadFile.getSwfpath() != null) {
 //					// 转SWF
 //					reflectHelper.setMethodValue(uploadFile.getSwfpath(), path + swfName + ".swf");
@@ -227,7 +268,15 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 		}
 		return object;
 	}
-
+    
+	private String toHexString(int index){
+        String hexString = Integer.toHexString(index);   
+        // 1个byte变成16进制的，只需要2位就可以表示了，取后面两位，去掉前面的符号填充   
+        hexString = hexString.substring(hexString.length() -2);  
+        return hexString;
+	}
+	
+	
 	/**
 	 * 文件下载或预览
 	 * 
@@ -400,7 +449,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 							} else if (type.equals("double")) {
 								setMethod.invoke(obj1, new Double(node.getText()));
 							} else if (type.equals("Timestamp")) {
-								setMethod.invoke(obj1, new Timestamp(DataUtils.str2Date(node.getText(), DataUtils.datetimeFormat).getTime()));
+								setMethod.invoke(obj1, new Timestamp(DateUtils.str2Date(node.getText(), DateUtils.datetimeFormat).getTime()));
 							}
 						}
 					}
@@ -460,23 +509,42 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	}
 
 	/**
-	 * 根据模型生成ComboTree JSON
-	 * 
-	 * @param all全部对象
-	 * @param in已拥有的对象
-	 * @param comboTreeModel模型
-	 * @return
-	 */
-	public List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in) {
+     * 根据模型生成ComboTree JSON
+     * 
+     * @param all全部对象
+     * @param in已拥有的对象
+     * @param comboTreeModel模型
+     * @return
+     */
+    public List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in) {
+        List<ComboTree> trees = new ArrayList<ComboTree>();
+        for (Object obj : all) {
+            trees.add(comboTree(obj, comboTreeModel, in, false));
+        }
+        return trees;
+
+    }
+	
+	public List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive) {
 		List<ComboTree> trees = new ArrayList<ComboTree>();
 		for (Object obj : all) {
-			trees.add(comboTree(obj, comboTreeModel, in, false));
+			trees.add(comboTree(obj, comboTreeModel, in, recursive));
 		}
+
+		all.clear();
+
 		return trees;
 
 	}
 
-	// 构建ComboTree
+    /**
+     * 构建ComboTree
+     * @param obj
+     * @param comboTreeModel
+     * @param in
+     * @param recursive 是否递归子节点
+     * @return
+     */
 	private ComboTree comboTree(Object obj, ComboTreeModel comboTreeModel, List in, boolean recursive) {
 		ComboTree tree = new ComboTree();
 		Map<String, Object> attributes = new HashMap<String, Object>();
@@ -500,14 +568,27 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				}
 			}
 		}
-		List tsFunctions = (List) reflectHelper.getMethodValue(comboTreeModel.getChildField());
-		if (tsFunctions != null && tsFunctions.size() > 0) {
+
+		List curChildList = (List) reflectHelper.getMethodValue(comboTreeModel.getChildField());
+		if (curChildList != null && curChildList.size() > 0) {
 			tree.setState("closed");
 			tree.setChecked(false);
-			/*
-			 * if (recursive) {// 递归查询子节点 List<TSFunction> functionList = new ArrayList<TSFunction>(tsFunctions); Collections.sort(functionList, new SetListSort());// 排序 List<ComboTree> children = new ArrayList<ComboTree>(); for (TSFunction f : functionList) { ComboTree t = comboTree(f,comboTreeModel,in, true); children.add(t); } tree.setChildren(children); }
-			 */
+
+            if (recursive) { // 递归查询子节点
+                List<ComboTree> children = new ArrayList<ComboTree>();
+                List nextChildList = new ArrayList(curChildList);
+                for (Object childObj : nextChildList) {
+                    ComboTree t = comboTree(childObj, comboTreeModel, in, recursive);
+                    children.add(t);
+                }
+                tree.setChildren(children);
+            }
+        }
+
+		if(curChildList!=null){
+			curChildList.clear();
 		}
+
 		return tree;
 	}
 	/**
@@ -595,6 +676,22 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				}
 				tg.setOperations(attributes.toString());
 			}
+            if (treeGridModel.getFieldMap() != null) {
+                tg.setFieldMap(new HashMap<String, Object>());
+                for (Map.Entry<String, Object> entry : treeGridModel.getFieldMap().entrySet()) {
+                    Object fieldValue = reflectHelper.getMethodValue(entry.getValue().toString());
+                    tg.getFieldMap().put(entry.getKey(), fieldValue);
+                }
+            }
+            if (treeGridModel.getFunctionType() != null) {
+            	String functionType = oConvertUtils.getString(reflectHelper.getMethodValue(treeGridModel.getFunctionType()));
+            	tg.setFunctionType(functionType);
+            }
+
+            if(treeGridModel.getIconStyle() != null){
+            	String iconStyle = oConvertUtils.getString(reflectHelper.getMethodValue(treeGridModel.getIconStyle()));
+            	tg.setIconStyle(iconStyle);
+            }
 
 			treegrid.add(tg);
 		}

@@ -1,22 +1,22 @@
 package org.jeecgframework.core.common.dao.impl;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.lang.model.util.ElementScanner6;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -43,16 +43,17 @@ import org.jeecgframework.core.common.hibernate.qbc.PagerUtil;
 import org.jeecgframework.core.common.model.common.DBTable;
 import org.jeecgframework.core.common.model.json.DataGridReturn;
 import org.jeecgframework.core.util.MyBeanUtils;
+import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.ToEntityUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.vo.datatable.DataTableReturn;
+import org.jeecgframework.tag.vo.datatable.SortDirection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -60,10 +61,11 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
 
+
 /**
- * 
+ *
  * 类描述： DAO层泛型基类
- * 
+ *
  * 张代浩
  * @date： 日期：2012-12-7 时间：上午10:16:48
  * @param <T>
@@ -76,8 +78,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	/**
 	 * 初始化Log4j的一个实例
 	 */
-	private static final Logger logger = Logger
-			.getLogger(GenericBaseCommonDao.class);
+	private static final Logger logger = Logger.getLogger(GenericBaseCommonDao.class);
 	/**
 	 * 注入一个sessionFactory属性,并注入到父类(HibernateDaoSupport)
 	 * **/
@@ -92,7 +93,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 获得该类的属性和类型
-	 * 
+	 *
 	 * @param entityName
 	 *            注解的实体类
 	 */
@@ -108,7 +109,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 获取所有数据表
-	 * 
+	 *
 	 * @return
 	 */
 	public List<DBTable> getAllDbTableName() {
@@ -136,7 +137,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 获取所有数据表
-	 * 
+	 *
 	 * @return
 	 */
 	public Integer getAllDbTableSize() {
@@ -147,7 +148,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 根据实体名字获取唯一记录
-	 * 
+	 *
 	 * @param propertyName
 	 * @param value
 	 * @return
@@ -175,7 +176,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	public <T> Serializable save(T entity) {
 		try {
 			Serializable id = getSession().save(entity);
-			getSession().flush();
+			//getSession().flush();
 			if (logger.isDebugEnabled()) {
 				logger.debug("保存实体成功," + entity.getClass().getName());
 			}
@@ -189,7 +190,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 批量保存数据
-	 * 
+	 *
 	 * @param <T>
 	 * @param entitys
 	 *            要持久化的临时实体对象集合
@@ -197,29 +198,29 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	public <T> void batchSave(List<T> entitys) {
 		for (int i = 0; i < entitys.size(); i++) {
 			getSession().save(entitys.get(i));
-			if (i % 20 == 0) {
-				// 20个对象后才清理缓存，写入数据库
+			if (i % 1000 == 0) {
+				// 1000个对象批量写入数据库，后才清理缓存
 				getSession().flush();
 				getSession().clear();
 			}
 		}
-		// 最后清理一下----防止大于20小于40的不保存
+		//最后页面的数据，进行提交手工清理
 		getSession().flush();
 		getSession().clear();
 	}
 
 	/**
 	 * 根据传入的实体添加或更新对象
-	 * 
+	 *
 	 * @param <T>
-	 * 
+	 *
 	 * @param entity
 	 */
 
 	public <T> void saveOrUpdate(T entity) {
 		try {
 			getSession().saveOrUpdate(entity);
-			getSession().flush();
+			//getSession().flush();
 			if (logger.isDebugEnabled()) {
 				logger.debug("添加或更新成功," + entity.getClass().getName());
 			}
@@ -235,7 +236,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	public <T> void delete(T entity) {
 		try {
 			getSession().delete(entity);
-			getSession().flush();
+			//getSession().flush();
 			if (logger.isDebugEnabled()) {
 				logger.debug("删除成功," + entity.getClass().getName());
 			}
@@ -247,26 +248,26 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 根据主键删除指定的实体
-	 * 
+	 *
 	 * @param <T>
 	 * @param pojo
 	 */
 	public <T> void deleteEntityById(Class entityName, Serializable id) {
 		delete(get(entityName, id));
-		getSession().flush();
+		//getSession().flush();
 	}
 
 	/**
 	 * 删除全部的实体
-	 * 
+	 *
 	 * @param <T>
-	 * 
+	 *
 	 * @param entitys
 	 */
 	public <T> void deleteAllEntitie(Collection<T> entitys) {
 		for (Object entity : entitys) {
 			getSession().delete(entity);
-			getSession().flush();
+			//getSession().flush();
 		}
 	}
 
@@ -281,7 +282,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 根据主键获取实体并加锁。
-	 * 
+	 *
 	 * @param <T>
 	 * @param entityName
 	 * @param id
@@ -292,31 +293,31 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 		T t = (T) getSession().get(entityName, id);
 		if (t != null) {
-			getSession().flush();
+			//getSession().flush();
 		}
 		return t;
 	}
 
 	/**
 	 * 更新指定的实体
-	 * 
+	 *
 	 * @param <T>
 	 * @param pojo
 	 */
 	public <T> void updateEntitie(T pojo) {
 		getSession().update(pojo);
-		getSession().flush();
+		//getSession().flush();
 	}
 
 	/**
 	 * 更新指定的实体
-	 * 
+	 *
 	 * @param <T>
 	 * @param pojo
 	 */
 	public <T> void updateEntitie(String className, Object id) {
 		getSession().update(className, id);
-		getSession().flush();
+		//getSession().flush();
 	}
 
 	/**
@@ -328,7 +329,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 通过hql 查询语句查找对象
-	 * 
+	 *
 	 * @param <T>
 	 * @param query
 	 * @return
@@ -337,16 +338,16 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 		Query queryObject = getSession().createQuery(query);
 		List<T> list = queryObject.list();
-		if (list.size() > 0) {
-			getSession().flush();
-		}
+//		if (list.size() > 0) {
+			//getSession().flush();
+//		}
 		return list;
 
 	}
 
 	/**
 	 * 通过hql查询唯一对象
-	 * 
+	 *
 	 * @param <T>
 	 * @param query
 	 * @return
@@ -356,7 +357,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 		Query queryObject = getSession().createQuery(hql);
 		List<T> list = queryObject.list();
 		if (list.size() == 1) {
-			getSession().flush();
+			//getSession().flush();
 			t = list.get(0);
 		} else if (list.size() > 0) {
 			throw new BusinessException("查询结果数:" + list.size() + "大于1");
@@ -366,7 +367,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 通过hql 查询语句查找HashMap对象
-	 * 
+	 *
 	 * @param <T>
 	 * @param query
 	 * @return
@@ -386,7 +387,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 通过sql更新记录
-	 * 
+	 *
 	 * @param <T>
 	 * @param query
 	 * @return
@@ -399,7 +400,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 通过sql查询语句查找对象
-	 * 
+	 *
 	 * @param <T>
 	 * @param query
 	 * @return
@@ -411,7 +412,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 创建Criteria对象，有排序功能。
-	 * 
+	 *
 	 * @param <T>
 	 * @param entityClass
 	 * @param orderBy
@@ -432,7 +433,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 创建Criteria对象带属性比较
-	 * 
+	 *
 	 * @param <T>
 	 * @param entityClass
 	 * @param criterions
@@ -454,7 +455,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 创建单一Criteria对象
-	 * 
+	 *
 	 * @param <T>
 	 * @param entityClass
 	 * @param criterions
@@ -467,7 +468,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 根据属性名和属性值查询. 有排序
-	 * 
+	 *
 	 * @param <T>
 	 * @param entityClass
 	 * @param propertyName
@@ -485,7 +486,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 根据属性名和属性值 查询 且要求对象唯一.
-	 * 
+	 *
 	 * @return 符合条件的唯一对象.
 	 */
 	public <T> T findUniqueBy(Class<T> entityClass, String propertyName,
@@ -497,7 +498,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 根据查询条件与参数列表创建Query对象
-	 * 
+	 *
 	 * @param session
 	 *            Hibernate会话
 	 * @param hql
@@ -518,7 +519,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 批量插入实体
-	 * 
+	 *
 	 * @param clas
 	 * @param values
 	 * @return
@@ -534,7 +535,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 根据实体名返回全部对象
-	 * 
+	 *
 	 * @param <T>
 	 * @param hql
 	 * @param size
@@ -542,7 +543,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	 */
 	/**
 	 * 使用占位符的方式填充值 请注意：like对应的值格式："%"+username+"%" Hibernate Query
-	 * 
+	 *
 	 * @param hibernateTemplate
 	 * @param hql
 	 * @param valus
@@ -562,7 +563,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 根据实体模版查找
-	 * 
+	 *
 	 * @param entityName
 	 * @param exampleEntity
 	 * @return
@@ -592,7 +593,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 查询指定实体的总记录数
-	 * 
+	 *
 	 * @param clazz
 	 * @return
 	 */
@@ -607,7 +608,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	 * 获取分页记录CriteriaQuery 老方法final int allCounts =
 	 * oConvertUtils.getInt(criteria
 	 * .setProjection(Projections.rowCount()).uniqueResult(), 0);
-	 * 
+	 *
 	 * @param cq
 	 * @param isOffset
 	 * @return
@@ -684,39 +685,64 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 		} else {
 			pageSize = allCounts;
 		}
-		DetachedCriteriaUtil.selectColumn(cq.getDetachedCriteria(), cq
-				.getField().split(","), cq.getEntityClass(), false);
-		return new DataTableReturn(allCounts, allCounts, cq.getDataTables()
-				.getEcho(), criteria.list());
+		DetachedCriteriaUtil.selectColumn(cq.getDetachedCriteria(), cq.getField().split(","), cq.getEntityClass(), false);
+		return new DataTableReturn(allCounts, allCounts, cq.getDataTables().getEcho(), criteria.list());
 	}
 
 	/**
 	 * 返回easyui datagrid DataGridReturn模型对象
 	 */
-	public DataGridReturn getDataGridReturn(final CriteriaQuery cq,
-			final boolean isOffset) {
-		Criteria criteria = cq.getDetachedCriteria().getExecutableCriteria(
-				getSession());
+
+	public void getDataGridReturn(CriteriaQuery cq,final boolean isOffset) {
+
+		Criteria criteria = cq.getDetachedCriteria().getExecutableCriteria(getSession());
 		CriteriaImpl impl = (CriteriaImpl) criteria;
 		// 先把Projection和OrderBy条件取出来,清空两者来执行Count操作
 		Projection projection = impl.getProjection();
-		final int allCounts = ((Long) criteria.setProjection(
-				Projections.rowCount()).uniqueResult()).intValue();
+		final int allCounts = ((Long) criteria.setProjection(Projections.rowCount()).uniqueResult()).intValue();
 		criteria.setProjection(projection);
 		if (projection == null) {
 			criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		}
-		if (StringUtils.isNotBlank(cq.getDataGrid().getSort())) {
-			cq.addOrder(cq.getDataGrid().getSort(), cq.getDataGrid().getOrder());
+
+		Map<String, Object> ordermap = cq.getOrdermap();
+		if(ordermap==null){
+			ordermap = new LinkedHashMap<String, Object>();
+		}
+		
+		String sort = cq.getDataGrid().getSort();
+		if (StringUtils.isNotBlank(sort)) {
+			String []sortArr = sort.split(",");
+			String []orderArr = cq.getDataGrid().getOrder().split(",");
+			if(sortArr.length != orderArr.length && orderArr.length > 0){
+				for (int i = 0; i < sortArr.length; i++) {
+					if(SortDirection.asc.equals(SortDirection.toEnum(orderArr[0]))){
+						ordermap.put(sortArr[i], SortDirection.asc);
+					}else{
+						ordermap.put(sortArr[i], SortDirection.desc);
+					}
+				}
+			}else if(sortArr.length == orderArr.length){
+				for (int i = 0; i < sortArr.length; i++) {
+					if(SortDirection.asc.equals(SortDirection.toEnum(orderArr[i]))){
+						ordermap.put(sortArr[i], SortDirection.asc);
+					}else{
+						ordermap.put(sortArr[i], SortDirection.desc);
+					}
+				}
+			}
+		}
+		if(!ordermap.isEmpty() && ordermap.size()>0){
+			cq.setOrder(ordermap);
 		}
 
+
 		// 判断是否有排序字段
-		if (!cq.getOrdermap().isEmpty()) {
-			cq.setOrder(cq.getOrdermap());
-		}
+//		if (!cq.getOrdermap().isEmpty()) {
+//			cq.setOrder(cq.getOrdermap());
+//		}
 		int pageSize = cq.getPageSize();// 每页显示数
-		int curPageNO = PagerUtil.getcurPageNo(allCounts, cq.getCurPage(),
-				pageSize);// 当前页
+		int curPageNO = PagerUtil.getcurPageNo(allCounts, cq.getCurPage(),pageSize);// 当前页
 		int offset = PagerUtil.getOffset(allCounts, curPageNO, pageSize);
 		if (isOffset) {// 是否分页
 			criteria.setFirstResult(offset);
@@ -726,15 +752,20 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 		}
 		// DetachedCriteriaUtil.selectColumn(cq.getDetachedCriteria(),
 		// cq.getField().split(","), cq.getClass1(), false);
-		List list = criteria.list();
+		List<?> list = criteria.list();
 		cq.getDataGrid().setResults(list);
 		cq.getDataGrid().setTotal(allCounts);
-		return new DataGridReturn(allCounts, list);
+
+		cq.clear();
+		cq = null;
+
+		//return new DataGridReturn(allCounts, list);
+
 	}
 
 	/**
 	 * 获取分页记录SqlQuery
-	 * 
+	 *
 	 * @param cq
 	 * @param isOffset
 	 * @return
@@ -766,7 +797,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 获取分页记录HqlQuery
-	 * 
+	 *
 	 * @param cq
 	 * @param isOffset
 	 * @return
@@ -793,7 +824,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 根据CriteriaQuery获取List
-	 * 
+	 *
 	 * @param cq
 	 * @param isOffset
 	 * @return
@@ -806,8 +837,10 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 		if (cq.getOrdermap() != null) {
 			cq.setOrder(cq.getOrdermap());
 		}
-		if (ispage)
+		if (ispage){
+			criteria.setFirstResult((cq.getCurPage()-1)*cq.getPageSize());
 			criteria.setMaxResults(cq.getPageSize());
+		}
 		return criteria.list();
 
 	}
@@ -831,7 +864,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 使用指定的检索标准检索数据并分页返回数据
-	 * 
+	 *
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
@@ -857,7 +890,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 使用指定的检索标准检索数据并分页返回数据-采用预处理方式
-	 * 
+	 *
 	 * @param criteria
 	 * @param firstResult
 	 * @param maxResults
@@ -875,15 +908,18 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	 * 使用指定的检索标准检索数据并分页返回数据For JDBC
 	 */
 	public Long getCountForJdbc(String sql) {
-		return this.jdbcTemplate.queryForLong(sql);
+		return this.jdbcTemplate.queryForObject(sql,Long.class);
 	}
 
 	/**
 	 * 使用指定的检索标准检索数据并分页返回数据For JDBC-采用预处理方式
-	 * 
+	 *
 	 */
 	public Long getCountForJdbcParam(String sql, Object[] objs) {
-		return this.jdbcTemplate.queryForLong(sql, objs);
+
+		return this.jdbcTemplate.queryForObject(sql, objs,Long.class);
+
+
 	}
 
 	public List<Map<String, Object>> findForJdbc(String sql, Object... objs) {
@@ -903,16 +939,29 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	}
 	public Object executeSqlReturnKey(final String sql, Map<String, Object> param) {
 		Object keyValue = null;
-		KeyHolder keyHolder = new GeneratedKeyHolder(); 
+		KeyHolder keyHolder = null;
 		SqlParameterSource sqlp  = new MapSqlParameterSource(param);
-		this.namedParameterJdbcTemplate.update(sql,sqlp, keyHolder);
-		if(oConvertUtils.isNotEmpty(keyHolder.getKey())){
-			keyValue = keyHolder.getKey().longValue();
+		if (StringUtil.isNotEmpty(param.get("id"))) {//表示已经生成过id(UUID),则表示是非序列或数据库自增的形式
+			this.namedParameterJdbcTemplate.update(sql,sqlp);
+		//--author：zhoujf---start------date:20170216--------for:自定义表单保存数据格sqlserver报错问题
+		}else if (StringUtil.isNotEmpty(param.get("ID"))) {//表示已经生成过id(UUID),则表示是非序列或数据库自增的形式
+			this.namedParameterJdbcTemplate.update(sql,sqlp);
+		}else{//NATIVE or SEQUENCE
+			keyHolder = new GeneratedKeyHolder();
+			this.namedParameterJdbcTemplate.update(sql,sqlp, keyHolder, new String[]{"id"});
+			Number number = keyHolder.getKey();
+			if(oConvertUtils.isNotEmpty(number)){
+				keyValue = keyHolder.getKey().longValue();
+			}
 		}
 		return keyValue;
 	}
+
 	public Integer countByJdbc(String sql, Object... param) {
-		return this.jdbcTemplate.queryForInt(sql, param);
+
+		return this.jdbcTemplate.queryForObject(sql, param,Integer.class);
+
+
 	}
 
 	public Map<String, Object> findOneForJdbc(String sql, Object... objs) {
@@ -925,7 +974,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 通过hql 查询语句查找对象
-	 * 
+	 *
 	 * @param <T>
 	 * @param query
 	 * @return
@@ -942,7 +991,7 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 
 	/**
 	 * 执行HQL语句操作更新
-	 * 
+	 *
 	 * @param hql
 	 * @return
 	 */
@@ -966,4 +1015,19 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	public <T> List<T> findByDetached(DetachedCriteria dc) {
 		return dc.getExecutableCriteria(getSession()).list();
 	}
+
+	/**
+	 * 调用存储过程
+	 */
+	@SuppressWarnings({ "unchecked",})
+	public <T> List<T> executeProcedure(String executeSql,Object... params) {
+		SQLQuery sqlQuery = getSession().createSQLQuery(executeSql);
+		
+		for(int i=0;i<params.length;i++){
+			sqlQuery.setParameter(i, params[i]);
+		}
+		
+		return sqlQuery.list();
+	}
+
 }

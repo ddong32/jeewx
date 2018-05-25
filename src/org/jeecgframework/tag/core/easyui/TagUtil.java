@@ -3,13 +3,11 @@ package org.jeecgframework.tag.core.easyui;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.fop.layout.Page;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -23,6 +21,7 @@ import org.jeecgframework.tag.vo.datatable.DataTableReturn;
 import org.jeecgframework.tag.vo.easyui.Autocomplete;
 import org.jeecgframework.web.system.pojo.base.TSRole;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -76,13 +75,65 @@ public class TagUtil {
 		}
 		value = reflectHelper.getMethodValue(fieldName)==null?"":reflectHelper.getMethodValue(fieldName);
 		if (value !=""&&value != null && (FiledName.indexOf("_") != -1||FiledName.indexOf(".") != -1)) {
-			value = fieldNametoValues(childFieldName, value);
+
+            if(value instanceof List) {
+                Object tempValue = "";
+                for (Object listValue : (List)value) {
+                    tempValue = tempValue.toString() + fieldNametoValues(childFieldName, listValue) + ",";
+                }
+                value = tempValue;
+            } else {
+                value = fieldNametoValues(childFieldName, value);
+            }
+
 		}
 		if(value != "" && value != null) {
-			value = value.toString().replaceAll("\r\n", "");
+
+			value = converunicode(value.toString());
 		}
 		return value;
 	}
+	static Object converunicode(String jsonValue){ 
+        StringBuffer sb = new StringBuffer();      
+        for (int i=0; i<jsonValue.length(); i++) {
+        char c = jsonValue.charAt(i);  
+          switch (c){
+
+//         case '\"':      
+//                 sb.append("\\\"");      
+//                 break;      
+          case '\'':      
+                 sb.append("\\\'");      
+                 break;    
+             case '\\':      
+                 sb.append("\\\\");      
+                 break;      
+//             case '/':      
+//                 sb.append("\\/");      
+//                 break;   
+
+             case '\b':      
+                 sb.append("\\b");      
+                 break;      
+             case '\f':      
+                 sb.append("\\f");      
+                 break;      
+             case '\n':      
+                 sb.append("\\n");      
+                 break;      
+             case '\r':      
+                 sb.append("\\r");      
+                 break;      
+             case '\t':      
+                 sb.append("\\t");      
+                 break;      
+             default:      
+                 sb.append(c);   
+          }
+         }    
+        return sb.toString();   
+}
+
 
 	/**
 	 * 对象转数组
@@ -105,23 +156,46 @@ public class TagUtil {
 	 * @param fields
 	 * @param total
 	 * @param list
+	 * @param dataStyle 
+	 * @param page 
 	 */
-	private static String listtojson(String[] fields, int total, List<?> list, String[] footers) throws Exception {
-		Object[] values = new Object[fields.length];
+	private static String listtojson(String[] fields, int total, List<?> list, String[] footers, String dataStyle, int pageSize) throws Exception {
+		//Object[] values = new Object[fields.length];
 		StringBuffer jsonTemp = new StringBuffer();
-		jsonTemp.append("{\"total\":" + total + ",\"rows\":[");
+
+		if("jqgrid".equals(dataStyle)){
+			int totalPage = total % pageSize > 0 ? total / pageSize + 1 : total / pageSize;
+			if(totalPage == 0) totalPage = 1;
+			jsonTemp.append("{\"total\":" + totalPage );
+		}else{
+			jsonTemp.append("{\"total\":" + total );
+		}
+		jsonTemp.append(",\"rows\":[");
+
 		int i;
 		String fieldName;
+
+		if(list==null){
+			list = new ArrayList();
+		}
+
+		
 		for (int j = 0; j < list.size(); ++j) {
+
+			//jsonTemp.append("{");
 			jsonTemp.append("{\"state\":\"closed\",");
+
+			Object fieldValue = null;
 			for (i = 0; i < fields.length; ++i) {
 				fieldName = fields[i].toString();
 				if (list.get(j) instanceof Map)
-					values[i] = ((Map<?, ?>) list.get(j)).get(fieldName);
+					fieldValue = ((Map<?, ?>) list.get(j)).get(fieldName);
 				else {
-					values[i] = fieldNametoValues(fieldName, list.get(j));
+					fieldValue = fieldNametoValues(fieldName, list.get(j));
 				}
-				jsonTemp.append("\"" + fieldName + "\"" + ":\"" + String.valueOf(values[i]).replace("\"", "\\\"") + "\"");
+
+				jsonTemp.append("\"" + fieldName + "\"" + ":\"" + getStringValue(fieldValue).replace("\"", "\\\"") + "\"");
+
 				if (i != fields.length - 1) {
 					jsonTemp.append(",");
 				}
@@ -133,23 +207,24 @@ public class TagUtil {
 			}
 		}
 		jsonTemp.append("]");
-		if (footers != null) {
+		if (footers != null&&footers.length>0) {
 			jsonTemp.append(",");
 			jsonTemp.append("\"footer\":[");
 			jsonTemp.append("{");
-			jsonTemp.append("\"name\":\"合计\",");
-			for (String footer : footers) {
-				String footerFiled = footer.split(":")[0];
+//			jsonTemp.append("\"name\":\"合计\",");
+			for(i=0;i<footers.length;i++){
+				String footerFiled = footers[i].split(":")[0];
 				Object value = null;
-				if (footer.split(":").length == 2)
-					value = footer.split(":")[1];
+				if (footers[i].split(":").length == 2)
+					value = footers[i].split(":")[1];
 				else {
 					value = getTotalValue(footerFiled, list);
 				}
-				jsonTemp.append("\"" + footerFiled + "\":\"" + value + "\",");
-			}
-			if (jsonTemp.lastIndexOf(",") == jsonTemp.length()) {
-				jsonTemp = jsonTemp.deleteCharAt(jsonTemp.length());
+				if(i==0){
+					jsonTemp.append("\"" + footerFiled + "\":\"" + value + "\"");
+				}else{
+					jsonTemp.append(",\"" + footerFiled + "\":\"" + value + "\"");
+				}
 			}
 			jsonTemp.append("}");
 			jsonTemp.append("]");
@@ -157,6 +232,13 @@ public class TagUtil {
 		jsonTemp.append("}");
 		return jsonTemp.toString();
 	}
+
+	//为空时返回空串
+	private static String getStringValue(Object obj){
+		return (obj == null) ? "" : obj.toString();
+	}
+
+	
 	/**
 	 * 计算指定列的合计
 	 * @param filed 字段名
@@ -257,11 +339,13 @@ public class TagUtil {
 	private static JSONObject getJson(DataGrid dg) {
 		JSONObject jObject = null;
 		try {
+
 			if(!StringUtil.isEmpty(dg.getFooter())){
-				jObject = JSONObject.parseObject(listtojson(dg.getField().split(","), dg.getTotal(), dg.getResults(),dg.getFooter().split(",")));
+				jObject = JSONObject.parseObject(listtojson(dg.getField().split(","), dg.getTotal(), dg.getResults(),dg.getFooter().split(","),dg.getDataStyle(),dg.getRows()));
 			}else{
-				jObject = JSONObject.parseObject(listtojson(dg.getField().split(","), dg.getTotal(), dg.getResults(),null));
+				jObject = JSONObject.parseObject(listtojson(dg.getField().split(","), dg.getTotal(), dg.getResults(),null,dg.getDataStyle(),dg.getRows()));
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -374,6 +458,11 @@ public class TagUtil {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				response.getWriter().close();
+			} catch (IOException e) {
+			}
 		}
 	}
 
@@ -387,14 +476,104 @@ public class TagUtil {
 		response.setContentType("application/json");
 		response.setHeader("Cache-Control", "no-store");
 		JSONObject object = TagUtil.getJson(dg);
+		PrintWriter pw = null;
 		try {
-			PrintWriter pw=response.getWriter();
+			pw=response.getWriter();
 			pw.write(object.toString());
 			pw.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				pw.close();
+
+				object.clear();
+				object = null;
+				dg.clear();
+				dg = null;
+				System.gc();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
+	
+	/**
+	 * 控件类型：easyui
+	 * 返回treegrid JSON数据
+	 * @param response
+	 * @param dataGrid
+	 */
+	public static void treegrid(HttpServletResponse response,DataGrid dg) {
+		response.setContentType("application/json");
+		response.setHeader("Cache-Control", "no-store");
+		JSONObject object = TagUtil.getJson(dg);
+		JSONArray rows = object.getJSONArray("rows");
+		PrintWriter pw = null;
+		try {
+			pw=response.getWriter();
+			pw.write(rows.toString());
+			pw.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				pw.close();
+
+				object.clear();
+
+				dg.clear();
+				dg = null;
+				System.gc();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * 控件类型：easyui
+	 * 返回datagrid JSON数据
+	 * @param response
+	 * @param dataGrid
+	 * @param extMap 数据列表的扩展
+	 */
+	public static void datagrid(HttpServletResponse response,DataGrid dg,Map<String,Map<String,Object>>  extMap) {
+		response.setContentType("application/json");
+		response.setHeader("Cache-Control", "no-store");
+		JSONObject object = TagUtil.getJson(dg);
+		JSONArray r =  object.getJSONArray("rows");
+		for (Object object2 : r) {
+			JSONObject o =(JSONObject) object2;
+			o.putAll(extMap.get(o.get("id")));
+		}
+		PrintWriter pw = null;
+		try {
+			pw=response.getWriter();
+			pw.write(object.toString());
+			pw.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				pw.close();
+
+				object.clear();
+
+				dg.clear();
+				dg = null;
+				System.gc();
+				extMap = null;
+
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}
+	}
+	
+	
 	/**
 	 * 控件类型：datatable
 	 * 返回datatable JSON数据
@@ -407,8 +586,15 @@ public class TagUtil {
 		JSONObject object = TagUtil.getJson(dataTableReturn,field);
 		try {
 			response.getWriter().write(object.toString());
+			response.getWriter().flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				response.getWriter().close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 		}
 	}
 
@@ -517,5 +703,53 @@ public class TagUtil {
 		}
 		param += "'\"+index+\"'";// 传出行索引号参数
 		return param;
+	}
+
+	public static String getJson(List fields,List datas){
+		if(datas!=null && datas.size()>0){
+			StringBuffer sb = new StringBuffer();
+			sb.append("{\"total\":\""+datas.size()+"\",\"rows\":[");
+			for(int i=0;i<datas.size();i++){
+				Object[] values = (Object[]) datas.get(i);
+				sb.append("{");
+				for(int j=0;j<values.length;j++){
+					sb.append("\""+fields.get(j)+"\":\""+(values[j]==null?"":values[j])+"\""+(j==values.length-1?"":","));
+				}
+				sb.append("}"+(i==datas.size()-1?"":","));
+			}
+			sb.append("]}");
+			
+			return sb.toString();
+		}else{
+			return "{\"total\":\"0\",\"rows\":[]}";
+		}
+	}
+
+
+	public static String getJsonByMap(List fields,List<Map<String,Object>> datas){
+		if(datas!=null && datas.size()>0){
+			StringBuffer sb = new StringBuffer();
+			sb.append("{\"total\":\""+datas.size()+"\",\"rows\":[");
+			for(int i=0;i<datas.size();i++){
+				Map<String,Object> values = (Map<String,Object>) datas.get(i);
+				sb.append("{");
+				//for(int j=0;j<values.size();){
+				int j=0;
+				for (Object value : values.values()) {
+					sb.append("\""+fields.get(j)+"\":\""+(value==null?"":value)+"\""+(j==values.size()-1?"":","));
+					j++;
+				}
+					//sb.append("\""+fields.get(j)+"\":\""+(values.get(j)==null?"":values.get(j))+"\""+(j==values.size()-1?"":","));
+				//}
+
+				sb.append("}"+(i==datas.size()-1?"":","));
+			}
+
+			sb.append("]}");
+
+			return sb.toString();
+		}else{
+			return "{\"total\":\"0\",\"rows\":[]}";
+		}
 	}
 }

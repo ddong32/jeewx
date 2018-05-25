@@ -3,9 +3,11 @@ package org.jeecgframework.web.system.listener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.web.system.manager.ClientManager;
 
 import org.springframework.context.ApplicationContext;
@@ -28,7 +30,11 @@ public class OnlineListener implements ServletContextListener,HttpSessionListene
 
 	
 	public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
-		ClientManager.getInstance().removeClinet(httpSessionEvent.getSession().getId());
+		try {
+			ClientManager.getInstance().removeClinet(httpSessionEvent.getSession().getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.BrowserUtils;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.DataUtils;
@@ -20,6 +21,7 @@ import org.jeecgframework.web.system.pojo.base.DictEntity;
 import org.jeecgframework.web.system.pojo.base.TSFunction;
 import org.jeecgframework.web.system.pojo.base.TSIcon;
 import org.jeecgframework.web.system.pojo.base.TSLog;
+import org.jeecgframework.web.system.pojo.base.TSOperation;
 import org.jeecgframework.web.system.pojo.base.TSRole;
 import org.jeecgframework.web.system.pojo.base.TSRoleFunction;
 import org.jeecgframework.web.system.pojo.base.TSRoleUser;
@@ -66,7 +68,16 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		log.setNote(oConvertUtils.getIp());
 		log.setBroswer(broswer);
 		log.setOperatetime(DataUtils.gettimestamp());
-		log.setTSUser(ResourceUtil.getSessionUserName());
+	    /* end dangzhenghui 201703016TASK #1784 【online bug】Online 表单保存的时候，报错*/
+		//      log.setTSUser(ResourceUtil.getSessionUser());
+        /*start chenqian 201708031TASK #2317 【改造】系统日志表，增加两个字段，避免关联查询 [操作人账号] [操作人名字]*/
+	    TSUser u = ResourceUtil.getSessionUserName();
+        if(u!=null){
+            log.setUserid(u.getId());
+            log.setUsername(u.getUserName());
+            log.setRealname(u.getRealName());
+        }
+		
 		commonDao.save(log);
 	}
 
@@ -115,32 +126,29 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	}
 
 	
-	public void initAllTypeGroups() {
-		List<TSTypegroup> typeGroups = this.commonDao.loadAll(TSTypegroup.class);
-		for (TSTypegroup tsTypegroup : typeGroups) {
-			TSTypegroup.allTypeGroups.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
-			List<TSType> types = this.commonDao.findByProperty(TSType.class, "TSTypegroup.id", tsTypegroup.getId());
-			TSTypegroup.allTypes.put(tsTypegroup.getTypegroupcode().toLowerCase(), types);
-		}
-	}
+    public void initAllTypeGroups() {
+        List<TSTypegroup> typeGroups = this.commonDao.loadAll(TSTypegroup.class);
+        for (TSTypegroup tsTypegroup : typeGroups) {
+            ResourceUtil.allTypeGroups.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
+            List<TSType> types = this.commonDao.findByProperty(TSType.class, "TSTypegroup.id", tsTypegroup.getId());
+            ResourceUtil.allTypes.put(tsTypegroup.getTypegroupcode().toLowerCase(), types);
+        }
+    }
 
-	
-	public void refleshTypesCach(TSType type) {
-		TSTypegroup tsTypegroup = type.getTSTypegroup();
-		TSTypegroup typeGroupEntity = this.commonDao.get(TSTypegroup.class, tsTypegroup.getId());
-		List<TSType> types = this.commonDao.findByProperty(TSType.class, "TSTypegroup.id", tsTypegroup.getId());
-		TSTypegroup.allTypes.put(typeGroupEntity.getTypegroupcode().toLowerCase(), types);
-	}
+    public void refleshTypesCach(TSType type) {
+        TSTypegroup tsTypegroup = type.getTSTypegroup();
+        TSTypegroup typeGroupEntity = this.commonDao.get(TSTypegroup.class, tsTypegroup.getId());
+        List<TSType> types = this.commonDao.findByProperty(TSType.class, "TSTypegroup.id", tsTypegroup.getId());
+        ResourceUtil.allTypes.put(typeGroupEntity.getTypegroupcode().toLowerCase(), types);
+    }
 
-	
-	public void refleshTypeGroupCach() {
-		TSTypegroup.allTypeGroups.clear();
-		List<TSTypegroup> typeGroups = this.commonDao.loadAll(TSTypegroup.class);
-		for (TSTypegroup tsTypegroup : typeGroups) {
-			TSTypegroup.allTypeGroups.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
-		}
-	}
-
+    public void refleshTypeGroupCach() {
+        ResourceUtil.allTypeGroups.clear();
+        List<TSTypegroup> typeGroups = this.commonDao.loadAll(TSTypegroup.class);
+        for (TSTypegroup tsTypegroup : typeGroups) {
+            ResourceUtil.allTypeGroups.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
+        }
+    }
 	
 	public Set<String> getOperationCodesByRoleIdAndFunctionId(String roleId, String functionId) {
 		Set<String> operationCodes = new HashSet<String>();
@@ -204,5 +212,68 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		}
 	}
 
-
+	/**
+     * 加载所有图标
+     * @return
+     */
+    public  void initAllTSIcons() {
+        List<TSIcon> list = this.loadAll(TSIcon.class);
+        for (TSIcon tsIcon : list) {
+            ResourceUtil.allTSIcons.put(tsIcon.getId(), tsIcon);
+        }
+    }
+    /**
+     * 更新图标
+     * @param icon
+     */
+    public  void upTSIcons(TSIcon icon) {
+        ResourceUtil.allTSIcons.put(icon.getId(), icon);
+    }
+    /**
+     * 更新图标
+     * @param icon
+     */
+    public  void delTSIcons(TSIcon icon) {
+        ResourceUtil.allTSIcons.remove(icon.getId());
+    }
+    
+    /**
+     * 获取页面控件权限控制的
+     * JS片段
+     * @param out
+     */
+    public String getAuthFilterJS() {
+        StringBuilder out = new StringBuilder();
+        out.append("<script type=\"text/javascript\">");
+        out.append("$(document).ready(function(){");
+        if(ResourceUtil.getSessionUserName().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+            return "";
+        }else{
+            HttpServletRequest request = ContextHolderUtils.getRequest();
+            Set<String> operationCodes = (Set<String>) request.getAttribute(Globals.OPERATIONCODES);
+            if (null!=operationCodes) {
+                for (String MyoperationCode : operationCodes) {
+                    if (oConvertUtils.isEmpty(MyoperationCode))
+                        break;
+                    TSOperation operation = this.getEntity(TSOperation.class, MyoperationCode);
+                    if (operation.getOperationcode().startsWith(".") || operation.getOperationcode().startsWith("#")){
+                        if (operation.getOperationType().intValue()==Globals.OPERATION_TYPE_HIDE){
+                            //out.append("$(\""+name+"\").find(\"#"+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
+                            out.append("$(\""+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
+                        }else {
+                            //out.append("$(\""+name+"\").find(\"#"+operation.getOperationcode().replaceAll(" ", "")+"\").find(\":input\").attr(\"disabled\",\"disabled\");");
+                            out.append("$(\""+operation.getOperationcode().replaceAll(" ", "")+"\").attr(\"disabled\",\"disabled\");");
+                            out.append("$(\""+operation.getOperationcode().replaceAll(" ", "")+"\").find(\":input\").attr(\"disabled\",\"disabled\");");
+                        }
+                    }
+                }
+            }else{
+                return "";
+            }
+            
+        }
+        out.append("});");
+        out.append("</script>");
+        return out.toString();
+    }
 }

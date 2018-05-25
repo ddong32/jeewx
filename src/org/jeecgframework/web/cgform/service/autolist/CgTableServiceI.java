@@ -57,4 +57,15 @@ public interface CgTableServiceI {
 	 * @return
 	 */
 	public boolean deleteBatch(String table,String[] ids);
+	
+	/**
+	 * 树形菜单结果处理
+	 * @param table
+	 * @param parentIdFieldName
+	 * @param parentIdFieldType
+	 * @param result
+	 */
+	public void treeFromResultHandle(String table, String parentIdFieldName,
+			String parentIdFieldType, List<Map<String, Object>> result);
+
 }

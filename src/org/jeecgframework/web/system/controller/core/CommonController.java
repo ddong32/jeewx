@@ -8,9 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jeecgframework.web.system.pojo.base.TSAttachment;
-import org.jeecgframework.web.system.service.SystemService;
-
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
@@ -20,7 +17,6 @@ import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.ImportFile;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.FileUtils;
-import org.jeecgframework.core.util.ImportUtil;
 import org.jeecgframework.core.util.JSONHelper;
 import org.jeecgframework.core.util.MyClassLoader;
 import org.jeecgframework.core.util.ReflectHelper;
@@ -28,8 +24,9 @@ import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.easyui.Autocomplete;
+import org.jeecgframework.web.system.pojo.base.TSAttachment;
+import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author 张代浩
  * 
  */
-@Scope("prototype")
+//@Scope("prototype")
 @Controller
 @RequestMapping("/commonController")
 public class CommonController extends BaseController {
@@ -54,7 +51,6 @@ public class CommonController extends BaseController {
 	 */
 	private static final Logger logger = Logger.getLogger(CommonController.class);
 	private SystemService systemService;
-	private String message;
 
 	@Autowired
 	public void setSystemService(SystemService systemService) {
@@ -67,6 +63,7 @@ public class CommonController extends BaseController {
 	@RequestMapping(params = "listTurn")
 	public ModelAndView listTurn(HttpServletRequest request) {
 		String turn = request.getParameter("turn");// 跳转的目标页面
+		logger.info("--通用页面跳转--listTurn-------"+turn);
 		return new ModelAndView(turn);
 	}
 
@@ -80,7 +77,7 @@ public class CommonController extends BaseController {
 		String fileid = request.getParameter("fileid");
 		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"), "org.jeecgframework.web.system.pojo.base.TSAttachment");
 		String contentfield = oConvertUtils.getString(request.getParameter("contentfield"));
-		Class fileClass = MyClassLoader.getClassByScn(subclassname);// 附件的实际类
+		Class<?> fileClass = MyClassLoader.getClassByScn(subclassname);// 附件的实际类
 		Object fileobj = systemService.getEntity(fileClass, fileid);
 		ReflectHelper reflectHelper = new ReflectHelper(fileobj);
 		String extend = oConvertUtils.getString(reflectHelper.getMethodValue("extend"));
@@ -97,6 +94,9 @@ public class CommonController extends BaseController {
 			return new ModelAndView("common/upload/imageView");
 		} else {
 			String swfpath = oConvertUtils.getString(reflectHelper.getMethodValue("swfpath"));
+
+			swfpath=swfpath.replace("\\","/");
+
 			request.setAttribute("swfpath", swfpath);
 			return new ModelAndView("common/upload/swfView");
 		}
@@ -104,29 +104,49 @@ public class CommonController extends BaseController {
 	}
 
 	/**
-	 * 附件预览读取
+	 * 附件预览读取/下载文件
 	 * 
 	 * @return
 	 */
 	@RequestMapping(params = "viewFile")
 	public void viewFile(HttpServletRequest request, HttpServletResponse response) {
 		String fileid =oConvertUtils.getString(request.getParameter("fileid"));
-		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"), "com.jeecg.base.pojo.TSAttachment");
-		Class fileClass = MyClassLoader.getClassByScn(subclassname);// 附件的实际类
-		Object fileobj = systemService.getEntity(fileClass, fileid);
-		ReflectHelper reflectHelper = new ReflectHelper(fileobj);
-		UploadFile uploadFile = new UploadFile(request, response);
-		String contentfield = oConvertUtils.getString(request.getParameter("contentfield"), uploadFile.getByteField());
-		byte[] content = (byte[]) reflectHelper.getMethodValue(contentfield);
-		String path = oConvertUtils.getString(reflectHelper.getMethodValue("realpath"));
-		String extend = oConvertUtils.getString(reflectHelper.getMethodValue("extend"));
-		String attachmenttitle = oConvertUtils.getString(reflectHelper.getMethodValue("attachmenttitle"));
-		uploadFile.setExtend(extend);
-		uploadFile.setTitleField(attachmenttitle);
-		uploadFile.setRealPath(path);
-		uploadFile.setContent(content);
-		//uploadFile.setView(true);
-		systemService.viewOrDownloadFile(uploadFile);
+
+		String subclassname = request.getParameter("subclassname");
+		if(oConvertUtils.isEmpty(subclassname)){
+			TSAttachment tsAttachment = systemService.getEntity(TSAttachment.class, fileid);
+			UploadFile uploadFile = new UploadFile(request, response);
+			//byte[] content = tsAttachment.getAttachmentcontent();
+			String path = tsAttachment.getRealpath();;
+			String extend = tsAttachment.getExtend();
+			String attachmenttitle = tsAttachment.getAttachmenttitle();
+			uploadFile.setExtend(extend);
+			uploadFile.setTitleField(attachmenttitle);
+			uploadFile.setRealPath(path);
+			//uploadFile.setContent(content);
+			//uploadFile.setView(true);
+			systemService.viewOrDownloadFile(uploadFile);
+			logger.info("--附件预览----TSAttachment---viewFile-----path--"+path);
+		}else{
+			subclassname = oConvertUtils.getString(subclassname);
+			Class<?> fileClass = MyClassLoader.getClassByScn(subclassname);// 自定义附件实体类
+			Object fileobj = systemService.getEntity(fileClass, fileid);
+			ReflectHelper reflectHelper = new ReflectHelper(fileobj);
+			UploadFile uploadFile = new UploadFile(request, response);
+			String contentfield = oConvertUtils.getString(request.getParameter("contentfield"), uploadFile.getByteField());
+			byte[] content = (byte[]) reflectHelper.getMethodValue(contentfield);
+			String path = oConvertUtils.getString(reflectHelper.getMethodValue("realpath"));
+			String extend = oConvertUtils.getString(reflectHelper.getMethodValue("extend"));
+			String attachmenttitle = oConvertUtils.getString(reflectHelper.getMethodValue("attachmenttitle"));
+			uploadFile.setExtend(extend);
+			uploadFile.setTitleField(attachmenttitle);
+			uploadFile.setRealPath(path);
+			uploadFile.setContent(content);
+			//uploadFile.setView(true);
+			systemService.viewOrDownloadFile(uploadFile);
+			logger.info("--附件预览---自定义实体类："+subclassname+"--viewFile-----path--"+path);
+		}
+
 	}
 
 	@RequestMapping(params = "importdata")
@@ -218,9 +238,13 @@ public class CommonController extends BaseController {
             response.setDateHeader("Expires", 0);
             response.getWriter().write(JSONHelper.listtojson(allFieldArr,allFieldArr.length,autoList));
             response.getWriter().flush();
-            response.getWriter().close();
 		} catch (Exception e1) {
 			e1.printStackTrace();
+		}finally{
+			try {
+				response.getWriter().close();
+			} catch (IOException e) {
+			}
 		}
 
 	}
@@ -234,6 +258,7 @@ public class CommonController extends BaseController {
 	@RequestMapping(params = "delObjFile")
 	@ResponseBody
 	public AjaxJson delObjFile(HttpServletRequest request) {
+		String message = null;
 		AjaxJson j = new AjaxJson();
 		String fileKey = oConvertUtils.getString(request.getParameter("fileKey"));// 文件ID
 		TSAttachment attachment = systemService.getEntity(TSAttachment.class,fileKey);
@@ -242,6 +267,7 @@ public class CommonController extends BaseController {
 		message = "" + attachment.getAttachmenttitle() + "删除成功";
 		systemService.delete(objfile);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		logger.info("--删除附件---delObjFile----"+message);
 		
 		j.setMsg(message);
 		return j;

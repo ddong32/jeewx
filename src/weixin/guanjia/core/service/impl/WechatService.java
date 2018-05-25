@@ -392,8 +392,7 @@ public class WechatService {
 				newsResp.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
 				newsResp.setArticleCount(newsList.size());
 				newsResp.setArticles(articleList);
-				respMessage = MessageUtil
-						.newsMessageToXml(newsResp);
+				respMessage = MessageUtil.newsMessageToXml(newsResp);
 			} else if ("expand".equals(type)) {
 				WeixinExpandconfigEntity expandconfigEntity = weixinExpandconfigService.getEntity(WeixinExpandconfigEntity.class,menuEntity.getTemplateId());
 				String className = expandconfigEntity.getClassname();

@@ -30,12 +30,19 @@ public class ComboBoxTag extends TagSupport {
 		return EVAL_PAGE;
 	}
 	public int doEndTag() throws JspTagException {
+		JspWriter out = null;
 		try {
-			JspWriter out = this.pageContext.getOut();
+			out = this.pageContext.getOut();
 			out.print(end().toString());
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				out.clear();
+				out.close();
+			} catch (Exception e2) {
+			}
 		}
 		return EVAL_PAGE;
 	}
@@ -48,7 +55,7 @@ public class ComboBoxTag extends TagSupport {
 				+"$(function() {"
 				+"$(\'#"+name+"\').combobox({"
 				+"url:\'"+url+"&id="+id+"&text="+text+"\',"
-				+"editable:\'false\',"
+				+"editable:\'"+editable+"\',"
 				+"valueField:\'id\',"
 				+"textField:\'text\'," 
 				+"width:\'"+width+"\'," 
@@ -78,5 +85,12 @@ public class ComboBoxTag extends TagSupport {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 }

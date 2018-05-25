@@ -29,6 +29,7 @@ public interface ICommonDao extends IGenericBaseCommonDao{
 	 * 检查用户是否存在
 	 * */
 	public TSUser getUserByUserIdAndUserNameExits(TSUser user);
+	public TSUser findUserByAccountAndPassword(String username,String password);
 	public String getUserRole(TSUser user);
 	/**
 	 * 文件上传
@@ -54,14 +55,19 @@ public interface ICommonDao extends IGenericBaseCommonDao{
 	 */
 	public void parserXml(String fileName);
 	public List<ComboTree> comTree(List<TSDepart> all,ComboTree comboTree);
+	public List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in);
+	
 	/**
-	 * 根据模型生成JSON
-	 * @param all 全部对象
-	 * @param in  已拥有的对象
-	 * @param comboBox 模型
-	 * @return
-	 */
-	public  List<ComboTree> ComboTree(List all,ComboTreeModel comboTreeModel,List in);
+     * 根据模型生成ComboTree JSON
+     *
+     * @param all 全部对象
+     * @param comboTreeModel 模型
+     * @param in 已拥有的对象
+     * @param recursive 是否递归加载所有子节点
+     * @return List<ComboTree>
+     */
+	public  List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive);
+
 	public  List<TreeGrid> treegrid(List all,TreeGridModel treeGridModel);
 }
 

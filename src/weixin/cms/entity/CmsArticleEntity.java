@@ -63,12 +63,13 @@ public class CmsArticleEntity implements java.io.Serializable {
 	private String expense_contain;
 	/**费用不包含*/
 	private String expense_ncontain;
+	/**栏目id*/
+	private String menuentityId;
 	
 	/**
 	 *方法: 取得java.lang.String
 	 *@return: java.lang.String  主键
 	 */
-	
 	@Id
 	@GeneratedValue(generator = "paymentableGenerator")
 	@GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
@@ -292,7 +293,15 @@ public class CmsArticleEntity implements java.io.Serializable {
 		this.expense_ncontain = expense_ncontain;
 	}
 	
-	private List<CmsPhotoEntity> photos;
+	@Column(name ="menuentity_id",nullable=true,length=36)
+	public String getMenuentityId() {
+        return menuentityId;
+    }
+    public void setMenuentityId(String menuentityId) {
+        this.menuentityId = menuentityId;
+    }
+
+    private List<CmsPhotoEntity> photos;
     @Transient
     public List<CmsPhotoEntity> getPhotos() {
         return photos;

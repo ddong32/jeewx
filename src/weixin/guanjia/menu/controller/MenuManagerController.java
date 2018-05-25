@@ -272,8 +272,7 @@ public class MenuManagerController {
             MenuEntity entity = menuList.get(a);
             String hqls = "from MenuEntity where fatherid = '" + entity.getId() + "' and accountId = '" + ResourceUtil.getWeiXinAccountId() + "'  order by  orders asc";
             List<MenuEntity> childList = this.systemService.findByQueryString(hqls);
-            // org.jeecgframework.core.util.LogUtil.info("....二级菜单的大小....." +
-            // childList.size());
+            // org.jeecgframework.core.util.LogUtil.info("....二级菜单的大小....." + childList.size());
             if (childList.size() == 0) {
                 if ("view".equals(entity.getType())) {
                     ViewButton viewButton = new ViewButton();

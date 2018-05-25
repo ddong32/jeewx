@@ -17,6 +17,7 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
@@ -35,7 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @version V1.0   
  *
  */
-@Scope("prototype")
+//@Scope("prototype")
 @Controller
 @RequestMapping("/cgformButtonSqlController")
 public class CgformButtonSqlController extends BaseController {
@@ -51,15 +52,6 @@ public class CgformButtonSqlController extends BaseController {
 	private CgformButtonServiceI cgformButtonService;
 	@Autowired
 	private SystemService systemService;
-	private String message;
-	
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
 
 
 	/**
@@ -103,12 +95,13 @@ public class CgformButtonSqlController extends BaseController {
 	@RequestMapping(params = "del")
 	@ResponseBody
 	public AjaxJson del(CgformButtonSqlEntity cgformButtonSql, HttpServletRequest request) {
+		String message = null;
 		AjaxJson j = new AjaxJson();
 		cgformButtonSql = systemService.getEntity(CgformButtonSqlEntity.class, cgformButtonSql.getId());
 		message = "删除成功";
 		cgformButtonSqlService.delete(cgformButtonSql);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
-		
+		logger.info("["+IpUtil.getIpAddr(request)+"][online表单sql增强删除]"+message);
 		j.setMsg(message);
 		return j;
 	}
@@ -142,6 +135,7 @@ public class CgformButtonSqlController extends BaseController {
 	@RequestMapping(params = "save")
 	@ResponseBody
 	public AjaxJson save(CgformButtonSqlEntity cgformButtonSql, HttpServletRequest request) {
+		String message = null;
 		AjaxJson j = new AjaxJson();
 		List<CgformButtonSqlEntity> list =  cgformButtonSqlService.checkCgformButtonSql(cgformButtonSql);
 		if(list!=null&&list.size()>0){
@@ -164,6 +158,7 @@ public class CgformButtonSqlController extends BaseController {
 			cgformButtonSqlService.save(cgformButtonSql);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
+		logger.info("["+IpUtil.getIpAddr(request)+"][online表单sql增强添加更新]"+message);
 		j.setMsg(message);
 		return j;
 	}

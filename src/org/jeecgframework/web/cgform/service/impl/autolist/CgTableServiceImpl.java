@@ -163,6 +163,10 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 		return true;
 	}
 
+    @Override
+    public void treeFromResultHandle(String table, String parentIdFieldName, String parentIdFieldType, List<Map<String, Object>> result) {
+        // TODO Auto-generated method stub
+        
+    }
 
-	
 }

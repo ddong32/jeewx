@@ -4,6 +4,8 @@ import org.jeecgframework.web.cgform.entity.config.CgFormHeadEntity;
 
 import org.jeecgframework.minidao.annotation.Arguments;
 import org.jeecgframework.minidao.annotation.MiniDao;
+import org.springframework.stereotype.Repository;
+
 /**
  * 
  * @Title:CgFormFieldDao
@@ -12,7 +14,7 @@ import org.jeecgframework.minidao.annotation.MiniDao;
  * @date Aug 24, 2013 11:33:33 AM
  * @version V1.0
  */
-@MiniDao
+@Repository("cgFormVersionDao")
 public interface CgFormVersionDao {
 	@Arguments("tableName")
 	public String  getCgFormVersionByTableName(String tableName);

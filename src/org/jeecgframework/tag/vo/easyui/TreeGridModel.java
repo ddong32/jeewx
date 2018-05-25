@@ -1,6 +1,8 @@
 package org.jeecgframework.tag.vo.easyui;
 
- /**
+import java.util.Map;
+
+/**
  * 
  * @ClassName: TreeGridModel 
  * @Description: TODO(树形列表模型设置类) 
@@ -19,7 +21,17 @@ public class TreeGridModel implements java.io.Serializable {
  	private String roleid;
  	private String icon;
  	private String order;
+ 	private String functionType;
+ 	private String iconStyle;//图标样式
+ 	private Map<String, Object> fieldMap; // 存储实体字段信息容器：key-字段名称，value-字段值
  	
+    public String getFunctionType() {
+		return functionType;
+	}
+	public void setFunctionType(String functionType) {
+		this.functionType = functionType;
+	}
+
 	public String getOrder() {
 		return order;
 	}
@@ -81,4 +93,23 @@ public class TreeGridModel implements java.io.Serializable {
 	public void setChildList(String childList) {
 		this.childList = childList;
 	}
+
+    public Map<String, Object> getFieldMap() {
+        return fieldMap;
+    }
+
+    public void setFieldMap(Map<String, Object> fieldMap) {
+        this.fieldMap = fieldMap;
+    }
+
+	public String getIconStyle() {
+		return iconStyle;
+	}
+	public void setIconStyle(String iconStyle) {
+		this.iconStyle = iconStyle;
+	}
+
+    
+    
+    
 }

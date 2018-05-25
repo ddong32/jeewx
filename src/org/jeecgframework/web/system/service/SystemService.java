@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.jeecgframework.web.system.pojo.base.DictEntity;
 import org.jeecgframework.web.system.pojo.base.TSFunction;
+import org.jeecgframework.web.system.pojo.base.TSIcon;
 import org.jeecgframework.web.system.pojo.base.TSType;
 import org.jeecgframework.web.system.pojo.base.TSTypegroup;
 import org.jeecgframework.web.system.pojo.base.TSUser;
@@ -99,5 +100,28 @@ public interface SystemService extends CommonService{
 	 */
 	public void flushRoleFunciton(String id, TSFunction newFunciton);
 
-	
+	/**
+     * 加载所有图标
+     * @return
+     */
+    public  void initAllTSIcons();
+    
+    /**
+     * 更新图标
+     * @param icon
+     */
+    public  void upTSIcons(TSIcon icon);
+    
+    /**
+     * 更新图标
+     * @param icon
+     */
+    public  void delTSIcons(TSIcon icon);
+    
+    /**
+     * 获取页面控件权限控制的
+     * JS片段
+     * @param out
+     */
+    public String getAuthFilterJS();
 }

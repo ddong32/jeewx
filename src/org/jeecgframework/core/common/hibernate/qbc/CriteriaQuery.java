@@ -1,8 +1,8 @@
 package org.jeecgframework.core.common.hibernate.qbc;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +26,7 @@ import org.jeecgframework.tag.vo.datatable.SortInfo;
  *@date： 日期：2012-12-7 时间：上午10:22:15
  *@version 1.0
  */
-@SuppressWarnings({"rawtypes","static-access"})
-public class CriteriaQuery implements Serializable {
+public class CriteriaQuery {
 	public CriteriaQuery() {
 
 	}
@@ -45,15 +44,18 @@ public class CriteriaQuery implements Serializable {
 	private static Map<String, Object> ordermap;//排序字段
 	private boolean flag = true;// 对同一字段进行第二次重命名查询时值设置FASLE不保存重命名查询条件
 	private String field="";//查询需要显示的字段
-	private Class entityClass;//POJO
-	private List results;// 结果集
+	private Class<?> entityClass;//POJO
+	private List<?> results;// 结果集
 	private int total;
 	private List<String> alias = new ArrayList<String>();//保存创建的aliasName 防止重复创建
-	public List getResults() {
+	private DataGrid dataGrid;
+	private DataTables dataTables;
+	
+	public List<?> getResults() {
 		return results;
 	}
 
-	public void setResults(List results) {
+	public void setResults(List<?> results) {
 		this.results = results;
 	}
 
@@ -64,9 +66,6 @@ public class CriteriaQuery implements Serializable {
 	public void setTotal(int total) {
 		this.total = total;
 	}
-
-	private DataGrid dataGrid;
-	private DataTables dataTables;
 
 	public DataTables getDataTables() {
 		return dataTables;
@@ -84,11 +83,11 @@ public class CriteriaQuery implements Serializable {
 		this.dataGrid = dataGrid;
 	}
 
-	public Class getEntityClass() {
+	public Class<?> getEntityClass() {
 		return entityClass;
 	}
 
-	public void setEntityClass(Class entityClass) {
+	public void setEntityClass(Class<?> entityClass) {
 		this.entityClass = entityClass;
 	}
 	public CriterionList getJqcriterionList() {
@@ -99,33 +98,37 @@ public class CriteriaQuery implements Serializable {
 		this.jqcriterionList = jqcriterionList;
 	}
 
-	public CriteriaQuery(Class c) {
+	public CriteriaQuery(Class<?> c) {
 		this.detachedCriteria = DetachedCriteria.forClass(c);
 		this.map = new HashMap<String, Object>();
-		this.ordermap = new HashMap<String, Object>();
+
+		this.ordermap = new LinkedHashMap<String, Object>();
+
 	}
 
-	public CriteriaQuery(Class c, int curPage, String myAction, String myForm) {
+	public CriteriaQuery(Class<?> c, int curPage, String myAction, String myForm) {
 		this.curPage = curPage;
 		this.myAction = myAction;
 		this.myForm = myForm;
 		this.detachedCriteria = DetachedCriteria.forClass(c);
 	}
 
-	public CriteriaQuery(Class c, int curPage, String myAction) {
+	public CriteriaQuery(Class<?> c, int curPage, String myAction) {
 		this.myAction = myAction;
 		this.curPage = curPage;
 		this.detachedCriteria = DetachedCriteria.forClass(c);
 		this.map = new HashMap<String, Object>();
-		this.ordermap = new HashMap<String, Object>();
+
+		this.ordermap = new LinkedHashMap<String, Object>();
+
 	}
 
-	public CriteriaQuery(Class entityClass, int curPage) {
+	public CriteriaQuery(Class<?> entityClass, int curPage) {
 		this.curPage = curPage;
 		this.detachedCriteria = DetachedCriteria.forClass(entityClass);
 		this.map = new HashMap<String, Object>();
 	}
-	public CriteriaQuery(Class entityClass,DataGrid dg) {
+	public CriteriaQuery(Class<?> entityClass,DataGrid dg) {
 		this.curPage = dg.getPage();
 		//String[] fieldstring=dg.getField().split(",");
 		//this.detachedCriteria = DetachedCriteriaUtil
@@ -138,7 +141,9 @@ public class CriteriaQuery implements Serializable {
 		this.dataGrid=dg;
 		this.pageSize=dg.getRows();
 		this.map = new HashMap<String, Object>();
-		this.ordermap = new HashMap<String, Object>();
+
+		this.ordermap = new LinkedHashMap<String, Object>();
+
 	}
 	public CriteriaQuery(Class entityClass,DataTables dataTables) {
 		this.curPage = dataTables.getDisplayStart();
@@ -151,7 +156,9 @@ public class CriteriaQuery implements Serializable {
 		this.dataTables=dataTables;
 		this.pageSize=dataTables.getDisplayLength();
 		this.map = new HashMap<String, Object>();
-		this.ordermap = new HashMap<String, Object>();
+
+		this.ordermap = new LinkedHashMap<String, Object>();
+
 		addJqCriteria(dataTables);
 	}
 
@@ -235,7 +242,7 @@ public class CriteriaQuery implements Serializable {
 		}
 	}
 
-	public void setResultTransformer(Class class1) {
+	public void setResultTransformer(Class<?> class1) {
 		detachedCriteria.setResultTransformer(Transformers.aliasToBean(class1));
 	}
 
@@ -535,7 +542,7 @@ public class CriteriaQuery implements Serializable {
 	 * @param keyvalue2
 	 */
 	public void in(String keyname, Object[] keyvalue) {
-		if (keyvalue != null && keyvalue[0] != "") {
+		if (keyvalue != null&&keyvalue.length>0&& keyvalue[0] != "") {
 			criterionList.addPara(Restrictions.in(keyname, keyvalue));
 		}
 	}
@@ -702,4 +709,24 @@ public class CriteriaQuery implements Serializable {
 		this.flag = flag;
 	}
 
+	public void clear(){
+		criterionList.clear();
+		jqcriterionList.clear();
+		alias.clear();
+		if(map!=null){map.clear();}
+		if(ordermap!=null){ordermap.clear();}
+		entityClass=null;
+
+		dataGrid = null;
+		dataTables = null;
+		detachedCriteria = null;
+
+		criterionList = null;
+		jqcriterionList = null;
+		jqcriterionList = null;
+		map = null;
+		ordermap = null;
+		alias = null;
+		field = null;
+	}
 }

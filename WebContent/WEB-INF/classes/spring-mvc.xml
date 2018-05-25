@@ -25,8 +25,7 @@
 	</bean>
 	
 	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射， 配置一个基于注解的定制的WebBindingInitializer，解决日期转换问题，方法级别的处理器映射 -->
-	<bean
-		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="cacheSeconds" value="0" />
 		<property name="messageConverters">
 			<list>
@@ -65,13 +64,11 @@
 	<!-- Excel 处理 根据用户输入进行对象处理 -->
 	<bean id="jeecgExcelView" class="org.jeecgframework.poi.excel.view.JeecgSingleExcelView" />
 	<!-- 方言 -->
-	<bean id="dialect"
-		class="org.jeecgframework.core.common.hibernate.dialect.DialectFactoryBean">
+	<bean id="dialect" class="org.jeecgframework.core.common.hibernate.dialect.DialectFactoryBean">
 		<property name="dbType" value="${jdbc.dbType}" />
 	</bean>
 	<!-- 异常处理类 -->
-	<bean id="exceptionHandler"
-		class="org.jeecgframework.core.common.exception.MyExceptionHandler" />
+	<bean id="exceptionHandler" class="org.jeecgframework.core.common.exception.MyExceptionHandler" />
 	<!-- 系统错误转发配置[并记录错误日志] -->
 	<bean
 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
@@ -79,7 +76,7 @@
 		<property name="defaultStatusCode" value="404"></property>
 		<property name="statusCodes"><!-- 配置多个statusCode -->
 			<props>
-				<prop key="error">500</prop>  <!-- error.jsp -->
+				<prop key="error">500</prop>     <!-- error.jsp -->
 				<prop key="error1">404</prop>    <!-- error1.jsp -->
 			</props>
 		</property>

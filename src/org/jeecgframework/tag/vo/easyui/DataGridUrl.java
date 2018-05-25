@@ -19,6 +19,14 @@ public class DataGridUrl {
 	private String funname;//自定义函数名称
 	private boolean isRadio;//是否是单选框
 	private String onclick;//选项单击事件
+	private String urlStyle;//url样式
+
+	private String urlclass;//按钮样式
+	private String urlfont;//按钮图标
+
+	private String id;
+
+	private String operationCode;//按钮的操作Code
 	public String getOnclick() {
 		return onclick;
 	}
@@ -69,6 +77,14 @@ public class DataGridUrl {
 		return type;
 	}
 
+	public String getOperationCode() {
+		return operationCode;
+	}
+
+	public void setOperationCode(String operationCode) {
+		this.operationCode = operationCode;
+	}
+
 	public String getUrl() {
 		return url;
 	}
@@ -115,6 +131,43 @@ public class DataGridUrl {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-	
 
+	public void setUrlStyle(String urlStyle) {
+		this.urlStyle = urlStyle;
+	}
+
+	public String getUrlStyle() {
+		return urlStyle;
+	}
+
+	public String getUrlclass() {
+		return urlclass;
+	}
+	public void setUrlclass(String urlclass) {
+		this.urlclass = urlclass;
+	}
+	public String getUrlfont() {
+		return urlfont;
+	}
+	public void setUrlfont(String urlfont) {
+		this.urlfont = urlfont;
+	}
+
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "DataGridUrl [url=" + url + ", title=" + title + ", icon=" + icon + ", value=" + value + ", width=" + width + ", height=" + height + 
+		", type=" + type + ", isbtn=" + isbtn + ", message=" + message + ", exp=" + exp + ", funname=" + funname + ", isRadio=" + isRadio +
+		", onclick=" + onclick + ", urlStyle=" + urlStyle + ", urlclass=" + urlclass + ", urlfont=" + urlfont
+		+ ", id=" + id + ", operationCode=" + operationCode + "]";
+	}
+		
 }

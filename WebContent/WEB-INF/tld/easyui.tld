@@ -302,11 +302,31 @@
 			<description>datagrid field 的扩展字段,如果easyui上面有但是jeecg没有这个属性可以自己添加
 				添加规则和easyui的field一致</description>
 		</attribute>
+		<attribute>
+   			<name>popup</name>
+   			<rtexprvalue>true</rtexprvalue>
+   			<description>是否启用popup模式</description>
+  		</attribute>
+  		<attribute>
+   			<name>editor</name>
+   			<rtexprvalue>true</rtexprvalue>
+   			<description>高级查询器用的字段编辑器</description>
+  		</attribute>
+  		<attribute>
+   			<name>defaultVal</name>
+   			<rtexprvalue>true</rtexprvalue>
+   			<description>UI标签库列表默认查询条件</description>
+  		</attribute>
+  		<attribute>
+  			<name>newColumn</name>
+  			<rtexprvalue>true</rtexprvalue>
+  			<description>是否另起一行</description>
+  		</attribute>
 	</tag>
 	<tag>
 		<name>dgDelOpt</name>
 		<tag-class>org.jeecgframework.tag.core.easyui.DataGridDelOptTag</tag-class>
-		<body-content>jsp</body-content>
+		<body-content>JSP</body-content>
 		<description>列表删除操作</description>
 		<attribute>
 			<name>url</name>
@@ -320,6 +340,14 @@
 			<rtexprvalue>true</rtexprvalue>
 			<description>操作标题</description>
 		</attribute>
+		
+		<attribute>
+			<name>langArg</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>多语言参数</description>
+		</attribute>
+
 		<attribute>
 			<name>message</name>
 			<rtexprvalue>true</rtexprvalue>
@@ -331,15 +359,34 @@
 			<description>是否显示改链接的表达式,例 字段名#表达式符号#字段值(name#eq#admin)
 				表达式类型支持eq,ne,empty</description>
 		</attribute>
+		<!-- //update-begin-Author:xuelin  Date:20170704 for：TASK #2206 【UI标签】确认功能是否可用，取消这个属性 -->
+		<!-- 		
 		<attribute>
 			<name>funname</name>
 			<rtexprvalue>true</rtexprvalue>
 			<description>自定义函数名称</description>
-		</attribute>
+		</attribute> 
+		-->		
+		<!-- //update-end-Author:xuelin  Date:20170704 for：TASK #2206 【UI标签】确认功能是否可用，取消这个属性 -->
 		<attribute>
 			<name>operationCode</name>
 			<rtexprvalue>true</rtexprvalue>
 			<description>按钮操作Code</description>
+		</attribute>
+		<attribute>
+			<name>urlStyle</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>链接样式,直接写style里的内容; e.g: (background-color:#18a689;padding-left:10px;)</description>
+		</attribute>
+		<attribute>
+			<name>urlclass</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>自定义按钮样式</description>
+		</attribute>
+		<attribute>
+			<name>urlfont</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>自定义按钮图标样式</description>
 		</attribute>
 	</tag>
 	<tag>
@@ -444,10 +491,10 @@
 			<description>按钮操作Code</description>
 		</attribute>
 	</tag>
-	<tag>
+		<tag>
 		<name>dgToolBar</name>
 		<tag-class>org.jeecgframework.tag.core.easyui.DataGridToolBarTag</tag-class>
-		<body-content>jsp</body-content>
+		<body-content>JSP</body-content>
 		<description>列表工具条标签</description>
 		<attribute>
 			<name>url</name>
@@ -459,12 +506,27 @@
 			<rtexprvalue>true</rtexprvalue>
 			<description>工具条选项图标</description>
 		</attribute>
+		<!-- author:zhangjiqaing date：20170620 for:task 2158 增加控件ID -->
+		<attribute>
+			<name>id</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>控件ID</description>
+		</attribute>
+		<!-- author:zhangjiqaing date：20170620 for:task 2158 增加控件ID -->
 		<attribute>
 			<name>title</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 			<description>工具条选项标题</description>
 		</attribute>
+		
+		<attribute>
+			<name>langArg</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>多语言参数</description>
+		</attribute>
+		
 		<attribute>
 			<name>funname</name>
 			<rtexprvalue>true</rtexprvalue>

@@ -22,6 +22,17 @@ public class TSOperation extends IdEntity implements java.io.Serializable {
 	private Short status;
 	private TSIcon TSIcon = new TSIcon();
 	private TSFunction TSFunction = new TSFunction();
+	
+	private Short operationType;//0隐藏 1禁用
+	
+	@Column(name = "operationtype")
+	public Short getOperationType() {
+		return operationType;
+	}
+
+	public void setOperationType(Short operationType) {
+		this.operationType = operationType;
+	}
 
 	@Column(name = "operationname", length = 50)
 	public String getOperationname() {
@@ -77,4 +88,27 @@ public class TSOperation extends IdEntity implements java.io.Serializable {
 	public void setTSFunction(TSFunction tSFunction) {
 		TSFunction = tSFunction;
 	}
+	
+	@Override
+    public boolean equals(Object obj) {  
+        if(this == obj)  
+            return false;  
+        if(obj == null)  
+            return false;  
+        if(getClass() != obj.getClass() )  
+            return false;  
+        TSOperation other = (TSOperation)obj;  
+        if (getId().equals(other.getId())){
+        	return true; 
+        }else {
+        	return false;  
+        }
+    } 
+
+	@Override
+	public int hashCode(){
+		String in = super.getId() + operationname;
+		return in.hashCode();
+	}
+
 }

@@ -312,7 +312,7 @@ public class WeixinCmsSiteController extends BaseController {
 
 			List<WeixinCmsSiteEntity> weixinCmsSites = this.weixinCmsSiteService
 					.getListByCriteriaQuery(cq, false);
-			workbook = ExcelExportUtil.exportExcel(new ExcelTitle("微站点信息列表",
+            workbook = ExcelExportUtil.exportExcel(new ExcelTitle("微站点信息列表",
 					"导出人:" + ResourceUtil.getSessionUserName().getRealName(),
 					"导出信息"), WeixinCmsSiteEntity.class, weixinCmsSites);
 			fOut = response.getOutputStream();

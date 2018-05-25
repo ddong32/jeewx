@@ -6,17 +6,32 @@
   <t:datagrid name="cmsArticleList" title="信息管理" actionUrl="cmsArticleController.do?datagrid" idField="id" fit="true" sortName="createDate" sortOrder="desc" queryMode="group">
    <t:dgCol title="编号" field="id" hidden="false"></t:dgCol>
    <t:dgCol title="标题" field="title" query="true" width="140"></t:dgCol>
-   <t:dgCol title="所属栏目" field="columnId" dictionary="weixin_cms_menu,id,name,accountid='${accountid}'" query="true" width="80"></t:dgCol>
+   <t:dgCol title="所属栏目" field="columnId" query="true" popup="true" width="80" ></t:dgCol>
    <t:dgCol title="摘要" field="summary" width="160"></t:dgCol>
    <t:dgCol title="创建时间" field="createDate" formatter="yyyy-MM-dd hh:mm:ss" width="120"></t:dgCol>
    <t:dgCol title="图片名称" field="imageName" hidden="false"></t:dgCol>
    <t:dgCol title="图片地址" field="imageHref" hidden="false"></t:dgCol>
    <t:dgCol title="微信账户" field="accountid" hidden="false"></t:dgCol>
    <t:dgCol title="操作" field="opt"></t:dgCol>
-   <t:dgDelOpt title="删除" url="cmsArticleController.do?del&id={id}" />
+   <t:dgDelOpt title="删除" url="cmsArticleController.do?del&id={id}" urlclass="ace_button" urlfont="fa-trash" urlStyle="background-color:red"/>
    <t:dgToolBar title="录入" icon="icon-add" url="cmsArticleController.do?addorupdate" funname="add" width="100%" height="100%"></t:dgToolBar>
    <t:dgToolBar title="编辑" icon="icon-edit" url="cmsArticleController.do?addorupdate" funname="update" width="100%" height="100%"></t:dgToolBar>
    <t:dgToolBar title="查看" icon="icon-search" url="cmsArticleController.do?addorupdate" funname="detail" width="100%" height="100%"></t:dgToolBar>
   </t:datagrid>
   </div>
- </div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $('#fatherName').combotree({
+            url : 'menuManagerController.do?treeMenu',
+            onClick: function(node){
+                if (node.state){//有值代表一级菜单
+                    $("#state").val(node.state);
+                } else {
+                    $("#state").val('no');
+                }
+            }
+        });
+    });
+ </script>

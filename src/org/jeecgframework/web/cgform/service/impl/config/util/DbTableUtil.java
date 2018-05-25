@@ -70,8 +70,7 @@ public class DbTableUtil {
 
 	public static DbTableHandleI getTableHandle(Session  session) {
 		DbTableHandleI dbTableHandle = null;
-		String dialect = ((SessionImpl)session).getFactory().getDialect()
-				.getClass().getName();
+		String dialect = ((SessionImpl)session).getFactory().getDialect().getClass().getName();
 		if (dialect.equals("org.hibernate.dialect.MySQLDialect")) {
 			dbTableHandle = new DbTableMysqlHandleImpl();
 		}else if (dialect.contains("Oracle")) {
@@ -79,6 +78,9 @@ public class DbTableUtil {
 		}else if (dialect.equals("org.hibernate.dialect.PostgreSQLDialect")) {
 			dbTableHandle = new DbTablePostgresHandleImpl();
 		}else if (dialect.equals("org.hibernate.dialect.SQLServerDialect")) {
+			dbTableHandle = new TableSQLServerHandleImpl();
+		}
+		else if (dialect.equals("org.jeecgframework.core.common.hibernate.dialect.MySQLServer2008Dialect")) {
 			dbTableHandle = new TableSQLServerHandleImpl();
 		}
 		return dbTableHandle;
@@ -101,6 +103,9 @@ public class DbTableUtil {
 		}else if (dialect.equals("org.hibernate.dialect.PostgreSQLDialect")) {
 			dataType = "POSTGRESQL";
 		}else if (dialect.equals("org.hibernate.dialect.SQLServerDialect")) {
+			dataType="SQLSERVER";
+		}
+		else if (dialect.equals("org.jeecgframework.core.common.hibernate.dialect.MySQLServer2008Dialect")) {
 			dataType="SQLSERVER";
 		}
 		return dataType;

@@ -359,6 +359,36 @@ public class StringUtil {
 	}
 
 	/**
+	 * 转化为String时过滤空
+	 * @param o
+	 * @return
+	 */
+	public static String formatEmpty(Object o){
+		if(o == null){
+			return "";
+		}else{
+			return o.toString();
+		}
+	}
+	/**
+	 * 将多个对象拼接成一个String
+	 * @param objs
+	 * @return
+	 */
+	public static String concate(Object... objs){
+		if(objs == null || objs.length <= 0){
+			return "";
+		}
+		StringBuffer result = new StringBuffer();
+		for(int i=0; i<objs.length; i++){
+			result.append(formatEmpty(objs[i]));
+			result.append("_");
+		}
+		return result.toString();
+	}
+
+
+	/**
 	 * 自定义的分隔字符串函数 例如: 1,2,3 =>[1,2,3] 3个元素 ,2,3=>[,2,3] 3个元素 ,2,3,=>[,2,3,] 4个元素 ,,,=>[,,,] 4个元素
 	 * 
 	 * 5.22算法修改，为提高速度不用正则表达式 两个间隔符,,返回""元素
@@ -419,6 +449,28 @@ public class StringUtil {
 		}
 		return null;
 	}
+
+	/**
+	 * 把 名=值 参数表转换成字符串 {"a":"1","b":"2"}
+	 * @param map
+	 * @return
+	 */
+	public static String HashMapToJsonContent(HashMap<String, String> map) {
+		if (map != null && map.size() > 0) {
+			String result = "{";
+			Iterator it = map.keySet().iterator();
+			while (it.hasNext()) {
+				String name = (String) it.next();
+				String value = (String) map.get(name);
+				result += (result.equals("{")) ? "" : ", ";
+				result += String.format("\"%s\":\"%s\"", name, value);
+			}
+			result += "}";
+			return result;
+		}
+		return null;
+	}
+
 
 	/**
 	 * 解析字符串返回 名称=值的参数表 (a=1&b=2 => a=1,b=2)
@@ -1123,6 +1175,31 @@ public class StringUtil {
 		}
 		return str;
 	}
+	
+	// 字符串的替换
+	public static String replace(String strSource, String strOld, String strNew) {
+		if (strSource == null) {
+			return null;
+		}
+		int i = 0;
+		if ((i = strSource.indexOf(strOld, i)) >= 0) {
+			char[] cSrc = strSource.toCharArray();
+			char[] cTo = strNew.toCharArray();
+			int len = strOld.length();
+			StringBuffer buf = new StringBuffer(cSrc.length);
+			buf.append(cSrc, 0, i).append(cTo);
+			i += len;
+			int j = i;
+			while ((i = strSource.indexOf(strOld, i)) > 0) {
+				buf.append(cSrc, j, i - j).append(cTo);
+				i += len;
+				j = i;
+			}
+			buf.append(cSrc, j, cSrc.length - j);
+			return buf.toString();
+		}
+		return strSource;
+	}
 
 	/**
 	 * 判断是否与给定字符串样式匹配
@@ -1769,6 +1846,7 @@ public class StringUtil {
 	public static String firstLowerCase(String realName) {
 		return StringUtils.replaceChars(realName, realName.substring(0, 1),realName.substring(0, 1).toLowerCase());
 	}
+	
 	/**
 	 * 判断这个类是不是java自带的类
 	 * @param clazz
@@ -1785,5 +1863,14 @@ public class StringUtil {
 			isBaseClass =  true;
 		}
 		return isBaseClass;
+	}
+	
+	/**
+	 * 判断这个类是不是java自带的类
+	 * @param clazz
+	 * @return
+	 */
+	public static String getEmptyString() {
+		return "";
 	}
 }

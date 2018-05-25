@@ -1,5 +1,7 @@
 package org.jeecgframework.core.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,14 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 
- * @author  张代浩
- *
+ * @author 张代浩
+ * 
  */
 public class BrowserUtils {
+	
 	// 判断是否是IE
 	public static boolean isIE(HttpServletRequest request) {
-		return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0||
-				request.getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0")>0)? true : false;
+		return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0 || request
+				.getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0) ? true
+				: false;
 	}
 
 	/**
@@ -27,15 +31,15 @@ public class BrowserUtils {
 		Double version = 0.0;
 		if (getBrowserType(request, IE11)) {
 			version = 11.0;
-		}else if (getBrowserType(request, IE10)) {
+		} else if (getBrowserType(request, IE10)) {
 			version = 10.0;
-		}else if (getBrowserType(request, IE9)) {
+		} else if (getBrowserType(request, IE9)) {
 			version = 9.0;
-		}else if (getBrowserType(request, IE8)) {
+		} else if (getBrowserType(request, IE8)) {
 			version = 8.0;
-		}else if (getBrowserType(request, IE7)) {
+		} else if (getBrowserType(request, IE7)) {
 			version = 7.0;
-		}else if (getBrowserType(request, IE6)) {
+		} else if (getBrowserType(request, IE6)) {
 			version = 6.0;
 		}
 		return version;
@@ -85,9 +89,12 @@ public class BrowserUtils {
 		return browserType;
 	}
 
-	private static boolean getBrowserType(HttpServletRequest request, String brosertype) {
-		return request.getHeader("USER-AGENT").toLowerCase().indexOf(brosertype) > 0 ? true : false;
+	private static boolean getBrowserType(HttpServletRequest request,
+			String brosertype) {
+		return request.getHeader("USER-AGENT").toLowerCase()
+				.indexOf(brosertype) > 0 ? true : false;
 	}
+
 	private final static String IE11 = "rv:11.0";
 	private final static String IE10 = "MSIE 10.0";
 	private final static String IE9 = "MSIE 9.0";
@@ -105,7 +112,7 @@ public class BrowserUtils {
 	private final static String OTHER = "其它";
 
 	public static String checkBrowse(HttpServletRequest request) {
-		String userAgent=request.getHeader("USER-AGENT");
+		String userAgent = request.getHeader("USER-AGENT");
 		if (regex(OPERA, userAgent))
 			return OPERA;
 		if (regex(CHROME, userAgent))
@@ -141,6 +148,33 @@ public class BrowserUtils {
 		Pattern p = Pattern.compile(regex, Pattern.MULTILINE);
 		Matcher m = p.matcher(str);
 		return m.find();
+	}
+
+	
+	private static Map<String, String> langMap = new HashMap<String, String>();
+	private final static String ZH = "zh";
+	private final static String ZH_CN = "zh-cn";
+	
+	private final static String EN = "en";
+	private final static String EN_US = "en";
+	
+	
+	static 
+	{
+		langMap.put(ZH, ZH_CN);
+		langMap.put(EN, EN_US);
+	}
+	
+	public static String getBrowserLanguage(HttpServletRequest request) {
+		
+		String browserLang = request.getLocale().getLanguage();
+		String browserLangCode = (String)langMap.get(browserLang);
+		
+		if(browserLangCode == null)
+		{
+			browserLangCode = EN_US;
+		}
+		return browserLangCode;
 	}
 
 }

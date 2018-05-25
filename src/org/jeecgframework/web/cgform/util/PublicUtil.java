@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.jeecgframework.core.util.ReflectHelper;
 import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.web.cgform.common.CgAutoListConstant;
 
 /**
  * 公共方法
@@ -31,7 +32,7 @@ public class PublicUtil {
 	/**
 	 * 设置checkbox的值 -- Y/N
 	 * @param obj
-	 * @param params 以逗号隔开  "isNull,isShow,isQuery,isKey"
+	 * @param params 以逗号隔开  "isNull,isShow,isQuery,isKey,fieldMustInput"
 	 */
 	public static void judgeCheckboxValue(Object obj,String params){
 		ReflectHelper reflectHelper=new ReflectHelper(obj);
@@ -81,4 +82,18 @@ public class PublicUtil {
 		}
 		return s.trim();
 	}
+
+	/**
+	 * online配置表截取下划线获取真实物理表名称
+	 */
+	public static String replaceTableName(String tableName) {
+		if(tableName.indexOf(CgAutoListConstant.ONLINE_TABLE_SPLIT_STR)> -1){
+			int indexOf = tableName.indexOf(CgAutoListConstant.ONLINE_TABLE_SPLIT_STR);
+			tableName = tableName.substring(0, indexOf);
+			return tableName;
+		}
+		//否则返回原数据
+		return tableName;
+	}
+
 }

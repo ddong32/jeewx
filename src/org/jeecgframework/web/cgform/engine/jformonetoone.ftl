@@ -1,4 +1,5 @@
 
+					    <#--update-start--Author:luobaoli  Date:20150614 for：表单类型为onetoone子表属性中增加了扩展参数 ${po.extend_json?if_exists}-->
 					    <div title="${field['${sub}'].head.content?if_exists?html}" style="margin:0px;padding:0px;overflow:hidden;">
 							<div>
 							<table cellpadding="0" cellspacing="1" class="formtable" id="${sub}_table">
@@ -9,7 +10,7 @@
 										<#list data['${sub}'] as subTableData >
 											<input type="hidden" name="${sub}[${subTableData_index}].id" id="${sub}[${subTableData_index}].id" value="${subTableData['id']?if_exists?html}"/>
 											<#list field['${sub}'].hiddenFieldList as subTableField >
-											<input type="hidden" name="${sub}[${subTableData_index}].${subTableField.field_name}" id="${sub}[${subTableData_index}].${subTableField.field_name}" value="${subTableData['${subTableField.field_name}']?if_exists?html}}"/>
+											<input type="hidden" name="${sub}[${subTableData_index}].${subTableField.field_name}" id="${sub}[${subTableData_index}].${subTableField.field_name}" value="${subTableData['${subTableField.field_name}']?if_exists?html}"/>
 											</#list> 
 											<#list field['${sub}'].fieldNoAreaList as subTableField >
 											<#if subTableField_index%2==0>
@@ -22,7 +23,7 @@
 											</td>
 											<td class="value">
 											<#if subTableField.show_type=='text'>
-												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
+												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
 												       style="width: 150px" class="inputxt" value="${subTableData['${subTableField.field_name}']?if_exists?html}"
 										               nullmsg="请输入${subTableField.content}！"
 										               
@@ -38,7 +39,7 @@
 										               </#if></#if>>
 											
 											<#elseif subTableField.show_type=='password'>
-												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" name="${sub}[${subTableData_index}].${subTableField.field_name}"  type="password"
+												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}"  type="password"
 												       style="width: 150px" class="inputxt" value="${subTableData['${subTableField.field_name}']?if_exists?html}"
 										               nullmsg="请输入${subTableField.content}！"
 										               
@@ -51,7 +52,8 @@
 											<#elseif subTableField.show_type=='radio'>
 										        <@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 													<#list dataList as dictdata> 
-													<input value="${dictdata.typecode?if_exists?html}" name="${sub}[${subTableData_index}].${subTableField.field_name}" type="radio"
+													<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="radio"
+													<#if dictdata_index==0&&subTableField.is_null != 'Y'>datatype="*"</#if>
 													<#if dictdata.typecode?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}"> checked="true" </#if>>
 														${dictdata.typename?if_exists?html}
 													</#list> 
@@ -62,7 +64,8 @@
 												<#assign checkboxlist=checkboxstr?split(",")>
 												<@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 													<#list dataList as dictdata> 
-													<input value="${dictdata.typecode?if_exists?html}" name="${sub}[${subTableData_index}].${subTableField.field_name}" type="checkbox"
+													<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="checkbox"
+													<#if dictdata_index==0&&subTableField.is_null != 'Y'>datatype="*"</#if>
 													<#list checkboxlist as x >
 													<#if dictdata.typecode?if_exists?html=="${x?if_exists?html}"> checked="true" </#if></#list>>
 														${dictdata.typename?if_exists?html}
@@ -71,7 +74,8 @@
 										               
 											<#elseif subTableField.show_type=='list'>
 												<@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
-													<select id="${sub}[${subTableData_index}].${subTableField.field_name}" name="${sub}[${subTableData_index}].${subTableField.field_name}" >
+													<select id="${sub}[${subTableData_index}].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" 
+													<#if subTableField.is_null != 'Y'>datatype="*"</#if> >
 														<#list dataList as dictdata> 
 														<option value="${dictdata.typecode?if_exists?html}" 
 														<#if dictdata.typecode?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}"> selected="selected" </#if>>
@@ -82,7 +86,7 @@
 												</@DictData>
 												
 											<#elseif subTableField.show_type=='date'>
-												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
+												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
 												       style="width: 150px"  value="${subTableData['${subTableField.field_name}']?if_exists?html}"
 												       class="Wdate" onClick="WdatePicker()" 
 										               nullmsg="请输入${subTableField.content}！"
@@ -94,7 +98,7 @@
 										               </#if>>
 											
 											<#elseif subTableField.show_type=='datetime'>
-												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
+												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
 												       style="width: 150px"  value="${subTableData['${subTableField.field_name}']?if_exists?html}"
 												       class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
 										               nullmsg="请输入${subTableField.content}！"
@@ -106,7 +110,7 @@
 										               </#if>>
 										               
 											<#elseif subTableField.show_type=='popup'>
-												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" name="${sub}[${subTableData_index}].${subTableField.field_name}"  type="text"
+												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}"  type="text"
 												       style="width: 150px" class="searchbox-inputtext15" 
 												       onClick="inputClick(this,'${subTableField.dict_text?if_exists?html}','${subTableField.dict_table?if_exists?html}');" 
 												       value="${subTableData['${subTableField.field_name}']?if_exists?html}"
@@ -119,7 +123,7 @@
 										               </#if>>
 											
 											<#elseif subTableField.show_type=='file'>
-												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
+												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
 												       style="width: 150px" class="inputxt" value="${subTableData['${subTableField.field_name}']?if_exists?html}"
 										               nullmsg="请输入${subTableField.content}！"
 										               
@@ -130,7 +134,7 @@
 										               </#if>>
 										               
 											<#else>
-												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
+												<input id="${sub}[${subTableData_index}].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="text"
 												       style="width: 150px" class="inputxt" value="${subTableData['${subTableField.field_name}']?if_exists?html}"
 										               nullmsg="请输入${subTableField.content}！"
 										               
@@ -167,7 +171,7 @@
 													</label>
 												</td>
 												<td class="value" colspan="3">
-													<textarea id="${sub}[${subTableData_index}].${subTableField.field_name}" name="${sub}[${subTableData_index}].${subTableField.field_name}" 
+													<textarea id="${sub}[${subTableData_index}].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" 
 													       style="width: 600px" class="inputxt" rows="6"
 											               <#if subTableField.field_valid_type?if_exists?html != ''>
 											               datatype="${subTableField.field_valid_type?if_exists?html}"
@@ -197,7 +201,7 @@
 										</td>
 										<td class="value">
 										<#if subTableField.show_type=='text'>
-											<input id="${sub}[0].${subTableField.field_name}" name="${sub}[0].${subTableField.field_name}" type="text"
+											<input id="${sub}[0].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="text"
 											       style="width: 150px" class="inputxt"
 									               nullmsg="请输入${subTableField.content}！"
 									               
@@ -213,7 +217,7 @@
 									               </#if></#if>>
 										
 										<#elseif subTableField.show_type=='password'>
-											<input id="${sub}[0].${subTableField.field_name}" name="${sub}[0].${subTableField.field_name}"  type="password"
+											<input id="${sub}[0].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}"  type="password"
 											       style="width: 150px" class="inputxt" 
 									               nullmsg="请输入${subTableField.content}！"
 									               
@@ -226,7 +230,7 @@
 										<#elseif subTableField.show_type=='radio'>
 									        <@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 												<#list dataList as dictdata> 
-												<input value="${dictdata.typecode?if_exists?html}" name="${sub}[0].${subTableField.field_name}" type="radio">
+												<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="radio" <#if subTableField.is_null != 'Y'>datatype="*"</#if>>
 													${dictdata.typename?if_exists?html}
 												</#list> 
 											</@DictData>
@@ -234,14 +238,14 @@
 										<#elseif subTableField.show_type=='checkbox'>
 											<@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 												<#list dataList as dictdata> 
-												<input value="${dictdata.typecode?if_exists?html}" name="${sub}[0].${subTableField.field_name}" type="checkbox">
+												<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="checkbox" <#if subTableField.is_null != 'Y'>datatype="*"</#if>>
 													${dictdata.typename?if_exists?html}
 												</#list> 
 											</@DictData>
 									               
 										<#elseif subTableField.show_type=='list'>
 											<@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
-												<select id="${sub}[0].${subTableField.field_name}" name="${sub}[0].${subTableField.field_name}" >
+												<select id="${sub}[0].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" <#if subTableField.is_null != 'Y'>datatype="*"</#if>>
 													<#list dataList as dictdata> 
 													<option value="${dictdata.typecode?if_exists?html}" >
 														${dictdata.typename?if_exists?html}
@@ -251,7 +255,7 @@
 											</@DictData>
 											
 										<#elseif subTableField.show_type=='date'>
-											<input id="${sub}[0].${subTableField.field_name}" name="${sub}[0].${subTableField.field_name}" type="text"
+											<input id="${sub}[0].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="text"
 											       style="width: 150px"  
 											       class="Wdate" onClick="WdatePicker()" 
 									               nullmsg="请输入${subTableField.content}！"
@@ -263,7 +267,7 @@
 									               </#if>>
 										
 										<#elseif subTableField.show_type=='datetime'>
-											<input id="${sub}[0].${subTableField.field_name}" name="${sub}[0].${subTableField.field_name}" type="text"
+											<input id="${sub}[0].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="text"
 											       style="width: 150px"  
 											       class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
 									               nullmsg="请输入${subTableField.content}！"
@@ -275,7 +279,7 @@
 									               </#if>>
 									               
 										<#elseif subTableField.show_type=='popup'>
-											<input id="${sub}[0].${subTableField.field_name}" name="${sub}[0].${subTableField.field_name}"  type="text"
+											<input id="${sub}[0].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}"  type="text"
 											       style="width: 150px" class="searchbox-inputtext15" 
 											       onClick="inputClick(this,'${subTableField.dict_text?if_exists?html}','${subTableField.dict_table?if_exists?html}');" 
 									               nullmsg="请输入${subTableField.content}！"
@@ -287,7 +291,7 @@
 									               </#if>>
 										
 										<#elseif subTableField.show_type=='file'>
-											<input id="${sub}[0].${subTableField.field_name}" name="${sub}[0].${subTableField.field_name}" type="text"
+											<input id="${sub}[0].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="text"
 											       style="width: 150px" class="inputxt" 
 									               nullmsg="请输入${subTableField.content}！"
 									               
@@ -298,7 +302,7 @@
 									               </#if>>
 									               
 										<#else>
-											<input id="${sub}[0].${subTableField.field_name}" name="${sub}[0].${subTableField.field_name}" type="text"
+											<input id="${sub}[0].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="text"
 											       style="width: 150px" class="inputxt"
 									               nullmsg="请输入${subTableField.content}！"
 									               
@@ -335,7 +339,7 @@
 													</label>
 												</td>
 												<td class="value" colspan="3">
-													<textarea id="${sub}[0].${subTableField.field_name}" name="${sub}[0].${subTableField.field_name}" 
+													<textarea id="${sub}[0].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" 
 													       style="width: 600px" class="inputxt" rows="6"
 											               <#if subTableField.field_valid_type?if_exists?html != ''>
 											               datatype="${subTableField.field_valid_type?if_exists?html}"
@@ -351,4 +355,5 @@
 							</table>
 							</div>
 						</div>
+						<#--update-end--Author:luobaoli  Date:20150614 for：表单类型为onetoone子表属性中增加了扩展参数 ${po.extend_json?if_exists}-->
 					

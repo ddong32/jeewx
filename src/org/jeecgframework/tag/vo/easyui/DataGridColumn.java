@@ -11,12 +11,16 @@ public class DataGridColumn {
 	protected String title;//表格列名
 	protected String field;//数据库对应字段
 	protected Integer width;//宽度
+	//author：xugj start date:2016年5月11日 for:TASK #1080 【UI标签改造】t:dgCol 显示内容长度控制 -->
+	protected Integer showLen; //显示长度
+	//author：xugj end date:2016年5月11日 for:TASK #1080 【UI标签改造】t:dgCol 显示内容长度控制 -->
 	protected String rowspan;//跨列
 	protected String colspan;//跨行
 	protected String align;//对齐方式
 	protected boolean sortable;//是否排序
 	protected boolean checkbox;//是否显示复选框
 	protected String formatter;//格式化函数
+	protected String formatterjs;//自定义函数名称(调用页面自定义js方法 参数为(value,row,index)
 	protected boolean hidden;//是否隐藏
 	protected String treefield;//
 	protected boolean image;//是否是图片
@@ -29,6 +33,7 @@ public class DataGridColumn {
 	protected String funname="openwindow";//自定义函数名称
 	protected String arg;
 	protected String dictionary;
+	protected boolean popup=false;	//是否启用popup模式选择 默认不启用
 	protected String replace;
 	protected String extend;
 	protected String style; //列的颜色值
@@ -36,6 +41,37 @@ public class DataGridColumn {
 	protected String downloadName;//附件下载
 	protected boolean autocomplete;//自动补全
 	protected String extendParams;//扩展参数,easyui有的,但是jeecg没有的参数进行扩展
+	protected String editor;//高级查询用的编辑器
+
+	private String defaultVal = "";//列默认值
+
+	protected String showMode;//表单元素,查询表单中显示样式,默认样式select	
+
+	protected boolean newColumn;
+	
+	public boolean isNewColumn() {
+		return newColumn;
+	}
+
+	public void setNewColumn(boolean newColumn) {
+		this.newColumn = newColumn;
+	}
+
+	public String getShowMode() {
+		return showMode;
+	}
+
+	public void setShowMode(String showMode) {
+		this.showMode = showMode;
+	}
+
+	public String getEditor() {
+		return editor;
+	}
+
+	public void setEditor(String editor) {
+		this.editor = editor;
+	}
 	public String getDownloadName() {
 		return downloadName;
 	}
@@ -94,6 +130,14 @@ public class DataGridColumn {
 
 	public void setWidth(Integer width) {
 		this.width = width;
+	}
+
+	public Integer getShowLen() {
+		return showLen;
+	}
+
+	public void setShowLen(Integer showLen) {
+		this.showLen = showLen;
 	}
 
 	public void setRowspan(String rowspan) {
@@ -185,6 +229,14 @@ public class DataGridColumn {
 	public void setDictionary(String dictionary) {
 		this.dictionary = dictionary;
 	}
+	public boolean isPopup() {
+		return popup;
+	}
+
+	public void setPopup(boolean popup) {
+		this.popup = popup;
+	}
+
 	public String getQueryMode() {
 		return queryMode;
 	}
@@ -249,6 +301,31 @@ public class DataGridColumn {
 		this.extendParams = extendParams;
 	}
 
+	public String getFormatterjs() {
+		return formatterjs;
+	}
 
+	public void setFormatterjs(String formatterjs) {
+		this.formatterjs = formatterjs;
+	}
+
+	public String getDefaultVal() {
+		return defaultVal;
+	}
+
+	public void setDefaultVal(String defaultVal) {
+		this.defaultVal = defaultVal;
+	}
+
+	@Override
+	public String toString() {
+		return "DataGridColumn [title=" + title + ", field=" + field + ", width=" + width + ", showLen=" + showLen + ", rowspan=" + rowspan + ", colspan=" + colspan + 
+		", align=" + align + ", sortable=" + sortable + ", checkbox=" + checkbox + ", formatter=" + formatter + ", formatterjs=" + formatterjs + ", hidden=" + hidden + 
+		", treefield=" + treefield + ", image=" + image + ", query=" + query + ", queryMode=" + queryMode + ", autoLoadData=" + autoLoadData + ", frozenColumn=" + frozenColumn + 
+		", url=" + url + ", funname=" + funname + ", arg=" + arg + ", dictionary=" + dictionary + ", popup=" + popup + ", replace=" + replace + ", extend=" + extend +
+		", style=" + style + ", imageSize=" + imageSize + ", downloadName=" + downloadName + ", autocomplete=" + autocomplete + ", extendParams="
+				+ extendParams + ", editor=" + editor + ", defaultVal=" + defaultVal + ", showMode=" + showMode + ", newColumn=" + newColumn + "]";
+	}
+	
 	
 }

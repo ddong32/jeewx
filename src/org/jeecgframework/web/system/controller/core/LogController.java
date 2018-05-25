@@ -14,10 +14,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jeecgframework.core.util.DataUtils;
-import org.jeecgframework.web.system.pojo.base.TSLog;
-import org.jeecgframework.web.system.service.SystemService;
-
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -30,8 +26,15 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.Highchart;
+import org.jeecgframework.core.util.DateUtils;
+import org.jeecgframework.core.util.MutiLangUtil;
+import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
+import org.jeecgframework.tag.vo.datatable.SortDirection;
+import org.jeecgframework.web.system.pojo.base.TSLog;
+import org.jeecgframework.web.system.service.LogService;
+import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,11 +55,21 @@ public class LogController extends BaseController {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(LogController.class);
+
+    //用户浏览器统计分析的国际化KEY
+    private static final String USER_BROWSER_ANALYSIS = "user.browser.analysis";
 	private SystemService systemService;
+	
+	private LogService logService;
 
 	@Autowired
 	public void setSystemService(SystemService systemService) {
 		this.systemService = systemService;
+	}
+	
+	@Autowired
+	public void setLogService(LogService logService) {
+		this.logService = logService;
 	}
 
 	/**
@@ -79,41 +92,66 @@ public class LogController extends BaseController {
 	@RequestMapping(params = "datagrid")
 	public void datagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(TSLog.class, dataGrid);
+		
+		//日志级别查询条件
 		String loglevel = request.getParameter("loglevel");
-		if (loglevel == null || loglevel.equals("0")) {
-		} else {
+		if (loglevel != null && !"0".equals(loglevel)) {
 			cq.eq("loglevel", oConvertUtils.getShort(loglevel));
 			cq.add();
 		}
-//        add-begin--Author:zhangguoming  Date:20140427 for：添加查询条件  操作时间
+		//时间范围查询条件
         String operatetime_begin = request.getParameter("operatetime_begin");
-        if(operatetime_begin != null) {
-            Timestamp beginValue = null;
-            try {
-                beginValue = DataUtils.parseTimestamp(operatetime_begin, "yyyy-MM-dd");
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            cq.ge("operatetime", beginValue);
-        }
         String operatetime_end = request.getParameter("operatetime_end");
-        if(operatetime_end != null) {
-            if (operatetime_end.length() == 10) {
-                operatetime_end =operatetime_end + " 23:59:59";
-            }
-            Timestamp endValue = null;
-            try {
-                endValue = DataUtils.parseTimestamp(operatetime_end, "yyyy-MM-dd hh:mm:ss");
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            cq.le("operatetime", endValue);
+        if(oConvertUtils.isNotEmpty(operatetime_begin)){
+        	try {
+				cq.ge("operatetime", DateUtils.parseDate(operatetime_begin, "yyyy-MM-dd hh:mm:ss"));
+			} catch (ParseException e) {
+				logger.error(e);
+			}
+        	cq.add();
         }
-        cq.add();
-//        add-end--Author:zhangguoming  Date:20140427 for：添加查询条件  操作时间
+        if(oConvertUtils.isNotEmpty(operatetime_end)){
+        	try {
+				cq.le("operatetime", DateUtils.parseDate(operatetime_end, "yyyy-MM-dd hh:mm:ss"));
+			} catch (ParseException e) {
+				logger.error(e);
+			}
+        	cq.add();
+        }
         this.systemService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 	}
+	
+	/**
+	 * 获取日志详情
+	 * @param tsLog
+	 * @param request
+	 * @return
+	 * @Author fangwenrong
+	 * @Date 2015-05-10
+	 */
+	@RequestMapping(params = "logDetail")
+	public ModelAndView logDetail(TSLog tsLog,HttpServletRequest request){
+		if (StringUtil.isNotEmpty(tsLog.getId())) {
+			tsLog = logService.getEntity(TSLog.class, tsLog.getId());
+			request.setAttribute("tsLog", tsLog);
+		}
+		return new ModelAndView("system/log/logDetail");
+		
+	}
+	
+	/**
+	 * @RequestMapping(params = "addorupdate")
+	public ModelAndView addorupdate(TSTimeTaskEntity timeTask, HttpServletRequest req) {
+		if (StringUtil.isNotEmpty(timeTask.getId())) {
+			timeTask = timeTaskService.getEntity(TSTimeTaskEntity.class, timeTask.getId());
+			req.setAttribute("timeTaskPage", timeTask);
+		}
+		return new ModelAndView("system/timetask/timeTask");
+	}
+	 */
+	
+	
 	/**
 	 * 统计集合页面
 	 * 
@@ -155,7 +193,7 @@ public class LogController extends BaseController {
 		Long count = systemService.getCountForJdbc("SELECT COUNT(1) FROM T_S_Log WHERE 1=1");
 		List lt = new ArrayList();
 		hc = new Highchart();
-		hc.setName("用户浏览器统计分析");
+		hc.setName(MutiLangUtil.getLang(USER_BROWSER_ANALYSIS));
 		hc.setType(reportType);
 		Map<String, Object> map;
 		if (userBroswerList.size() > 0) {

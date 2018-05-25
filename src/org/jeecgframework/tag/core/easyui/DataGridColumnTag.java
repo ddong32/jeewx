@@ -1,5 +1,8 @@
 package org.jeecgframework.tag.core.easyui;
 
+import org.jeecgframework.core.util.MutiLangUtil;
+import org.jeecgframework.core.util.StringUtil;
+
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -17,13 +20,19 @@ public class DataGridColumnTag extends TagSupport {
 	protected String title;
 	protected String field;
 	protected Integer width;
+	//author：xugj start date:2016年5月11日 for:TASK #1080 【UI标签改造】t:dgCol 显示内容长度控制 -->
+	protected Integer showLen;
+	//author：xugj end date:2016年5月11日 for:TASK #1080 【UI标签改造】t:dgCol 显示内容长度控制 -->
 	protected String rowspan;
 	protected String colspan;
 	protected String align;
 	protected boolean sortable=true;
 	protected boolean checkbox;
 	protected String formatter;
-	protected boolean hidden=true;
+	protected String formatterjs;//自定义函数名称(调用页面自定义js方法 参数为(value,row,index)
+
+	protected boolean hidden=false;
+
 	protected String replace;
 	protected String treefield;
 	protected boolean image;
@@ -37,17 +46,53 @@ public class DataGridColumnTag extends TagSupport {
 	protected String funname="openwindow";//自定义函数名称
 	protected String arg;//自定义链接传入参数字段
 	protected String dictionary;	//数据字典组编码
+	protected boolean popup=false;	//是否启用popup模式选择 默认不启用
 	protected String extend; //扩展属性
 	protected String style; //Td的CSS
 	protected String imageSize;//自定义图片显示大小
 	protected String downloadName;//附件下载
 	private boolean autocomplete = false;//自动完成
 	private String extendParams;//扩展参数
+	private String langArg;
+	protected String editor;//高级查询用的编辑器
+
+	private String defaultVal = "";//列默认值
+
+	protected String showMode;//表单元素,查询表单中显示样式,默认样式select
+
+	protected boolean newColumn = false;//是否新起一行
 	
+	public boolean isNewColumn() {
+		return newColumn;
+	}
+
+	public void setNewColumn(boolean newColumn) {
+		this.newColumn = newColumn;
+	}
+
+	public String getShowMode() {
+		return showMode;
+	}
+
+	public void setShowMode(String showMode) {
+		this.showMode = showMode;
+	}
+
+	public String getEditor() {
+		return editor;
+	}
+
+	public void setEditor(String editor) {
+		this.editor = editor;
+	}
 	public int doEndTag() throws JspTagException {
+		title = MutiLangUtil.doMutiLang(title, langArg);
+		
 		Tag t = findAncestorWithClass(this, DataGridTag.class);
 		DataGridTag parent = (DataGridTag) t;
-		parent.setColumn(title,field,width,rowspan,colspan,align,sortable,checkbox,formatter,hidden,replace,treefield,image,imageSize,query,url,funname,arg,queryMode, dictionary,frozenColumn,extend,style,downloadName,autocomplete,extendParams);
+
+		parent.setColumn(title,field,width,showLen,rowspan,colspan,align,sortable,checkbox,formatter,formatterjs,hidden,replace,treefield,image,imageSize,query,url,funname,arg,queryMode, dictionary,popup,frozenColumn,extend,style,downloadName,autocomplete,extendParams,editor,defaultVal,showMode,newColumn);
+
 		return EVAL_PAGE;
 	}
 	
@@ -143,6 +188,14 @@ public class DataGridColumnTag extends TagSupport {
 		return queryMode;
 	}
 
+	public boolean isPopup() {
+		return popup;
+	}
+
+	public void setPopup(boolean popup) {
+		this.popup = popup;
+	}
+
 	public void setQueryMode(String queryMode) {
 		this.queryMode = queryMode;
 	}
@@ -172,7 +225,38 @@ public class DataGridColumnTag extends TagSupport {
 	}
 
 	public void setExtendParams(String extendParams) {
+
+		if(StringUtil.isNotEmpty(extendParams) && !extendParams.endsWith(",")){
+			extendParams = extendParams + ",";
+		}
+
 		this.extendParams = extendParams;
 	}
+
+	public void setLangArg(String langArg) {
+		this.langArg = langArg;
+	}
+
+	public void setFormatterjs(String formatterjs) {
+		this.formatterjs = formatterjs;
+	}
+
+	public Integer getShowLen() {
+		return showLen;
+	}
+
+	public void setShowLen(Integer showLen) {
+		this.showLen = showLen;
+	}
+
+	public String getDefaultVal() {
+		return defaultVal;
+	}
+
+	public void setDefaultVal(String defaultVal) {
+		this.defaultVal = defaultVal;
+	}
+	
+	
 	
 }

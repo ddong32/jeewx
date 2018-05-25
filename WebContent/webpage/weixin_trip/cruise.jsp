@@ -5,7 +5,6 @@
 <html ng-app="mainApp" lang="zh-cn" style="font-size: 53.3333px;">
 	<head lang="en">
 		<meta charset="utf-8">
-		
 		<meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta http-equiv="Expires" content="-1">
@@ -28,11 +27,11 @@
 		<script type="text/javascript" src="${trip_res}/2/font.js"></script>
 		<script type="text/javascript" src="${trip_res}/2/jquery-2.1.1.min.js"></script>
 		<style type="text/css">
-		.description-info{
-		  background-color:white;
-		  margin-bottom:.2rem;
-		  border-radius:.1rem;
-		}
+    		.description-info{
+	           background-color:white;
+	           margin-bottom:.2rem;
+	           border-radius:.1rem;
+    		}
 		</style>
 	</head>
 	<body ng-controller="content">
@@ -57,17 +56,10 @@
 					</div>
 					<div class="more-list hide">
 						<ul>
-                            <li>
-                                <a ng-click="signup()"><i class="iconfont icon-comfooter-wode"></i>注册会员</a>
-                            </li>
-                            <li>
-                                <a ng-click="GoMyOrder()"><i class="iconfont icon-order"></i>我的订单</a>
-                            </li>
-							<li ng-if="!isApp" class="ng-scope">
-								<a class="history-show" ng-click="history_init()"><i class="iconfont icon-history"></i>浏览历史</a>
-							<li>
-								<a ng-click="GoIndex()"><i class="iconfont icon-home"></i>回到首页</a>
-							</li>
+                            <li><a ng-click="signup()"><i class="iconfont icon-comfooter-wode"></i>注册会员</a></li>
+                            <li><a ng-click="GoMyOrder()"><i class="iconfont icon-order"></i>我的订单</a></li>
+							<li ng-if="!isApp" class="ng-scope"><a class="history-show" ng-click="history_init()"><i class="iconfont icon-history"></i>浏览历史</a></li>
+							<li><a ng-click="GoIndex()"><i class="iconfont icon-home"></i>回到首页</a></li>
 						</ul>
 					</div>
 				</header>
@@ -80,7 +72,7 @@
                 <!-- 头部 结束 -->
 				
 				<!-- 头部以下全是脚 开始 -->
-				<div class="wrapper-scroll">
+				<div class="wrapper-scroll" id="wrapper-scroll">
 					<!-- 头部背景 开始 -->
 					<nav class="head-bg swiper-container-headbg">
 						<ul class="swiper-wrapper">
@@ -94,13 +86,13 @@
 					<!-- 头部背景 结束 -->
 				</div>
                 <!-- 头部以下全是脚  结束 -->
+                
                 <!-- 详情 开始 -->
 				<div class="main">
-					<div class="scroll-head">
-						<!-- 产品类型 -->
+					<div class="scroll-head" id="scroll-head">
+						<!-- 产品信息 -->
 						<div class="red-com-box">
 							<section class="com-box detail-type red-triangle">
-								
 								<div class="title">
 									<span>
 	                                	<i class="iconfont icon-flag "></i> 
@@ -123,14 +115,13 @@
 								</div>
 							</section>
 						</div>
-						<nav class="com-tit">行程介绍<i class="round-ico"></i></nav>
 					</div>
-					
+                    
 					<!-- 国内产品的行程介绍 开始 -->
 					<div class="trip periphery">
-						
+						<nav class="com-tit">行程介绍<i class="round-ico"></i></nav>
 						<section ng-repeat="JouneryGroupInfo in JouneryGroups" ng-class="$index == 0? 'wrap-box':'wrap-box hide'" find-trip-center>
-							<div class="com-box">
+							<div class="com-box" id="jounery-group-info">
 								<!-- 14日行程 -->
 								<div class="wrap-box-two days-info on">
 									<div class="com-box">
@@ -139,35 +130,18 @@
 										</div>
 									</div>
 									<div class="list">
-										<div class="part" ng-repeat="Detail in JouneryGroupInfo.JouneryDetail">
+										<div class="part" ng-repeat="Detail in JouneryGroupInfo.JouneryDetail" class="ng-binding ng-scope">
 											<p class="day-tit ng-binding">
 												<i class="iconfont icon-calendar"></i>第 {{Detail.Days}} 天
 											</p>
 											<p class="tit">
-											 <span>
-											     <em ng-repeat="ProductTravelType in Detail.ProductTravelTypes">
-											     <i class="iconfont icon-vehicle-{{ProductTravelType.Type}}" ng-show="!$first"></i>{{ProductTravelType.TreeName}}</em>
-											 </span>
+    											<span>
+    												<em ng-repeat="ProductTravelType in Detail.ProductTravelTypes">
+    												<i class="iconfont icon-vehicle-{{ProductTravelType.Type}}" ng-show="!$first"></i>{{ProductTravelType.TreeName}}</em>
+    											</span>
 											</p>
-											<p class="text ng-hide" >
-												<i class=" iconfont icon-timeon"></i>
-												<em class="ng-binding">00:00 --- 23:00</em>
-											</p>
-											<p class="text">
-												<i class="iconfont icon-meal"></i>
-												<span>早餐: <em class="ng-binding">{{Detail.Breakfast}}</em></span>
-												<span>午餐: <em class="ng-binding">{{Detail.HaveLunch}}</em></span>
-												<span>晚餐: <em class="ng-binding">{{Detail.Dinner}}</em></span>
-											</p>
-											<p class="text">
-												<i class="iconfont icon-hotel"></i>
-												特色酒店_参考酒店: <em class="ng-binding">{{Detail.HotelList}}</em>
-											</p>
-											<div class="box five-line border-top">
-												<p class="ng-binding" ng-bind-html="Detail.Content | trustHtml"></p>
-											</div>
+                                            <div class="five-line text ng-binding" ng-bind-html="Detail.Content | trustHtml"><br></div>
 										</div>
-										
 									</div>
 	
 									<a href="javascript:void(0)" ng-click="JouneryInfo_init(JouneryGroupInfo.UzaiJouneryGroupID)" class="trip-info"><i class="iconfont icon-daohangxianlu"></i>详细行程<i class="iconfont icon-right"></i></a>
@@ -180,9 +154,8 @@
 									<i class="iconfont icon-booking-notice"></i>注意事项<span class="right-btn iconfont icon-right"></span>
 								</a>
 								<!-- 费用说明 -->
-								<div class="wrap-box-two description-info" ng-hide="JouneryGroupInfo.Notice==''">
-									<div class="trip-ls none" ng-bind-html="JouneryGroupInfo.Notice | trustHtml">
-									</div>
+								<div class="wrap-box-two description-info" id="buyinfo-description" ng-hide="JouneryGroupInfo.Notice==''">
+									<div class="trip-ls none" ng-bind-html="JouneryGroupInfo.Notice | trustHtml"></div>
 								</div>
 							</div>
 							
@@ -190,13 +163,13 @@
 								<a href="#/purchasenoticejounery" class="com-box buyinfo-btn ">
 									<i class="iconfont icon-booking-notice"></i>购买须知<span class="right-btn iconfont icon-right"></span>
 								</a>
-								<!-- è´¹ç¨è¯´æ -->
-								<div class="wrap-box-two description-info">
+								<!--  -->
+								<div class="wrap-box-two description-info" >
 									<div class="trip-ls-tit"><span><i class="iconfont icon-costnotinclude"></i>费用包含</span></div>
-									<div class="trip-ls none" ng-show="JouneryGroupInfo.CostInclude!=''" ng-bind-html="JouneryGroupInfo.CostInclude | trustHtml"></div>
+									<div class="trip-ls none" id="cost-include" ng-show="JouneryGroupInfo.CostInclude!=''" ng-bind-html="JouneryGroupInfo.CostInclude | trustHtml"></div>
 	
 									<div class="trip-ls-tit margin-hr border-top" ><span><i class="iconfont icon-costnotincludes"></i>费用不包含</span></div>
-									<div class="trip-ls none" ng-show="JouneryGroupInfo.CostNotInclude!=''" ng-bind-html="JouneryGroupInfo.CostNotInclude | trustHtml"></div>
+									<div class="trip-ls none" id="cost-notinclude" ng-show="JouneryGroupInfo.CostNotInclude!=''" ng-bind-html="JouneryGroupInfo.CostNotInclude | trustHtml"></div>
 								</div>
 							</div>
 							
@@ -209,9 +182,12 @@
 		
 		<!-- 详细行程 -->
         <div class="J-router-traveldetail uzai-wrapper j-router" id="detail_wrapper" style="display: none;"></div>
-
-		<script src="${trip_res}/2/api.js"></script>
+        <!-- 
+		<script src="${trip_res}/2/api.js"></script>  
 		<script src="${trip_res}/2/api-weixin.js"></script>
+        <script src="${trip_res}/2/overlay.js"></script>
+        -->
+        <script src="${webRoot}/plug-in/blockui/jquery.blockUI.js"></script>
 		<script src="${trip_res}/2/swiper-3.3.1.min.js"></script>
 		<script src="${trip_res}/2/angular.min.js"></script>
 		<script src="${trip_res}/2/detail.js"></script>

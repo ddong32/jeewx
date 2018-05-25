@@ -1,14 +1,14 @@
 package org.jeecgframework.tag.core.easyui;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.jeecgframework.core.constant.Globals;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ApplicationContextUtil;
+import org.jeecgframework.web.system.service.SystemService;
+import org.springframework.beans.factory.annotation.Autowired;
 /**
  * 
  * @Title:AuthFilterTag
@@ -18,49 +18,40 @@ import org.jeecgframework.core.util.ResourceUtil;
  * @version V1.0
  */
 public class AuthFilterTag extends TagSupport{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**列表容器的ID*/
 	protected String name;
+	@Autowired
+	private SystemService systemService;
 	
 	public int doStartTag() throws JspException {
 		return super.doStartTag();
 	}
 	
 	public int doEndTag() throws JspException {
+		JspWriter out = null;
 		try {
-			JspWriter out = this.pageContext.getOut();
-				out.print(end().toString());
-				out.flush();
+			out = this.pageContext.getOut();
+			systemService = ApplicationContextUtil.getContext().getBean(SystemService.class);
+			out.print(systemService.getAuthFilterJS());
+			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		return EVAL_PAGE;
-		
-	}
-	protected Object end() {
-		StringBuilder out = new StringBuilder();
-		getAuthFilter(out);
-		return out;
-	}
-	/**
-	 * 获取隐藏按钮的JS代码
-	 * @param out
-	 */
-	@SuppressWarnings("unchecked")
-	protected void getAuthFilter(StringBuilder out) {
-		out.append("<script type=\"text/javascript\">");
-		out.append("$(document).ready(function(){");
-		List<String> nolist = (List<String>) super.pageContext.getRequest().getAttribute("noauto_operationCodes");
-		if(ResourceUtil.getSessionUserName().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
-		}else{
-			if(nolist!=null&&nolist.size()>0){
-				for(String s:nolist){
-					out.append("$(\"#"+name+"\").find(\"#"+s.replaceAll(" ", "")+"\").hide();");
+		}finally{
+			if(out!=null){
+				try {
+					out.clearBuffer();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}
-		out.append("});");
-		out.append("</script>");
+		return EVAL_PAGE;
 	}
+	
 	public String getName() {
 		return name;
 	}

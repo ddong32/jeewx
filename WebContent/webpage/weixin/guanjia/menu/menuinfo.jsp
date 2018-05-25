@@ -1,7 +1,6 @@
 <%@ page language="java" import="java.util.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/context/mytags.jsp"%>
 
-
 <!DOCTYPE html>
 <html>
  <head>
@@ -21,7 +20,7 @@
 		});
 	});
  	$(document).ready(function(){ 
- 		var fid = "${fatherId}";
+ 	   var fid = "${fatherId}";
  	   var msgType = "${msgType}";
  	   var type="${type}";
  	   var templateId = "${templateId}";
@@ -166,18 +165,18 @@
  </script>
  </head>
  <body style="overflow-y: hidden" scroll="no">
-  <t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="menuManagerController.do?su" beforeSubmit="btnSubmit">
-	<input id="state" name="state" type="hidden">
-  <c:if test="${menuEntity.id!=null}">
-  	<input id="id" name="id" type="hidden" value="${menuEntity.id}">
-  </c:if>
+   <t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="menuManagerController.do?su" beforeSubmit="btnSubmit">
+	 <input id="state" name="state" type="hidden">
+   <c:if test="${menuEntity.id!=null}">
+  	 <input id="id" name="id" type="hidden" value="${menuEntity.id}">
+   </c:if>
   
    <c:if test="${fatherId!=null}">
-  	<input id="fatherId" name="fatherId" type="hidden" value="${fatherId}">
-  </c:if>
-  <c:if test="${accountid!=null}">
-  	<input id="accountid" name="accountid" type="hidden" value="${accountid}">
-  </c:if>
+  	 <input id="fatherId" name="fatherId" type="hidden" value="${fatherId}">
+   </c:if>
+   <c:if test="${accountid!=null}">
+  	 <input id="accountid" name="accountid" type="hidden" value="${accountid}">
+   </c:if>
    <table style="width:100%" cellpadding="0" cellspacing="1" class="formtable">
     <tr>
      <td align="right" style="width:65px">
@@ -186,7 +185,7 @@
       </label>
      </td>
      <td colspan="3" class="value">
-      <input id="name" class="inputxt" name="name"  value="${name}" datatype="*" nullmsg="菜单名称不能为空！">
+      <input id="name" class="inputxt" name="name" value="${name}" datatype="*" nullmsg="菜单名称不能为空！">
       <span class="Validform_checktip">请输入 菜单名称！</span>
      </td>
     </tr>
@@ -199,10 +198,8 @@
      </td>
      <td colspan="3" class="value">
       <!-- 
-      <select name="fatherName" id="fatherName">
-      	
-      </select>
-       -->
+      <select name="fatherName" id="fatherName"></select>
+      -->
       <input id="fatherName" name="fatherName" value="${fatherId}" />
       <span class="Validform_checktip">请选择上级菜单！</span>
      </td>

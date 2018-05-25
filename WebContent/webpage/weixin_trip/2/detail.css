@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 * {
 	padding: 0;
 	margin: 0;
@@ -14,31 +15,8 @@ input[type=text] {
 	outline: 0
 }
 
-a,
-body,
-div,
-em,
-footer,
-form,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-header,
-html,
-i,
-iframe,
-label,
-li,
-menu,
-nav,
-p,
-section,
-span,
-strong,
-ul {
+a, body, div, em, footer, form, h1, h2, h3, h4, h5, h6, header, html, i,
+	iframe, label, li, menu, nav, p, section, span, strong, ul {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -47,9 +25,7 @@ ul {
 	word-wrap: break-word
 }
 
-li,
-ol,
-ul {
+li, ol, ul {
 	list-style: none
 }
 
@@ -83,8 +59,7 @@ html {
 	font-size: 50px
 }
 
-body,
-html {
+body, html {
 	background: #f7f7f7
 }
 
@@ -97,14 +72,9 @@ body {
 	-webkit-tap-highlight-color: transparent
 }
 
-.ng-cloak,
-.ng-hide,
-.x-ng-cloak,
-[data-ng-cloak],
-[ng-cloak],
-[ng\:cloak],
-[x-ng-cloak] {
-	display: none!important
+.ng-cloak, .ng-hide, .x-ng-cloak, [data-ng-cloak], [ng-cloak], [ng\:cloak],
+	[x-ng-cloak] {
+	display: none !important
 }
 
 ng\:form {
@@ -127,21 +97,16 @@ ng\:form {
 	white-space: nowrap
 }
 
-.border-bot,
-.border-left,
-.border-right,
-.border-top {
+.border-bot, .border-left, .border-right, .border-top {
 	position: relative
 }
 
-.border-bot:after,
-.border-top:after {
+.border-bot:after, .border-top:after {
 	left: 0;
 	right: 0
 }
 
-.border-left:after,
-.border-right:after {
+.border-left:after, .border-right:after {
 	top: 0;
 	bottom: 0
 }
@@ -154,8 +119,7 @@ ng\:form {
 	right: 0
 }
 
-.border-bot:after,
-.border-top:after {
+.border-bot:after, .border-top:after {
 	-webkit-transform: scaleY(0.5);
 	-moz-transform: scaleY(0.5);
 	-ms-transform: scaleY(0.5);
@@ -173,8 +137,7 @@ ng\:form {
 	width: 100%
 }
 
-.border-left:after,
-.border-right:after {
+.border-left:after, .border-right:after {
 	-webkit-transform: scaleX(0.5);
 	-moz-transform: scaleX(0.5);
 	-ms-transform: scaleX(0.5);
@@ -231,13 +194,10 @@ ng\:form {
 }
 
 .J-router-show {
-	left: 0!important
+	left: 0 !important
 }
 
-.five-line,
-.one-line,
-.three-line,
-.two-line {
+.five-line, .one-line, .three-line, .two-line {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: -webkit-box;
@@ -245,10 +205,7 @@ ng\:form {
 	-webkit-box-orient: vertical
 }
 
-.five-line p,
-.one-line p,
-.three-line p,
-.two-line p {
+.five-line p, .one-line p, .three-line p, .two-line p {
 	display: inline
 }
 
@@ -264,17 +221,15 @@ ng\:form {
 	-webkit-line-clamp: 1
 }
 
-.five-line.auto,
-.three-line.auto {
+.five-line.auto, .three-line.auto {
 	-webkit-line-clamp: 1000
 }
 
 .hide {
-	display: none!important
+	display: none !important
 }
 
-.clearfix:after,
-.clearfix:before {
+.clearfix:after, .clearfix:before {
 	display: block;
 	content: ""
 }
@@ -289,12 +244,21 @@ ng\:form {
 
 @font-face {
 	font-family: iconfont;
-	src: url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.eot?t=1502423548187);
-	src: url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.eot?t=1502423548187#iefix) format("embedded-opentype"), url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.woff?t=1502423548187) format("woff"), url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.ttf?t=1502423548187) format("truetype"), url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.svg?t=1502423548187#iconfont) format("svg")
+	src:
+		url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.eot?t=1502423548187);
+	src:
+		url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.eot?t=1502423548187#iefix)
+		format("embedded-opentype"),
+		url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.woff?t=1502423548187)
+		format("woff"),
+		url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.ttf?t=1502423548187)
+		format("truetype"),
+		url(https://r03.uzaicdn.com/content/hybrid/fonts/product/iconfont.svg?t=1502423548187#iconfont)
+		format("svg")
 }
 
 .iconfont {
-	font-family: iconfont!important;
+	font-family: iconfont !important;
 	font-style: normal;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale
@@ -801,7 +765,7 @@ ng\:form {
 }
 
 .icon-comfooter-wode:before {
-    content: "\e63f";
+	content: "\e63f";
 }
 
 input {
@@ -816,10 +780,7 @@ input:-webkit-autofill {
 	-webkit-box-shadow: 0 0 0 1000px #fff inset
 }
 
-button,
-input,
-select,
-textarea {
+button, input, select, textarea {
 	outline: 0
 }
 
@@ -846,7 +807,9 @@ textarea {
 	height: .62rem;
 	position: absolute;
 	top: .15rem;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/custom/back_ico.png) no-repeat;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/custom/back_ico.png)
+		no-repeat;
 	background-size: 100% auto;
 	left: .19rem
 }
@@ -858,7 +821,9 @@ textarea {
 	top: 50%;
 	left: 50%;
 	margin: -52px 0 0 -150px;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/common/loading.gif) no-repeat center;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/loading.gif)
+		no-repeat center;
 	background-size: 50px auto
 }
 
@@ -902,7 +867,9 @@ body .sale-content .main {
 body .uzai-down-pop .con {
 	width: 7.5rem;
 	height: 1.2rem;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/common/mcbg.png) no-repeat;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/mcbg.png)
+		no-repeat;
 	background-size: 100% auto;
 	position: static;
 	margin: 0;
@@ -972,7 +939,8 @@ body .uzai-shelves-header .top120 {
 .uzai-down-pop .con .down-btn {
 	width: 2rem;
 	height: .8rem;
-	background-image: url(https://r03.uzaicdn.com/content/hybrid/images/common/openappbtn.png);
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/openappbtn.png);
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	position: absolute;
@@ -983,7 +951,8 @@ body .uzai-shelves-header .top120 {
 .uzai-down-pop a.top-btn {
 	width: .6rem;
 	height: .6rem;
-	background-image: url(https://r03.uzaicdn.com/content/hybrid/images/common/mcclose.png);
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/mcclose.png);
 	display: block;
 	position: absolute;
 	left: 0;
@@ -1199,9 +1168,12 @@ body .uzai-shelves-header .top120 {
 }
 
 .white-topbar .more-list {
-	background: -webkit-linear-gradient(30deg, rgba(255, 26, 98, .8), rgba(255, 116, 90, .8));
-	background: -o-linear-gradient(30deg, rgba(255, 26, 98, .8), rgba(255, 116, 90, .8));
-	background: linear-gradient(30deg, rgba(255, 26, 98, .8), rgba(255, 116, 90, .8));
+	background: -webkit-linear-gradient(30deg, rgba(255, 26, 98, .8),
+		rgba(255, 116, 90, .8));
+	background: -o-linear-gradient(30deg, rgba(255, 26, 98, .8),
+		rgba(255, 116, 90, .8));
+	background: linear-gradient(30deg, rgba(255, 26, 98, .8),
+		rgba(255, 116, 90, .8));
 	width: 2.25rem;
 	position: absolute;
 	right: .2rem;
@@ -1271,7 +1243,9 @@ footer .collection {
 }
 
 footer .phone {
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/product/single-hr.jpg) no-repeat left center;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/single-hr.jpg)
+		no-repeat left center;
 	background-size: auto .23rem
 }
 
@@ -1280,7 +1254,8 @@ footer .iconfont {
 	line-height: .6rem;
 	display: inline-block;
 	margin-top: .1rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -1293,9 +1268,9 @@ footer .icon-collection {
 	text-shadow: none
 }
 
-footer .icon-collection.on,
-footer .icon-phone {
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+footer .icon-collection.on, footer .icon-phone {
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -1339,13 +1314,11 @@ footer .reservation-btn.disable {
 	margin-bottom: .2rem
 }
 
-.comment .icon-comment,
-.list-con .icon-buyinfo,
-.list-con .icon-cost,
-.list-con .icon-ownpay,
-.trip-info .icon-trip {
+.comment .icon-comment, .list-con .icon-buyinfo, .list-con .icon-cost,
+	.list-con .icon-ownpay, .trip-info .icon-trip {
 	font-size: .6rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	margin-right: .08rem
@@ -1509,12 +1482,12 @@ footer .reservation-btn.disable {
 	text-decoration: line-through;
 	font-size: .26rem;
 	color: #DDD;
-	display: none!important
+	display: none !important
 }
 
 .detail .detail-type .question-btn {
 	padding: 0 .1rem;
-	display: none!important
+	display: none !important
 }
 
 .detail .detail-type .icon-question {
@@ -1587,7 +1560,8 @@ footer .reservation-btn.disable {
 .detail .detail-type .icon-discount-m {
 	font-size: .4rem;
 	margin-right: .15rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -1598,12 +1572,13 @@ footer .reservation-btn.disable {
 	position: relative;
 	height: .25rem;
 	width: 100%;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/product/com-hr-bg.jpg) repeat-x center;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/com-hr-bg.jpg)
+		repeat-x center;
 	background-size: .27rem .16rem
 }
 
-.detail .com-hr .l,
-.detail .com-hr .r {
+.detail .com-hr .l, .detail .com-hr .r {
 	position: absolute;
 	top: 0;
 	width: .13rem;
@@ -1613,13 +1588,17 @@ footer .reservation-btn.disable {
 
 .detail .com-hr .l {
 	left: -.32rem;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/product/com-hr-l.jpg) no-repeat;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/com-hr-l.jpg)
+		no-repeat;
 	background-size: auto 100%
 }
 
 .detail .com-hr .r {
 	right: -.32rem;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/product/com-hr-r.jpg) no-repeat;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/com-hr-r.jpg)
+		no-repeat;
 	background-size: auto 100%
 }
 
@@ -1675,7 +1654,8 @@ footer .reservation-btn.disable {
 }
 
 .detail .icon-calendar {
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -1685,7 +1665,9 @@ footer .reservation-btn.disable {
 .detail .round-ico {
 	width: 20px;
 	height: 20px;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/product/round-ico.png) no-repeat;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/round-ico.png)
+		no-repeat;
 	background-size: 20px auto;
 	position: absolute;
 	bottom: -11px;
@@ -1704,7 +1686,9 @@ footer .reservation-btn.disable {
 
 .detail .schedule .c-box {
 	width: 1.5rem;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/product/schedule-bg.jpg) no-repeat;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/schedule-bg.jpg)
+		no-repeat;
 	background-size: 100% auto;
 	text-align: center;
 	font-size: .26rem;
@@ -1832,16 +1816,17 @@ footer .reservation-btn.disable {
 	overflow: hidden
 }
 
-.detail .trip .days-info .box em,
-.detail .trip .days-info .box p,
-.detail .trip .days-info .box span {
-	color: #999!important
+.detail .trip .days-info .box em, .detail .trip .days-info .box p,
+	.detail .trip .days-info .box span {
+	color: #999 !important
 }
 
 .detail .trip .days-info .com-box .top {
 	color: #666;
 	font-size: .26rem;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/product/trip-bg.png) no-repeat top right #f7f7f7;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/trip-bg.png)
+		no-repeat top right #f7f7f7;
 	background-size: 1rem auto;
 	min-height: .9rem;
 	padding: .25rem .3rem .15rem;
@@ -1883,9 +1868,8 @@ footer .reservation-btn.disable {
 	line-height: .45rem
 }
 
-.detail .trip .highlights-info p,
-.detail .trip .highlights-info span {
-	color: #999!important
+.detail .trip .highlights-info p, .detail .trip .highlights-info span {
+	color: #999 !important
 }
 
 .detail .trip .highlights-info img {
@@ -1917,7 +1901,8 @@ footer .reservation-btn.disable {
 }
 
 .detail .trip .trip-ls-tit span .iconfont {
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -1977,8 +1962,7 @@ footer .reservation-btn.disable {
 	padding-left: .2rem
 }
 
-.detail .trip .description-info,
-.detail .trip .notice-info {
+.detail .trip .description-info, .detail .trip .notice-info {
 	padding: .3rem
 }
 
@@ -2062,7 +2046,8 @@ footer .reservation-btn.disable {
 
 .detail .trip .iconfont {
 	font-size: .3rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -2182,7 +2167,8 @@ footer .reservation-btn.disable {
 
 .detail .comment .icon-comment {
 	font-size: .6rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -2375,7 +2361,8 @@ footer .reservation-btn.disable {
 
 .detail .more-btn .iconfont {
 	font-size: .3rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -2386,29 +2373,27 @@ footer .reservation-btn.disable {
 	padding-bottom: .2rem
 }
 
-.detail .periphery .part .icon-bottom,
-.detail .periphery .part .icon-hotel,
-.detail .periphery .part .icon-meal,
-.detail .periphery .part .icon-shopping,
-.detail .periphery .part .icon-timeon,
-.detail .periphery .part .icon-top {
+.detail .periphery .part .icon-bottom, .detail .periphery .part .icon-hotel,
+	.detail .periphery .part .icon-meal, .detail .periphery .part .icon-shopping,
+	.detail .periphery .part .icon-timeon, .detail .periphery .part .icon-top
+	{
 	font-size: .36rem;
 	margin-right: .05rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
 	-webkit-text-shadow: 1px 2px 6px rgba(255, 77, 119, .6)
 }
 
-.detail .periphery .part .icon-bottom,
-.detail .periphery .part .icon-top {
+.detail .periphery .part .icon-bottom, .detail .periphery .part .icon-top
+	{
 	font-size: .3rem
 }
 
-.detail .periphery .part .icon-hotel,
-.detail .periphery .part .icon-meal,
-.detail .periphery .part .icon-timeon {
+.detail .periphery .part .icon-hotel, .detail .periphery .part .icon-meal,
+	.detail .periphery .part .icon-timeon {
 	position: absolute;
 	left: -.12rem
 }
@@ -2478,8 +2463,8 @@ footer .reservation-btn.disable {
 	float: left
 }
 
-.detail .periphery .bus-info .name .one,
-.detail .periphery .bus-info .name .two {
+.detail .periphery .bus-info .name .one, .detail .periphery .bus-info .name .two
+	{
 	display: inline-block;
 	width: .14rem
 }
@@ -2520,11 +2505,11 @@ footer .reservation-btn.disable {
 	padding: .2rem .25rem
 }
 
-.detail .list-con .icon-booking-notice,
-.detail .list-con .icon-cost,
-.detail .list-con .icon-ownpay {
+.detail .list-con .icon-booking-notice, .detail .list-con .icon-cost,
+	.detail .list-con .icon-ownpay {
 	font-size: .6rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -2533,21 +2518,20 @@ footer .reservation-btn.disable {
 }
 
 .detail .list-con .icon-booking-notice {
-	margin-left: .12rem!important;
+	margin-left: .12rem !important;
 	margin-right: .22rem;
 	font-size: .34rem
 }
 
-.detail .list-con .icon-fujiafeiyong,
-.detail .list-con .icon-wendang {
+.detail .list-con .icon-fujiafeiyong, .detail .list-con .icon-wendang {
 	font-size: .35rem;
 	padding-left: .1rem
 }
 
-.detail .list-con .icon-buyinfo,
-.detail .list-con .icon-visainfo {
+.detail .list-con .icon-buyinfo, .detail .list-con .icon-visainfo {
 	font-size: .4rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -2565,7 +2549,7 @@ footer .reservation-btn.disable {
 }
 
 .detail .list-con .icon-visainfo {
-	margin-left: .06rem!important;
+	margin-left: .06rem !important;
 	font-size: .45rem;
 	margin-right: .15rem
 }
@@ -2699,7 +2683,9 @@ footer .reservation-btn.disable {
 
 .history-view .history-none .top {
 	padding-top: 3.8rem;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/product/history-none.png) no-repeat bottom center;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/history-none.png)
+		no-repeat bottom center;
 	background-size: 1.72rem auto
 }
 
@@ -2713,7 +2699,9 @@ footer .reservation-btn.disable {
 
 .history-view .history-login .top {
 	padding-top: 3.3rem;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/common/default-photo.png) no-repeat bottom center;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/default-photo.png)
+		no-repeat bottom center;
 	background-size: 1.52rem auto
 }
 
@@ -2797,7 +2785,8 @@ footer .reservation-btn.disable {
 
 .history-view .part .tit .iconfont {
 	margin-right: .05rem;
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -2828,8 +2817,7 @@ footer .reservation-btn.disable {
 	padding-bottom: .3rem
 }
 
-.detail-content .detail .trip-header,
-.detail-content .detail .white-topbar {
+.detail-content .detail .trip-header, .detail-content .detail .white-topbar {
 	position: fixed;
 	right: 0
 }
@@ -2857,8 +2845,8 @@ footer .reservation-btn.disable {
 	right: -4rem
 }
 
-.detail-content.left .detail .trip-header,
-.detail-content.left .detail .white-topbar {
+.detail-content.left .detail .trip-header, .detail-content.left .detail .white-topbar
+	{
 	position: fixed;
 	right: 4rem
 }
@@ -2884,18 +2872,13 @@ footer .reservation-btn.disable {
 	right: 0
 }
 
-.detail-content #wrapper .wrapper-scroll,
-.detail-content .back-top,
-.detail-content .detail .trip-header,
-.detail-content .detail .white-topbar,
-.detail-content .detail footer,
-.detail-content .history-view,
-.detail-content.left #wrapper .wrapper-scroll,
-.detail-content.left .back-top,
-.detail-content.left .detail .trip-header,
-.detail-content.left .detail .white-topbar,
-.detail-content.left .detail footer,
-.detail-content.left .history-view {
+.detail-content #wrapper .wrapper-scroll, .detail-content .back-top,
+	.detail-content .detail .trip-header, .detail-content .detail .white-topbar,
+	.detail-content .detail footer, .detail-content .history-view,
+	.detail-content.left #wrapper .wrapper-scroll, .detail-content.left .back-top,
+	.detail-content.left .detail .trip-header, .detail-content.left .detail .white-topbar,
+	.detail-content.left .detail footer, .detail-content.left .history-view
+	{
 	transition: right .2s;
 	-webkit-transition: right .2s
 }
@@ -3017,7 +3000,9 @@ body {
 	z-index: 2;
 	margin-left: -21px;
 	margin-top: -21px;
-	background: url(https://r03.uzaicdn.com/content/hybrid/images/common/preload.gif) no-repeat center;
+	background:
+		url(https://r03.uzaicdn.com/content/hybrid/images/common/preload.gif)
+		no-repeat center;
 	background-size: auto 100%
 }
 
@@ -3095,8 +3080,8 @@ body {
 	overflow: hidden
 }
 
-.buynotice .buynoticecon .icon-bottom,
-.buynotice .buynoticecon .icon-top {
+.buynotice .buynoticecon .icon-bottom, .buynotice .buynoticecon .icon-top
+	{
 	color: #d0d0d0;
 	font-size: .25rem;
 	text-shadow: none;
@@ -3152,8 +3137,7 @@ body {
 	margin-right: .566rem
 }
 
-.buynotice .thone,
-.buynotice .thtwo {
+.buynotice .thone, .buynotice .thtwo {
 	margin-right: .14rem
 }
 
@@ -3167,7 +3151,8 @@ body {
 }
 
 .purchase .iconfont {
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -3330,8 +3315,7 @@ body {
 	margin-right: .566rem
 }
 
-.shoppinginformation .thone,
-.shoppinginformation .thtwo {
+.shoppinginformation .thone, .shoppinginformation .thtwo {
 	margin-right: .14rem
 }
 
@@ -3457,9 +3441,12 @@ body {
 }
 
 .J-router-traveldetail .days {
-	background: -webkit-linear-gradient(30deg, rgba(255, 26, 98, .8), rgba(255, 116, 90, .8));
-	background: -o-linear-gradient(30deg, rgba(255, 26, 98, .8), rgba(255, 116, 90, .8));
-	background: linear-gradient(30deg, rgba(255, 26, 98, .8), rgba(255, 116, 90, .8))
+	background: -webkit-linear-gradient(30deg, rgba(255, 26, 98, .8),
+		rgba(255, 116, 90, .8));
+	background: -o-linear-gradient(30deg, rgba(255, 26, 98, .8),
+		rgba(255, 116, 90, .8));
+	background: linear-gradient(30deg, rgba(255, 26, 98, .8),
+		rgba(255, 116, 90, .8))
 }
 
 .J-router-traveldetail #j-drop-wrappe #j-t-wrapper-china {
@@ -3500,8 +3487,8 @@ body {
 	display: none
 }
 
-.J-router-traveldetail #t-wrapper,
-.J-router-traveldetail #t-wrapper-china {
+.J-router-traveldetail #t-wrapper, .J-router-traveldetail #t-wrapper-china
+	{
 	position: absolute;
 	z-index: 1;
 	left: 0;
@@ -3513,8 +3500,8 @@ body {
 	-webkit-overflow-scrolling: touch
 }
 
-.J-router-traveldetail #t-scroller,
-.J-router-traveldetail #t-scroller-china {
+.J-router-traveldetail #t-scroller, .J-router-traveldetail #t-scroller-china
+	{
 	-webkit-tap-highlight-color: transparent;
 	width: 100%;
 	-webkit-transform: translateZ(0);
@@ -3529,7 +3516,7 @@ body {
 }
 
 .J-router-traveldetail #t-wrapper-china.t-wrapper-scroll,
-.J-router-traveldetail #t-wrapper.t-wrapper-scroll {
+	.J-router-traveldetail #t-wrapper.t-wrapper-scroll {
 	overflow: hidden
 }
 
@@ -3552,7 +3539,8 @@ body {
 	width: .3rem;
 	height: .3rem;
 	display: inline-block;
-	background-image: url(https://r03.uzaicdn.com/content/hybrid/images/product/xiala.png);
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/xiala.png);
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	top: .12rem;
@@ -3751,7 +3739,8 @@ body {
 }
 
 .J-router-traveldetail .place .iconfont {
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
@@ -3764,18 +3753,17 @@ body {
 	padding-left: .05rem
 }
 
-.J-router-traveldetail .icon-vehicle-1,
-.J-router-traveldetail .icon-vehicle-2,
-.J-router-traveldetail .icon-vehicle-3,
-.J-router-traveldetail .icon-vehicle-4,
-.J-router-traveldetail .icon-vehicle-5 {
+.J-router-traveldetail .icon-vehicle-1, .J-router-traveldetail .icon-vehicle-2,
+	.J-router-traveldetail .icon-vehicle-3, .J-router-traveldetail .icon-vehicle-4,
+	.J-router-traveldetail .icon-vehicle-5 {
 	color: #fff;
 	padding-right: .1rem;
 	padding-left: .1rem
 }
 
 .J-router-traveldetail .traveldetail .dinner .iconfont {
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a), to(#ff1a62));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ff745a),
+		to(#ff1a62));
 	text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
 	-webkit-text-shadow: 1px 2px 6px rgba(255, 77, 119, .6);
 	-webkit-background-clip: text;
@@ -3803,7 +3791,7 @@ body {
 }
 
 .J-router-traveldetail .swiper-container-android .swiper-slide,
-.J-router-traveldetail .swiper-wrapper {
+	.J-router-traveldetail .swiper-wrapper {
 	-webkit-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0)
 }
@@ -3843,7 +3831,8 @@ body {
 }
 
 .J-router-traveldetail .line {
-	background-image: url(https://r03.uzaicdn.com/content/hybrid/images/product/line.png?v=20170317);
+	background-image:
+		url(https://r03.uzaicdn.com/content/hybrid/images/product/line.png?v=20170317);
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: .1rem 93%
@@ -3889,4 +3878,18 @@ body {
 
 #j-purchase-wrapper img {
 	min-height: 300px
+}
+/*遮罩样式\*/
+.bgOverlay {
+	display: none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: #C4C4C4;
+	z-index: 1001;
+	-moz-opacity: 0.6;
+	opacity: .60;
+	filter: alpha(opacity = 60);
 }

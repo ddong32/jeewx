@@ -22,7 +22,7 @@ public class UploadFile {
 	private String extend = "extend";// 扩展名
 	private boolean view = false;// 是否是预览
 	private boolean rename  =true;// 是否重命名
-	private String swfpath;// 转换SWF
+	private String swfpath;// 转换SWF(不设值则不转换)
 	private String cusPath;// 文件物理路径自定义子目录
 	private byte[] content;// 预览或下载时传入的文件二进制内容
 	private Object object;// 文件对应实体对象

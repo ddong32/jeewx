@@ -17,18 +17,14 @@
 				}
 			}
 		});
-		$("#functionListPanel").panel(
-			{
-				title :"菜单列表",
-				tools:[{iconCls:'icon-save',handler:function(){mysubmit();}}]
-			}
-		);
-		$("#operationListpanel").panel(
-			{
-				title :"操作按钮列表",
-				tools:[{iconCls:'icon-save',handler:function(){submitOperation();}}]
-			}
-		);
+		$("#functionListPanel").panel({
+			title :"菜单列表",
+			tools:[{iconCls:'icon-save',handler:function(){mysubmit();}}]
+		});
+		$("#operationListpanel").panel({
+			title :"操作按钮列表",
+			tools:[{iconCls:'icon-save',handler:function(){submitOperation();}}]
+		});
 	});
 	function mysubmit() {
 		var roleId = $("#rid").val();
@@ -63,6 +59,7 @@
 			$('#functionid').tree('expandAll');
 		}
 	}
+    
 	function selecrAll() {
 		var node = $('#functionid').tree('getRoots');
 		for ( var i = 0; i < node.length; i++) {
@@ -72,23 +69,24 @@
 			}
 	    }
 	}
+    
 	function reset() {
 		$('#functionid').tree('reload');
 	}
 
-	$('#selecrAllBtn').linkbutton({   
-	}); 
-	$('#resetBtn').linkbutton({   
-	});   
+	$('#selecrAllBtn').linkbutton({ });
+	$('#resetBtn').linkbutton({ });
 </script>
 <div class="easyui-layout" fit="true">
-<div region="center" style="padding: 1px;">
-<div class="easyui-panel" style="padding: 1px;" fit="true" border="false" id="functionListPanel"><input type="hidden" name="roleId" value="${roleId}" id="rid"> <a id="selecrAllBtn"
-	onclick="selecrAll();">全选</a> <a id="resetBtn" onclick="reset();">重置</a>
-<ul id="functionid"></ul>
-</div>
-</div>
-<div region="east" style="width: 150px; overflow: hidden;" split="true">
-<div class="easyui-panel" style="padding: 1px;" fit="true" border="false" id="operationListpanel"></div>
-</div>
+    <div region="center" style="padding: 1px;">
+        <div class="easyui-panel" style="padding: 1px;" fit="true" border="false" id="functionListPanel">
+            <input type="hidden" name="roleId" value="${roleId}" id="rid">
+            <a id="selecrAllBtn" onclick="selecrAll();">全选</a>
+            <a id="resetBtn" onclick="reset();">重置</a>
+            <ul id="functionid"></ul>
+        </div>
+    </div>
+    <div region="east" style="width: 150px; overflow: hidden;" split="true">
+        <div class="easyui-panel" style="padding: 1px;" fit="true" border="false" id="operationListpanel"></div>
+    </div>
 </div>

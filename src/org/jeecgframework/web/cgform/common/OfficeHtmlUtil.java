@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -16,8 +17,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import jodd.util.StringUtil;
+
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.converter.WordToHtmlConverter;
+import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.LogUtil;
 import org.w3c.dom.Document;
 
@@ -61,10 +65,12 @@ public class OfficeHtmlUtil {
 	 *            WORD文件全路径
 	 * @param htmlfile
 	 *            转换后HTML存放路径
+	 * @throws Exception 
 	 */
-	public void wordToHtml(String docfile, String htmlfile) {
-		ActiveXComponent app = new ActiveXComponent("Word.Application"); // 启动word
+	public void wordToHtml(String docfile, String htmlfile) throws Exception {
+		ActiveXComponent app = null;
 		try {
+			app = new ActiveXComponent("Word.Application"); // 启动word
 			app.setProperty("Visible", new Variant(false));
 			Dispatch docs = app.getProperty("Documents").toDispatch();
 			Dispatch doc = Dispatch.invoke(docs, "Open", Dispatch.Method, new Object[] { docfile, new Variant(false), new Variant(true) }, new int[1]).toDispatch();
@@ -72,9 +78,12 @@ public class OfficeHtmlUtil {
 			Variant f = new Variant(false);
 			Dispatch.call(doc, "Close", f);
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			throw new Exception("请确认，Word转化组件是否安装！");
 		} finally {
-			app.invoke("Quit", new Variant[] {});
+			if(app!=null){
+				app.invoke("Quit", new Variant[] {});
+			}
 		}
 	}
 
@@ -226,7 +235,10 @@ public class OfficeHtmlUtil {
 	public String doHtml(String htmlStr) {
 		java.util.regex.Pattern pattern;   
 	    java.util.regex.Matcher matcher;   
-		
+	    
+	    HttpSession session = ContextHolderUtils.getSession();
+	    String lang = (String)session.getAttribute("lang");
+	    
 		try{
 			pattern = Pattern.compile(regEx_style,Pattern.CASE_INSENSITIVE);   
 			matcher = pattern.matcher(htmlStr);   
@@ -258,28 +270,39 @@ public class OfficeHtmlUtil {
 			pattern = Pattern.compile(regEx_attr8,Pattern.CASE_INSENSITIVE);   
 			matcher = pattern.matcher(htmlStr);   
 			htmlStr = matcher.replaceAll(""); 
-			
+
 			//include
 	    	StringBuilder ls_include = new StringBuilder("");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/jquery/jquery-1.8.3.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/tools/dataformat.js\"></script>");
-	    	ls_include.append("<link id=\"easyuiTheme\" rel=\"stylesheet\" href=\"plug-in/easyui/themes/default/easyui.css\" type=\"text/css\"></link>");
-	    	ls_include.append("<link rel=\"stylesheet\" href=\"plug-in/easyui/themes/icon.css\" type=\"text/css\"></link>");
-	    	ls_include.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"plug-in/accordion/css/accordion.css\"></link>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/easyui/jquery.easyui.min.1.3.2.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/easyui/locale/easyui-lang-zh_CN.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/tools/syUtil.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/My97DatePicker/WdatePicker.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/lhgDialog/lhgdialog.min.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/tools/curdtools.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/tools/easyuiextend.js\"></script>");
-	    	ls_include.append("<link rel=\"stylesheet\" href=\"plug-in/Validform/css/style.css\" type=\"text/css\"/>");
-	    	ls_include.append("<link rel=\"stylesheet\" href=\"plug-in/Validform/css/tablefrom.css\" type=\"text/css\"/>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/js/Validform_v5.3.1_min.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/js/Validform_Datatype.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/js/datatype.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/plugin/passwordStrength/passwordStrength-min.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\">$(function(){$(\"#formobj\").Validform({tiptype:4,btnSubmit:\"#btn_sub\",btnReset:\"#btn_reset\",ajaxPost:true,usePlugin:{passwordstrength:{minLen:6,maxLen:18,trigger:function(obj,error){if(error){obj.parent().next().find(\".Validform_checktip\").show();obj.find(\".passwordStrength\").hide();}else{$(\".passwordStrength\").show();obj.parent().next().find(\".Validform_checktip\").hide();}}}},callback:function(data){var win = frameElement.api.opener;if(data.success==true){frameElement.api.close();win.tip(data.msg);}else{if(data.responseText==''||data.responseText==undefined)$(\"#formobj\").html(data.msg);else $(\"#formobj\").html(data.responseText); return false;}win.reloadTable();}});});</script>");
+
+	    	ls_include.append("<base href=\"${basePath}/\" />");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/jquery/jquery-1.8.3.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/tools/dataformat.js\"></script>");
+	    	ls_include.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"${basePath}/plug-in/accordion/css/accordion.css\"></link>");
+	    	ls_include.append("<link id=\"easyuiTheme\" rel=\"stylesheet\" href=\"${basePath}/plug-in/easyui/themes/default/easyui.css\" type=\"text/css\"></link>");
+	    	ls_include.append("<link rel=\"stylesheet\" href=\"${basePath}/plug-in/easyui/themes/icon.css\" type=\"text/css\"></link>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/easyui/jquery.easyui.min.1.3.2.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/easyui/locale/zh-cn.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/tools/syUtil.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/My97DatePicker/WdatePicker.js\"></script>");
+	    	ls_include.append("<link rel=\"stylesheet\" href=\"${basePath}/plug-in/tools/css/metrole/common.css\" type=\"text/css\"></link>");
+	    	ls_include.append("<link rel=\"stylesheet\" href=\"${basePath}/plug-in/ace/css/font-awesome.css\" type=\"text/css\"></link>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/lhgDialog/lhgdialog.min.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/layer/layer.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/tools/curdtools_zh-cn.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/tools/easyuiextend.js\"></script>");
+	    	ls_include.append("<link id=\"easyuiTheme\" rel=\"stylesheet\" href=\"${basePath}/plug-in/easyui/themes/metrole/main.css\" type=\"text/css\"></link>");
+	    	ls_include.append("<link rel=\"stylesheet\" href=\"${basePath}/plug-in/uploadify/css/uploadify.css\" type=\"text/css\"></link>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/uploadify/jquery.uploadify-3.1.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/tools/Map.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/Validform/js/Validform_v5.3.1_min_zh-cn.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/Validform/js/Validform_Datatype_zh-cn.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/Validform/js/datatype_zh-cn.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/Validform/plugin/passwordStrength/passwordStrength-min.js\"></script>");
+	    	ls_include.append("<link rel=\"stylesheet\" href=\"${basePath}/plug-in/Validform/css/metrole/style.css\" type=\"text/css\"/>");
+	    	ls_include.append("<link rel=\"stylesheet\" href=\"${basePath}/plug-in/Validform/css/metrole/tablefrom.css\" type=\"text/css\"/>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/ueditor/ueditor.config.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"${basePath}/plug-in/ueditor/ueditor.all.js\"></script>");
+
 	    	ls_include.append("<style>");
 	    	ls_include.append("body{font-size:12px;}");
 	    	ls_include.append("table{border: 1px solid #000000;padding:0; margin:0 auto;border-collapse: collapse;width:100%;align:right;}");
@@ -362,6 +385,9 @@ public class OfficeHtmlUtil {
 
 	    String regEx_poi3 = "[\\s]?(class|lang)=([^?(\\s|>)]+)";
 	    
+	    HttpSession session = ContextHolderUtils.getSession();
+	    String lang = (String)session.getAttribute("lang");
+	    
 		try{
 			
 			
@@ -392,17 +418,19 @@ public class OfficeHtmlUtil {
 	    	ls_include.append("<link rel=\"stylesheet\" href=\"plug-in/easyui/themes/icon.css\" type=\"text/css\"></link>");
 	    	ls_include.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"plug-in/accordion/css/accordion.css\"></link>");
 	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/easyui/jquery.easyui.min.1.3.2.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/easyui/locale/easyui-lang-zh_CN.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/easyui/locale/zh-cn.js\"></script>");
 	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/tools/syUtil.js\"></script>");
 	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/My97DatePicker/WdatePicker.js\"></script>");
 	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/lhgDialog/lhgdialog.min.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/tools/curdtools.js\"></script>");
+	    	
+	    	ls_include.append(StringUtil.replace("<script type=\"text/javascript\" src=\"plug-in/tools/curdtools_{0}.js\"></script>", "{0}", lang));
+	    	
 	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/tools/easyuiextend.js\"></script>");
 	    	ls_include.append("<link rel=\"stylesheet\" href=\"plug-in/Validform/css/style.css\" type=\"text/css\"/>");
 	    	ls_include.append("<link rel=\"stylesheet\" href=\"plug-in/Validform/css/tablefrom.css\" type=\"text/css\"/>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/js/Validform_v5.3.1_min.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/js/Validform_Datatype.js\"></script>");
-	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/js/datatype.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/js/Validform_v5.3.1_min_zh-cn.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/js/Validform_Datatype_zh-cn.js\"></script>");
+	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/js/datatype_zh-cn.js\"></script>");
 	    	ls_include.append("<script type=\"text/javascript\" src=\"plug-in/Validform/plugin/passwordStrength/passwordStrength-min.js\"></script>");
 	    	ls_include.append("<script type=\"text/javascript\">$(function(){$(\"#formobj\").Validform({tiptype:4,btnSubmit:\"#btn_sub\",btnReset:\"#btn_reset\",ajaxPost:true,usePlugin:{passwordstrength:{minLen:6,maxLen:18,trigger:function(obj,error){if(error){obj.parent().next().find(\".Validform_checktip\").show();obj.find(\".passwordStrength\").hide();}else{$(\".passwordStrength\").show();obj.parent().next().find(\".Validform_checktip\").hide();}}}},callback:function(data){var win = frameElement.api.opener;if(data.success==true){frameElement.api.close();win.tip(data.msg);}else{if(data.responseText==''||data.responseText==undefined)$(\"#formobj\").html(data.msg);else $(\"#formobj\").html(data.responseText); return false;}win.reloadTable();}});});</script>");
 	    	ls_include.append("<style>");

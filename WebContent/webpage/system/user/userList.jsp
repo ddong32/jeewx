@@ -12,16 +12,15 @@
 	<t:dgToolBar title="用户录入" icon="icon-add" url="userController.do?addorupdate" funname="add"></t:dgToolBar>
 	<t:dgToolBar title="用户编辑" icon="icon-edit" url="userController.do?addorupdate" funname="update"></t:dgToolBar>
 	<t:dgToolBar title="重置密码" icon="icon-edit" url="userController.do?changepasswordforuser" funname="update"></t:dgToolBar>
-<t:dgToolBar title="锁定账户" icon="icon-edit" url="userController.do?lock" funname="lockObj"></t:dgToolBar>
-	
+    <t:dgToolBar title="锁定账户" icon="icon-edit" url="userController.do?lock" funname="lockObj"></t:dgToolBar>
 </t:datagrid>
-<script type="text/javascript">
 
+<script type="text/javascript">
 function lockObj(title,url, id) {
 
 	gridname=id;
 	var rowsData = $('#'+id).datagrid('getSelections');
-	if (!rowsData || rowsData.length==0) {
+	if (!rowsData || rowsData.length == 0) {
 		tip('请选择锁定项目');
 		return;
 	}
@@ -33,7 +32,6 @@ function lockObj(title,url, id) {
 	});
 }
 
-
 function lockuploadify(url, id) {
 	$.ajax({
 		async : false,
@@ -41,7 +39,6 @@ function lockuploadify(url, id) {
 		type : 'POST',
 		url : url,// 请求的action路径
 		error : function() {// 请求失败处理函数
-		
 		
 		},
 		success : function(data) {
@@ -51,10 +48,7 @@ function lockuploadify(url, id) {
 				tip(msg);
 				reloadTable();
 			}
-			
 		}
 	});
 }
-
-
 </script>

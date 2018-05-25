@@ -14,6 +14,7 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
@@ -32,7 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @version V1.0   
  *
  */
-@Scope("prototype")
+//@Scope("prototype")
 @Controller
 @RequestMapping("/cgformButtonController")
 public class CgformButtonController extends BaseController {
@@ -46,15 +47,6 @@ public class CgformButtonController extends BaseController {
 	private CgformButtonServiceI cgformButtonService;
 	@Autowired
 	private SystemService systemService;
-	private String message;
-	
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
 
 
 	/**
@@ -98,12 +90,13 @@ public class CgformButtonController extends BaseController {
 	@RequestMapping(params = "del")
 	@ResponseBody
 	public AjaxJson del(CgformButtonEntity cgformButton, HttpServletRequest request) {
+		String message = null;
 		AjaxJson j = new AjaxJson();
 		cgformButton = systemService.getEntity(CgformButtonEntity.class, cgformButton.getId());
 		message = "删除成功";
 		cgformButtonService.delete(cgformButton);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
-		
+		logger.info("["+IpUtil.getIpAddr(request)+"][online表单自定义按钮删除]"+message);
 		j.setMsg(message);
 		return j;
 	}
@@ -118,6 +111,7 @@ public class CgformButtonController extends BaseController {
 	@RequestMapping(params = "save")
 	@ResponseBody
 	public AjaxJson save(CgformButtonEntity cgformButton, HttpServletRequest request) {
+		String message = null;
 		AjaxJson j = new AjaxJson();
 		if("add".equalsIgnoreCase(cgformButton.getButtonCode())
 				||"update".equalsIgnoreCase(cgformButton.getButtonCode())
@@ -147,6 +141,7 @@ public class CgformButtonController extends BaseController {
 			cgformButtonService.save(cgformButton);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
+		logger.info("["+IpUtil.getIpAddr(request)+"][online表单自定义按钮添加编辑]"+message);
 		j.setMsg(message);
 		return j;
 	}

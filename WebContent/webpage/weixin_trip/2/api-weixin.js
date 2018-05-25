@@ -20,7 +20,6 @@
         $.ajax(u, p);
 	}
 	
-	window['api_weixin'] = {
-			'run': run
-	};
+	window['api_weixin'] = { 'run': run };
+	
 })();

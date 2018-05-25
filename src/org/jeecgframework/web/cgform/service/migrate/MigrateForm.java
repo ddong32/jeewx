@@ -24,6 +24,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
+import org.apache.tools.zip.ZipOutputStream;
+import org.jeecgframework.core.common.model.common.DBTable;
+import org.jeecgframework.core.util.ReflectHelper;
 import org.jeecgframework.web.cgform.entity.button.CgformButtonEntity;
 import org.jeecgframework.web.cgform.entity.button.CgformButtonSqlEntity;
 import org.jeecgframework.web.cgform.entity.cgformftl.CgformFtlEntity;
@@ -32,21 +39,14 @@ import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
 import org.jeecgframework.web.cgform.exception.BusinessException;
 import org.jeecgframework.web.cgform.pojo.config.CgFormFieldPojo;
 import org.jeecgframework.web.cgform.pojo.config.CgFormHeadPojo;
+import org.jeecgframework.web.cgform.pojo.config.CgFormIndexPojo;
 import org.jeecgframework.web.cgform.util.PublicUtil;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipFile;
-import org.apache.tools.zip.ZipOutputStream;
-import org.jeecgframework.core.common.model.common.DBTable;
-import org.jeecgframework.core.util.ReflectHelper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Service;
@@ -172,6 +172,11 @@ public class MigrateForm<T> {
 			ls_sql = "select * from cgform_head where id='" + id + "'"; // 获得导出表单
 			listTables.add(bulidDbTableFromSQL(ls_sql, CgFormHeadPojo.class, jdbcTemplate));
 
+			ls_tmpsql = "select * from cgform_index where table_id='" + id + "'"; // 获得导出索引的字段
+			listTables.add(bulidDbTableFromSQL(ls_tmpsql, CgFormIndexPojo.class, jdbcTemplate));
+
+
+
 			ls_tmpsql = "select * from cgform_field where table_id='" + id + "'"; // 获得导出表单的字段
 			listTables.add(bulidDbTableFromSQL(ls_tmpsql, CgFormFieldPojo.class, jdbcTemplate));
 			// 获得自定义按钮数据
@@ -204,6 +209,12 @@ public class MigrateForm<T> {
 						if (subRowsList != null && subRowsList.size() > 0) {
 							subSqlMap = (Map) subRowsList.get(0);
 							ls_subid = (String) subSqlMap.get("id");
+
+							// 获得导出子表索引
+							ls_tmpsql = "select * from cgform_index where table_id='" + ls_subid + "'";
+							listTables.add(bulidDbTableFromSQL(ls_tmpsql, CgFormIndexPojo.class, jdbcTemplate));
+
+
 							// 获得导出子表字段
 							ls_tmpsql = "select * from cgform_field where table_id='" + ls_subid + "'";
 							listTables.add(bulidDbTableFromSQL(ls_tmpsql, CgFormFieldPojo.class, jdbcTemplate));
@@ -246,7 +257,9 @@ public class MigrateForm<T> {
 		DBTable<T> dbTable = new DBTable<T>();
 		dbTable.setTableName(PublicUtil.getTableName(sql));
 		dbTable.setClass1(clazz);
-		List<T> dataList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(clazz));
+
+		List<T> dataList = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(clazz));
+
 		dbTable.setTableData(dataList);
 		return dbTable;
 	}

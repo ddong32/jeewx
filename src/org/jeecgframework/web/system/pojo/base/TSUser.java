@@ -25,13 +25,8 @@ public class TSUser extends TSBaseUser implements java.io.Serializable {
 	private String officePhone;// 办公电话
 	private String email;// 邮箱
 	private String type; //用户类型  1：普通用户，2：商家用户，3:系统管理员
-	
-
 	private WeixinAccountEntity account;//商铺ID 
 	
-	
-	
-
 	@Column(name = "signatureFile", length = 100)
 	public String getSignatureFile() {
 		return this.signatureFile;

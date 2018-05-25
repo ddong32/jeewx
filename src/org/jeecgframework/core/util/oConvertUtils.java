@@ -19,24 +19,12 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 /**
  * 
  * @author  张代浩
  *
  */
 public class oConvertUtils {
-	/**
-	 * 判断字符串是否为空
-	 */
-	static Map<String, Object> map = new HashMap<String, Object>();
-
-	public static Map<String, Object> getMap() {
-		return map;
-	}
-
 	public static boolean isEmpty(Object object) {
 		if (object == null) {
 			return (true);
@@ -404,7 +392,69 @@ public class oConvertUtils {
 		return (userIp >= begin) && (userIp <= end);
 	}
 	
-	 /**
+	/**
+	 * 将下划线大写方式命名的字符串转换为驼峰式。
+	 * 如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br>
+	 * 例如：hello_world->helloWorld
+	 * 
+	 * @param name
+	 *            转换前的下划线大写方式命名的字符串
+	 * @return 转换后的驼峰式命名的字符串
+	 */
+	public static String camelName(String name) {
+		StringBuilder result = new StringBuilder();
+		// 快速检查
+		if (name == null || name.isEmpty()) {
+			// 没必要转换
+			return "";
+		} else if (!name.contains("_")) {
+			// 不含下划线，仅将首字母小写
+			return name.substring(0, 1).toLowerCase() + name.substring(1);
+		}
+		// 用下划线将原始字符串分割
+		String camels[] = name.split("_");
+		for (String camel : camels) {
+			// 跳过原始字符串中开头、结尾的下换线或双重下划线
+			if (camel.isEmpty()) {
+				continue;
+			}
+			// 处理真正的驼峰片段
+			if (result.length() == 0) {
+				// 第一个驼峰片段，全部字母都小写
+				result.append(camel.toLowerCase());
+			} else {
+				// 其他的驼峰片段，首字母大写
+				result.append(camel.substring(0, 1).toUpperCase());
+				result.append(camel.substring(1).toLowerCase());
+			}
+		}
+		return result.toString();
+	}
+	
+	/**
+	 * 将下划线大写方式命名的字符串转换为驼峰式。
+	 * 如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br>
+	 * 例如：hello_world,test_id->helloWorld,testId
+	 * 
+	 * @param name
+	 *            转换前的下划线大写方式命名的字符串
+	 * @return 转换后的驼峰式命名的字符串
+	 */
+	public static String camelNames(String names) {
+		if(names==null||names.equals("")){
+			return null;
+		}
+		StringBuffer sf = new StringBuffer();
+		String[] fs = names.split(",");
+		for (String field : fs) {
+			field = camelName(field);
+			sf.append(field + ",");
+		}
+		String result = sf.toString();
+		return result.substring(0, result.length() - 1);
+	}
+
+	/**
      * 方法描述:  null或空的判断
      * 作    者： Administrator
      * 日    期： 2015年1月18日-下午7:30:16
@@ -412,29 +462,29 @@ public class oConvertUtils {
      * @return 
      * 返回类型： boolean
      */
-	public static boolean isNullOrEmpty(Object obj) {
-		if (obj == null)
-			return true;
-		if (obj instanceof CharSequence)
-			return ((CharSequence) obj).length() == 0;
-		if (obj instanceof Collection)
-			return ((Collection) obj).isEmpty();
-		if (obj instanceof Map)
-			return ((Map) obj).isEmpty();
-		if (obj instanceof Object[]) {
-			Object[] object = (Object[]) obj;
-			if (object.length == 0) {
-				return true;
-			}
-			boolean empty = true;
-			for (int i = 0; i < object.length; i++) {
-				if (!isNullOrEmpty(object[i])) {
-					empty = false;
-					break;
-				}
-			}
-			return empty;
-		}
-		return false;
-	}  
+    public static boolean isNullOrEmpty(Object obj) {
+        if (obj == null)
+            return true;
+        if (obj instanceof CharSequence)
+            return ((CharSequence) obj).length() == 0;
+        if (obj instanceof Collection)
+            return ((Collection) obj).isEmpty();
+        if (obj instanceof Map)
+            return ((Map) obj).isEmpty();
+        if (obj instanceof Object[]) {
+            Object[] object = (Object[]) obj;
+            if (object.length == 0) {
+                return true;
+            }
+            boolean empty = true;
+            for (int i = 0; i < object.length; i++) {
+                if (!isNullOrEmpty(object[i])) {
+                    empty = false;
+                    break;
+                }
+            }
+            return empty;
+        }
+        return false;
+    }  
 }

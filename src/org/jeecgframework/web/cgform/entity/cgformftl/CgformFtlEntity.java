@@ -47,7 +47,17 @@ public class CgformFtlEntity implements java.io.Serializable {
 	private java.lang.String updateName;
 	/**修改时间*/
 	private java.util.Date updateDate;
-	
+	/**模板类型 01 ckeditor 02 自定义 03 */
+	private java.lang.String editorType;
+	@Column(name ="EDITOR_TYPE",nullable=false,length=32)
+	public java.lang.String getEditorType() {
+		return editorType;
+	}
+
+	public void setEditorType(java.lang.String editorType) {
+		this.editorType = editorType;
+	}
+
 	/**
 	 *方法: 取得java.lang.String
 	 *@return: java.lang.String  主键
@@ -117,8 +127,8 @@ public class CgformFtlEntity implements java.io.Serializable {
 		this.ftlVersion = ftlVersion;
 	}
 	/**
-	 *方法: 取得byte[]
-	 *@return: byte[]  表单模板内容
+	 *方法: 取得
+	 *@return:   表单模板内容
 	 */
 	@Lob
 	@Column(name ="FTL_CONTENT",nullable=true)
@@ -127,8 +137,8 @@ public class CgformFtlEntity implements java.io.Serializable {
 	}
 
 	/**
-	 *方法: 设置byte[]
-	 *@param: byte[]  表单模板内容
+	 *方法: 设置
+	 *@param:   表单模板内容
 	 */
 	public void setFtlContent(String ftlContent){
 		this.ftlContent = ftlContent;

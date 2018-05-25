@@ -16,7 +16,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class ComboTreeTag extends TagSupport {
 	protected String id;// ID
-	protected String url;// 远程数据
+	protected String url;// 远程数据URL
 	protected String name;// 控件名称
 	protected String width;// 宽度
 	protected String value;// 控件值
@@ -26,12 +26,19 @@ public class ComboTreeTag extends TagSupport {
 	}
 
 	public int doEndTag() throws JspTagException {
+		JspWriter out = null;
 		try {
-			JspWriter out = this.pageContext.getOut();
+			out = this.pageContext.getOut();
 			out.print(end().toString());
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				out.clear();
+				out.close();
+			} catch (Exception e2) {
+			}
 		}
 		return EVAL_PAGE;
 	}

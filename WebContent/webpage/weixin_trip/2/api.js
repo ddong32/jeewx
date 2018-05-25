@@ -1,24 +1,19 @@
 "use strict";
 var api = function(window, document) {
-	try {
-		document.domain = "uzai.com"
-	} catch(e) {
-		console.log(e.message)
-	}
 	var version = "1.0.3",
 		devicetype = "",
 		postTimes = 0,
 		iosGetTimes = 0,
 		apiUrlPre = "MobileCommon/RequestWebApi/544",
 		path = {
-			dingzhilogic: "http://mdingzhilogic.uzai.com/api/",
-			msitelogic: "http://msitelogic.uzai.com/api/",
-			mhomelogic: "http://mhomelogic.uzai.com/api/",
-			mcurrencylogic: "http://mcurrencylogic.uzai.com/api/",
-			mproductlogic: "http://mproductlogic.uzai.com/api/",
-			mbuylogic: "http://mbuylogic.uzai.com/api/",
-			mpaylogic: "http://mpaylogic.uzai.com/api/",
-			msearchlogic: "http://msearchlogic.uzai.com/api/"
+//			dingzhilogic: "http://mdingzhilogic.uzai.com/api/",
+//			msitelogic: "http://msitelogic.uzai.com/api/",
+//			mhomelogic: "http://mhomelogic.uzai.com/api/",
+//			mcurrencylogic: "http://mcurrencylogic.uzai.com/api/",
+//			mproductlogic: "http://mproductlogic.uzai.com/api/",
+//			mbuylogic: "http://mbuylogic.uzai.com/api/",
+//			mpaylogic: "http://mpaylogic.uzai.com/api/",
+//			msearchlogic: "http://msearchlogic.uzai.com/api/"
 		},
 		loginConfig = {
 			from: document.referrer,
@@ -45,12 +40,12 @@ var api = function(window, document) {
 			__scrolltop__: 0,
 			init: function() {
 				function asyncLoadScripts() {
-					for(var $array = ["r03.uzaicdn.com/content/hybrid/scripts/common/pagestatistics.js"], $arrayScript = ["r03.uzaicdn.com/content/hybrid/scripts/common/gmlinks.js"], $hasScripts = document.getElementsByTagName("script"), $frgmentGa = document.createDocumentFragment(), $frgmentGmlinks = document.createDocumentFragment(), _arrayHasScripts = [], a = 0; a < $hasScripts.length; a++) _arrayHasScripts = _arrayHasScripts.concat($hasScripts[a].getAttribute("src"));
+					for(var $array = ["127.0.0.1:8080/jeewx/plug-in/common/pagestatistics.js"], $arrayScript = ["127.0.0.1:8080/jeewx/webpage/weixin_trip/2/gmlinks.js"], $hasScripts = document.getElementsByTagName("script"), $frgmentGa = document.createDocumentFragment(), $frgmentGmlinks = document.createDocumentFragment(), _arrayHasScripts = [], a = 0; a < $hasScripts.length; a++) _arrayHasScripts = _arrayHasScripts.concat($hasScripts[a].getAttribute("src"));
 					_arrayHasScripts = _arrayHasScripts.toString();
 					for(var _a = 0; _a < $array.length; _a++)
 						if(_arrayHasScripts.indexOf($array[_a]) < 0) {
 							var _scripts = document.createElement("script");
-							_scripts.setAttribute("async", "async"), _scripts.setAttribute("src", "https://" + $array[_a]), $frgmentGa.appendChild(_scripts)
+							_scripts.setAttribute("async", "async"), _scripts.setAttribute("src", "http://" + $array[_a]), $frgmentGa.appendChild(_scripts)
 						}
 					document.body.appendChild($frgmentGa);
 					var source = api.getQueryString("source");
@@ -62,7 +57,7 @@ var api = function(window, document) {
 						for(var _a2 = 0; _a2 < $arrayScript.length; _a2++)
 							if(_arrayHasScripts.indexOf($arrayScript[_a2]) < 0) {
 								var _scripts2 = document.createElement("script");
-								_scripts2.setAttribute("async", "async"), _scripts2.setAttribute("src", "https://" + $arrayScript[_a2]), $frgmentGmlinks.appendChild(_scripts2)
+								_scripts2.setAttribute("async", "async"), _scripts2.setAttribute("src", "http://" + $arrayScript[_a2]), $frgmentGmlinks.appendChild(_scripts2)
 							}
 						document.body.appendChild($frgmentGmlinks)
 					}
@@ -194,7 +189,7 @@ var api = function(window, document) {
 				else {
 					1 == loading && api.loading();
 					var user = api.getCookie("user");
-					if(needLogin || "undefined" != typeof needLogin ? needLogin === !1 && (needLogin = !1) : needLogin = param.toLowerCase().indexOf("user") > -1 && (!user || "" === user || "0" === user || "undefined" == typeof user), needLogin) location.href = "https://mhome.uzai.com/Member/login.html?reurl=" + location.href;
+					if(needLogin || "undefined" != typeof needLogin ? needLogin === !1 && (needLogin = !1) : needLogin = param.toLowerCase().indexOf("user") > -1 && (!user || "" === user || "0" === user || "undefined" == typeof user), needLogin) location.href = "http://mhome.uzai.com/Member/login.html?reurl=" + location.href;
 					else {
 						postTimes++, api.__callback__.push([postTimes, callback, $scope]);
 						var url = "/data/post";

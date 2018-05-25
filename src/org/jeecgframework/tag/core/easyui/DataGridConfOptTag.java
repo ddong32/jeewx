@@ -4,6 +4,8 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.jeecgframework.core.util.MutiLangUtil;
+
 /**
  * 
  * 类描述：列表操作项处理标签
@@ -18,13 +20,20 @@ public class DataGridConfOptTag extends TagSupport {
 	private String message;//询问链接的提示语
 	private String exp;//判断链接是否显示的表达式
 	private String operationCode;//按钮的操作Code
+	private String urlStyle;//样式
+
+	private String urlclass;//自定义按钮样式
+	private String urlfont;//自定义按钮图标样式
+
 	public int doStartTag() throws JspTagException {
 		return EVAL_PAGE;
 	}
 	public int doEndTag() throws JspTagException {
 		Tag t = findAncestorWithClass(this, DataGridTag.class);
 		DataGridTag parent = (DataGridTag) t;
-		parent.setConfUrl(url,title,message,exp,operationCode);
+
+		parent.setConfUrl(url,MutiLangUtil.getLang(title),MutiLangUtil.getLang(message),exp,operationCode,urlStyle,urlclass,urlfont);
+
 		return EVAL_PAGE;
 	}
 	public void setExp(String exp) {
@@ -42,4 +51,25 @@ public class DataGridConfOptTag extends TagSupport {
 	public void setOperationCode(String operationCode) {
 		this.operationCode = operationCode;
 	}
+	public void setUrlStyle(String urlStyle) {
+		this.urlStyle = urlStyle;
+	}
+	public String getUrlStyle() {
+		return urlStyle;
+	}
+
+	public String getUrlclass() {
+		return urlclass;
+	}
+	public void setUrlclass(String urlclass) {
+		this.urlclass = urlclass;
+	}
+	public String getUrlfont() {
+		return urlfont;
+	}
+	public void setUrlfont(String urlfont) {
+		this.urlfont = urlfont;
+	}
+
+	
 }

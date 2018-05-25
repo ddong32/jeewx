@@ -1,5 +1,7 @@
 package org.jeecgframework.core.util;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -8,9 +10,15 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.hibernate.validator.util.privilegedactions.GetAnnotationParameter;
+import org.apache.commons.lang.StringUtils;
+import org.jeecgframework.core.constant.DataBaseConstant;
 import org.jeecgframework.web.system.manager.ClientManager;
+import org.jeecgframework.web.system.pojo.base.Client;
+import org.jeecgframework.web.system.pojo.base.DynamicDataSourceEntity;
+import org.jeecgframework.web.system.pojo.base.TSIcon;
 import org.jeecgframework.web.system.pojo.base.TSRoleFunction;
+import org.jeecgframework.web.system.pojo.base.TSType;
+import org.jeecgframework.web.system.pojo.base.TSTypegroup;
 import org.jeecgframework.web.system.pojo.base.TSUser;
 
 import weixin.guanjia.account.entity.WeixinAccountEntity;
@@ -22,8 +30,38 @@ import weixin.util.WeiXinConstants;
  * 
  */
 public class ResourceUtil {
-
+	public static final String LOCAL_CLINET_USER = "LOCAL_CLINET_USER";
+	/**
+	 * 缓存字段分组【缓存】
+	 */
+	public static Map<String, TSTypegroup> allTypeGroups = new HashMap<String,TSTypegroup>();
+	/**
+	 * 缓存字典【缓存】
+	 */
+	public static Map<String, List<TSType>> allTypes = new HashMap<String,List<TSType>>();
+	
+	/**
+	 * 国际化【缓存】
+	 */
+	public static Map<String, String> mutiLangMap = new HashMap<String, String>(); 
+	/**
+	 * 缓存系统图标【缓存】
+	 */
+	public static Map<String, TSIcon> allTSIcons = new HashMap<String,TSIcon>();
+	/**
+	 * 动态数据源参数配置【缓存】
+	 */
+	public static Map<String, DynamicDataSourceEntity> dynamicDataSourceMap = new HashMap<String, DynamicDataSourceEntity>(); 
+	
 	private static final ResourceBundle bundle = java.util.ResourceBundle.getBundle("sysConfig");
+	
+	/**
+	 * 属性文件[resources/sysConfig.properties]
+	 * #默认开启模糊查询方式 1为开启 条件无需带*就能模糊查询[暂时取消]
+	 * fuzzySearch=0
+	 */
+
+//	public final static boolean fuzzySearch= ResourceUtil.isFuzzySearch();
 
 	/**
 	 * 获取session定义名称
@@ -33,69 +71,78 @@ public class ResourceUtil {
 	public static final String getSessionattachmenttitle(String sessionName) {
 		return bundle.getString(sessionName);
 	}
+	
 	public static final TSUser getSessionUserName() {
 		HttpSession session = ContextHolderUtils.getSession();
 		if(ClientManager.getInstance().getClient(session.getId())!=null){
 			return ClientManager.getInstance().getClient(session.getId()).getUser();
+		}else{
+			TSUser u = (TSUser) session.getAttribute(ResourceUtil.LOCAL_CLINET_USER);
+			Client client = new Client();
+	        client.setIp("");
+	        client.setLogindatetime(new Date());
+	        client.setUser(u);
+	        ClientManager.getInstance().addClinet(session.getId(), client);
 		}
+
 		return null;
 	}
 	
-	/**
-	 * 获取登录用户微信账号信息
-	 * @return
-	 */
-	public static final WeixinAccountEntity getWeiXinAccount() {
-		HttpSession session = ContextHolderUtils.getSession();
-		if(session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT)!=null){
-			WeixinAccountEntity WeixinAccountEntity = (weixin.guanjia.account.entity.WeixinAccountEntity) session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT);
-			return WeixinAccountEntity;
-		}else{
-			return null;
-		}
-	}
-	
-	/**
-	 * 获取登录用户微信账号信息
-	 * @return
-	 */
-	public static final String getShangJiaAccountId() {
-		HttpSession session = ContextHolderUtils.getSession();
-		if(session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT)!=null){
-			WeixinAccountEntity weixinAccountEntity = (weixin.guanjia.account.entity.WeixinAccountEntity) session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT);
-			return weixinAccountEntity.getId();
-		}else{
-			return null;
-		}
-	}
-	
-	/**
-	 * 获取登录用户微信账号ID
-	 * @return
-	 */
-	public static final String getWeiXinAccountId() {
-		HttpSession session = ContextHolderUtils.getSession();
-		if(session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT)!=null){
-			WeixinAccountEntity weixinAccountEntity = (weixin.guanjia.account.entity.WeixinAccountEntity) session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT);
-			return weixinAccountEntity.getId();
-		}else{
-			return null;
-		}
-	}
-	
-	/**
-	 * 获取浏览用户的openId
-	 * @return
-	 */
-	public static final String getUserOpenId() {
-		HttpSession session = ContextHolderUtils.getSession();
-		Object userOpenId = session.getAttribute(WeiXinConstants.USER_OPENID);
-		if(userOpenId!=null){
-			return userOpenId.toString();
-		}else{
-			return null;
-		}
-	} 
+	   /**
+     * 获取登录用户微信账号信息
+     * @return
+     */
+    public static final WeixinAccountEntity getWeiXinAccount() {
+        HttpSession session = ContextHolderUtils.getSession();
+        if(session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT)!=null){
+            WeixinAccountEntity WeixinAccountEntity = (weixin.guanjia.account.entity.WeixinAccountEntity) session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT);
+            return WeixinAccountEntity;
+        }else{
+            return null;
+        }
+    }
+    
+    /**
+     * 获取登录用户微信账号信息
+     * @return
+     */
+    public static final String getShangJiaAccountId() {
+        HttpSession session = ContextHolderUtils.getSession();
+        if(session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT)!=null){
+            WeixinAccountEntity weixinAccountEntity = (weixin.guanjia.account.entity.WeixinAccountEntity) session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT);
+            return weixinAccountEntity.getId();
+        }else{
+            return null;
+        }
+    }
+    
+    /**
+     * 获取登录用户微信账号ID
+     * @return
+     */
+    public static final String getWeiXinAccountId() {
+        HttpSession session = ContextHolderUtils.getSession();
+        if(session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT)!=null){
+            WeixinAccountEntity weixinAccountEntity = (weixin.guanjia.account.entity.WeixinAccountEntity) session.getAttribute(WeiXinConstants.WEIXIN_ACCOUNT);
+            return weixinAccountEntity.getId();
+        }else{
+            return null;
+        }
+    }
+    
+    /**
+     * 获取浏览用户的openId
+     * @return
+     */
+    public static final String getUserOpenId() {
+        HttpSession session = ContextHolderUtils.getSession();
+        Object userOpenId = session.getAttribute(WeiXinConstants.USER_OPENID);
+        if(userOpenId!=null){
+            return userOpenId.toString();
+        }else{
+            return null;
+        }
+    } 
 	
 	@Deprecated
 	public static final List<TSRoleFunction> getSessionTSRoleFunction(String roleId) {
@@ -113,27 +160,32 @@ public class ResourceUtil {
 	}
 	
 	/**
-	 * 获得请求路径
+	 * 获得请求路径【注意： 不通用】
 	 * 
 	 * @param request
 	 * @return
 	 */
 	public static String getRequestPath(HttpServletRequest request) {
-		String requestPath = request.getRequestURI() + "?" + request.getQueryString();
-		if (requestPath.indexOf("&") > -1) {// 去掉其他参数
+
+//		String requestPath = request.getRequestURI() + "?" + request.getQueryString();
+		String queryString = request.getQueryString();
+		String requestPath = request.getRequestURI();
+		if(StringUtils.isNotEmpty(queryString)){
+			requestPath += "?" + queryString;
+		}
+
+		if (requestPath.indexOf("&") > -1) {// 去掉其他参数(保留一个参数) 例如：loginController.do?login
 			requestPath = requestPath.substring(0, requestPath.indexOf("&"));
 		}
-		requestPath = requestPath.substring(request.getContextPath().length() + 1);// 去掉项目路径
-		return requestPath;
-	}
-	
-	/**
-	 * 没有登录，跳转到登陆界面，获得登录前的url
-	 * @param request
-	 * @return
-	 */
-	public static String getRedirUrl(HttpServletRequest request){
-		String requestPath = request.getRequestURI() + "?" + request.getQueryString();
+
+		if(requestPath.indexOf("=")!=-1){
+			if(requestPath.indexOf(".do")!=-1){
+				requestPath = requestPath.substring(0,requestPath.indexOf(".do")+3);
+			}else{
+				requestPath = requestPath.substring(0,requestPath.indexOf("?"));
+			}
+		}
+
 		requestPath = requestPath.substring(request.getContextPath().length() + 1);// 去掉项目路径
 		return requestPath;
 	}
@@ -159,8 +211,6 @@ public class ResourceUtil {
 		Set set = bundle.keySet();
 		return oConvertUtils.SetToMap(set);
 	}
-
-	
 	
 	public static String getSysPath() {
 		String path = Thread.currentThread().getContextClassLoader().getResource("").toString();
@@ -233,24 +283,68 @@ public class ResourceUtil {
     public static String getRandCodeType() {
         return bundle.getString("randCodeType");
     }
-    
+
+
     /**
-	 * 获取商家的账号ID
-	 * 对应着微信公众账号
-	 * @return
-	 */
-	public static final String getOpenid(HttpServletRequest request) {
-		String openid = request.getParameter("openid");
-		if(openid!=null){
-			return openid;
-		}else{
-			return null;
+     * 获取组织机构编码长度的类型
+     *
+     * @return 组织机构编码长度的类型
+     */
+    public static String getOrgCodeLengthType() {
+        return bundle.getString("orgCodeLengthType");
+    }
+    
+
+    /**
+     * 获取用户session 中的变量
+     * @param key
+     * 			Session 中的值
+     * @return
+     */
+	private static String getSessionData(String key) {
+		//${myVar}%
+		//得到${} 后面的值
+		String moshi = "";
+		if(key.indexOf("}")!=-1){
+			 moshi = key.substring(key.indexOf("}")+1);
 		}
+		String returnValue = null;
+
+		if (key.contains("#{")) {
+			key = key.substring(2,key.indexOf("}"));
+		}
+		//从session中取得值
+		if (!StringUtil.isEmpty(key)) {
+			HttpSession session = ContextHolderUtils.getSession();
+			returnValue = (String) session.getAttribute(key);
+		}
+
+		//结果加上${} 后面的值
+		if(returnValue!=null){returnValue = returnValue + moshi;}
+		return returnValue;
 	}
+	
+    /**
+     * 获取商家的账号ID
+     * 对应着微信公众账号
+     * @return
+     */
+    public static final String getOpenid(HttpServletRequest request) {
+        String openid = request.getParameter("openid");
+        if(openid!=null){
+            return openid;
+        }else{
+            return null;
+        }
+    }
 	
 	public static void main(String[] args) {
 		org.jeecgframework.core.util.LogUtil.info(getPorjectPath());
 		org.jeecgframework.core.util.LogUtil.info(getSysPath());
-
 	}
+
+//	public static boolean isFuzzySearch(){
+//		return "1".equals(bundle.getString("fuzzySearch"));
+//	}
+
 }

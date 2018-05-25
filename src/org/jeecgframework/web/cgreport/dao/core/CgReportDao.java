@@ -5,13 +5,14 @@ import java.util.Map;
 
 import org.jeecgframework.minidao.annotation.Arguments;
 import org.jeecgframework.minidao.annotation.MiniDao;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
  * @author zhangdaihao
  *
  */
-@MiniDao
+@Repository("cgReportDao")
 public interface CgReportDao{
 
 	@Arguments("configId")

@@ -70,8 +70,7 @@ public class WeixinUserinfoUtils {
         
         String targetUrl = request.getRequestURL().toString();
         int pos = targetUrl.lastIndexOf("/");
-        targetUrl = targetUrl.substring(0, pos) + "/weixinUserinfoController.do?getUserinfo"
-                + "&appid=" + wxae.getAccountappid() + "&scret=" + wxae.getAccountappsecret();
+        targetUrl = targetUrl.substring(0, pos) + "/weixinUserinfoController.do?getUserinfo" + "&appid=" + wxae.getAccountappid() + "&scret=" + wxae.getAccountappsecret();
         
         try {
             URL url = new URL(targetUrl);

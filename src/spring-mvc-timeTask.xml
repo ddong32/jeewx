@@ -16,8 +16,7 @@
 	<context:component-scan base-package="org.jeecgframework.core.timer" />
 	<task:executor id="executor" pool-size="5" />
 	<task:scheduler id="scheduler" pool-size="10" />
-	<task:annotation-driven executor="executor"
-		scheduler="scheduler" />
+	<task:annotation-driven executor="executor" scheduler="scheduler" />
 	<!-- 定时任务配置 quartz 可配置到管理界面 -->
 	<bean id="taskDemoServiceTaskJob"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -32,8 +31,7 @@
 	</bean>
 	
 	<!-- 自动重置微信Token -->
-	<bean id="autoResetWeixinTokenJob"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<bean id="autoResetWeixinTokenJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="weixinAccountTokenTask" />
 		<property name="targetMethod" value="autoResetToken" />
 		<property name="concurrent" value="false" />
@@ -45,8 +43,7 @@
 	</bean>
 
 	<!-- 定时任务调度器 -->
-	<bean id="schedulerFactory" lazy-init="false" autowire="no"
-		class="org.jeecgframework.core.timer.DataBaseSchedulerFactoryBean">
+	<bean id="schedulerFactory" lazy-init="false" autowire="no" class="org.jeecgframework.core.timer.DataBaseSchedulerFactoryBean">
 		<property name="triggers">
 			<list>
 				 <!-- 重置Token -->
