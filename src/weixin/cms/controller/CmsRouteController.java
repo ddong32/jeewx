@@ -14,7 +14,6 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.web.system.pojo.base.TSType;
@@ -28,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import weixin.cms.entity.CmsPhotoEntity;
 import weixin.cms.entity.CmsRouteEntity;
-import weixin.cms.service.AdServiceI;
 import weixin.cms.service.CmsPhotoServiceI;
 import weixin.cms.service.CmsRouteServiceI;
 
@@ -73,13 +71,13 @@ public class CmsRouteController extends BaseController {
 
     @RequestMapping(params = "datagrid")
     public void datagrid(CmsRouteEntity entity, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+        dataGrid.setField("id,breakfastLabel,lunchLabel,dinnerLabel,stay,detail,traffic,createDate,");
         CriteriaQuery cq = new CriteriaQuery(CmsRouteEntity.class, dataGrid);
         // cq.eq("accountid", ResourceUtil.getWeiXinAccountId());
         // 查询条件组装器
         if (StringUtils.isNotBlank(entity.getArticleId())) {
             org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, entity, request.getParameterMap());
             this.service.getDataGridReturn(cq, true);
-            //
             service.trans_TSType(dataGrid.getResults());
         } else {
             dataGrid.setResults(Collections.emptyList());

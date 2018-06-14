@@ -3,6 +3,7 @@ package weixin.guanjia.account.service.impl;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import net.sf.json.JSONObject;
@@ -91,7 +92,14 @@ public class WeixinAccountServiceImpl extends CommonServiceImpl implements Weixi
                 // 失效 重新获取
                 String requestUrl = WeixinUtil.access_token_url.replace("APPID", account.getAccountappid()).replace("APPSECRET", account.getAccountappsecret());
                 JSONObject jsonObject = WeixinUtil.httpRequest(requestUrl, "GET", null);
+                Map<Object, Object> params = (Map<Object, Object>)jsonObject;
                 if (null != jsonObject) {
+                    if (params.get("errmsg") != null && !"".equals(params.get("errmsg").toString())) {
+                        token = null;
+                        // 获取token失败
+                        String wrongMessage = "获取token失败 errcode:{} errmsg:{}" + jsonObject.getInt("errcode") + jsonObject.getString("errmsg");
+                        System.out.println(wrongMessage);
+                    }
                     try {
                         token = jsonObject.getString("access_token");
                         // 重置token

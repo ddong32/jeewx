@@ -74,7 +74,4 @@ public class DataGridFunOptTag extends TagSupport {
 		this.urlfont = urlfont;
 	}
 
-	
-	
-
 }

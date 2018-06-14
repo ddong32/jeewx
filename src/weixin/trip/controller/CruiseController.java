@@ -1,5 +1,7 @@
 package weixin.trip.controller;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import net.sf.json.JSONObject;
 import weixin.cms.entity.CmsArticleEntity;
 import weixin.cms.entity.CmsMemberEntity;
 import weixin.cms.entity.CmsPhotoEntity;
@@ -26,6 +29,7 @@ import weixin.cms.entity.CmsRouteEntity;
 import weixin.cms.service.CmsArticleServiceI;
 import weixin.cms.service.CmsPhotoServiceI;
 import weixin.cms.service.CmsRouteServiceI;
+import weixin.cms.service.WeixinUserinfoServiceI;
 import weixin.cms.util.WeixinUserinfoUtils;
 
 /**
@@ -51,7 +55,7 @@ public class CruiseController extends BaseController {
 
     @Autowired
     private CmsPhotoServiceI cmsPhotoService;
-
+    
     /**
      * 信息列表 页面跳转
      * 
@@ -83,7 +87,9 @@ public class CruiseController extends BaseController {
         boolean isVip = Boolean.FALSE;
         try {
             //
-            String openid = WeixinUserinfoUtils.getUserInfo(request);
+            //WeixinUserinfoUtils.getUserInfo(request, response);
+            //weixinUserinfoService.callWeixinAuthor2ReturnUrl(request, response);
+            String openid = ResourceUtil.getUserOpenId();
             if (null != openid) {
                 CriteriaQuery cq = new CriteriaQuery(CmsMemberEntity.class);
                 cq.add(Restrictions.eq("openid", openid));
@@ -148,5 +154,57 @@ public class CruiseController extends BaseController {
             cmsRouteService.trans_TSType(routes);
         }
         request.setAttribute("accountid", ResourceUtil.getWeiXinAccountId());
+    }
+    
+    /**
+     * 微信登录测试
+     * 
+     * @param cmsArticle
+     * @param request
+     * @return
+     * @throws IOException 
+     * https://blog.csdn.net/normol/article/details/76595838
+     */
+    @RequestMapping(params = "wxLogin")
+    public void wxLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String backUrl="http://full.ngrok.xiaomiqiu.cn/jeewx/cruiseController.do?callBack";
+
+        /**
+        *这儿一定要注意！！首尾不能有多的空格（因为直接复制往往会多出空格），其次就是参数的顺序不能变动
+        **/
+        String url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeixinUserinfoUtils.APPID +
+                "&redirect_uri=" + URLEncoder.encode(backUrl,"UTF-8") +
+                "&response_type=code" +
+                "&scope=snsapi_userinfo" +
+//                "&scope=snsapi_base" +
+                "&state=STATE#wechat_redirect";
+        
+        response.sendRedirect(url);
+    }
+    
+    /**
+     * 微信登录测试
+     * 
+     * @param cmsArticle
+     * @param request
+     * @return
+     * @throws IOException 
+     */
+    @RequestMapping(params = "callBack")
+    public void callBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        System.out.println("hahah");
+        String code = request.getParameter("code");
+        String url  = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeixinUserinfoUtils.APPID + 
+                "&secret=" + WeixinUserinfoUtils.APPSECRET +
+                "&code=" + code + "&grant_type=authorization_code";
+        JSONObject jsonObject = WeixinUserinfoUtils.doGetJson(url);
+        String openid=jsonObject.getString("openid");
+        String token=jsonObject.getString("access_token");
+        System.out.println(openid + ", " + token);
+        
+        String infoUrl="https://api.weixin.qq.com/sns/userinfo?access_token=" + token + "&openid=" + openid + "&lang=zh_CN";
+        JSONObject userInfo = WeixinUserinfoUtils.doGetJson(infoUrl);
+        System.out.println(userInfo);
     }
 }

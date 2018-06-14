@@ -1,8 +1,6 @@
 package weixin.cms.service.impl;
 
 import java.util.List;
-import java.util.Map;
-
 import org.jeecgframework.core.common.dao.impl.CommonDao;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.web.system.pojo.base.TSType;
@@ -11,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import weixin.cms.dao.CmsPhotoDao;
 import weixin.cms.dao.CmsRouteDao;
 import weixin.cms.entity.CmsRouteEntity;
-import weixin.cms.service.CmsPhotoServiceI;
 import weixin.cms.service.CmsRouteServiceI;
 
 @Service("cmsRouteService")

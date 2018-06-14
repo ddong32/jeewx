@@ -28,7 +28,7 @@ public class OAuth2Util {
 	 * @throws UnsupportedEncodingException 
 	 * 返回类型： String
 	 */
-	public static String obtainWeixinOAuth2Url(String targetUrl, String appid,String scope) {
+	public static String obtainWeixinOAuth2Url(String targetUrl, String appid, String scope) {
 		String shareurl = "";
 		String encodeTargetURL = "";
 		try {

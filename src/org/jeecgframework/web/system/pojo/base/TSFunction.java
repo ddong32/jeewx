@@ -11,9 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.Formula;
 import org.jeecgframework.core.common.entity.IdEntity;
 
 /**
@@ -22,12 +19,10 @@ import org.jeecgframework.core.common.entity.IdEntity;
  */
 @Entity
 @Table(name = "t_s_function")
-
 @org.hibernate.annotations.Proxy(lazy = false)
-
-
 public class TSFunction extends IdEntity implements java.io.Serializable {
-	private TSFunction TSFunction;//父菜单
+    private static final long serialVersionUID = 1L;
+    private TSFunction TSFunction;//父菜单
 	private String functionName;//菜单名称
 	private Short functionLevel;//菜单等级
 	private String functionUrl;//菜单地址
@@ -35,11 +30,10 @@ public class TSFunction extends IdEntity implements java.io.Serializable {
 	private String functionOrder;//菜单排序
 	private Short functionType;//菜单类型
 	private TSIcon TSIcon = new TSIcon();//菜单图标
-
 	private String functionIconStyle;//菜单图标样式
-
 	private TSIcon TSIconDesk;// 云桌面菜单图标
-
+	private String stat;      //状态
+	
 	/*private int subFunctionSize;
 	@Formula(value = "(SELECT count(t_s_function.id) FROM t_s_function where t_s_function.parentfunctionid = id)")
 	public int getSubFunctionSize() {
@@ -254,6 +248,7 @@ public class TSFunction extends IdEntity implements java.io.Serializable {
 	public void setFunctionOrder(String functionOrder) {
 		this.functionOrder = functionOrder;
 	}
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TSFunction")
 	public List<TSFunction> getTSFunctions() {
 		return TSFunctions;
@@ -261,6 +256,7 @@ public class TSFunction extends IdEntity implements java.io.Serializable {
 	public void setTSFunctions(List<TSFunction> TSFunctions) {
 		this.TSFunctions = TSFunctions;
 	}
+	
 	@Column(name = "functioniframe")
 	public Short getFunctionIframe() {
 		return functionIframe;
@@ -278,6 +274,13 @@ public class TSFunction extends IdEntity implements java.io.Serializable {
 		this.functionIconStyle = functionIconStyle;
 	}
 
-	
+	@Column(name = "stat")
+    public String getStat() {
+        return stat;
+    }
+
+    public void setStat(String stat) {
+        this.stat = stat;
+    }
 
 }

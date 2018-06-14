@@ -136,10 +136,13 @@
 						<value>cruiseController.do?detail</value>
                         <value>cruiseController.do?traveldetail</value>
                         <value>cruiseController.do?detailcontent</value>
+                        <value>cruiseController.do?wxLogin</value>
+						<value>cruiseController.do?callBack</value>
                         <value>cmsMemberController.do?signup</value>
                         <value>cmsMemberController.do?save</value>
                         <value>cmsMemberController.do?getCurrent</value>
-                        <value>weixinUserinfoController.do?getUserinfo</value>
+                        <value>weixinUserinfoController.do?callWeixinAuthor2</value>
+                        <value>weixinUserinfoController.do?getOauth2AccessToken</value>
 					</list>
 				</property>
 				<!-- 模糊匹配 -->

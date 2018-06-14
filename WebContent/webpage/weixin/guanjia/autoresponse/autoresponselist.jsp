@@ -2,7 +2,7 @@
 <%@include file="/context/mytags.jsp"%>
 <t:base type="jquery,easyui,tools,DatePicker"></t:base>
 <t:datagrid name="autoresponselist" actionUrl="autoResponseController.do?datagrid" fit="true" fitColumns="true" idField="id" queryMode="group">
-	<t:dgCol title="编号" field="id" hidden="false" ></t:dgCol>
+	<t:dgCol title="编号" field="id" hidden="true" ></t:dgCol>
 	<t:dgCol title="关键字" field="keyWord" query="true" width="100"></t:dgCol>
 	<t:dgCol title="名称" field="templateName" width="100"></t:dgCol>
 	<t:dgCol title="时间" field="addTime" width="100"></t:dgCol>

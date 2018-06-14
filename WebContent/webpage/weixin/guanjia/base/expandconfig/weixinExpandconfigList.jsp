@@ -4,7 +4,7 @@
 <div class="easyui-layout" fit="true">
   <div region="center" style="padding:1px;">
   <t:datagrid name="weixinExpandconfigList" checkbox="true" fitColumns="true" title="扩展接口管理" actionUrl="weixinExpandconfigController.do?datagrid" idField="id" fit="true" queryMode="group">
-   <t:dgCol title="主键"  field="id"  hidden="false"  queryMode="single"  width="0"></t:dgCol>
+   <t:dgCol title="主键"  field="id"  hidden="true"  queryMode="single"  width="0"></t:dgCol>
    <t:dgCol title="关键字"  field="keyword"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="功能类"  field="classname"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="功能名称"  field="name"  hidden="true"  queryMode="single"  width="120"></t:dgCol>

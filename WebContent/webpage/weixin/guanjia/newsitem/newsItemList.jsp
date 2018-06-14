@@ -2,8 +2,7 @@
 <%@include file="/context/mytags.jsp"%>
  <t:base type="jquery,easyui,tools,DatePicker"></t:base>
 <t:datagrid name="newsitemslist" actionUrl="newsItemController.do?datagrid&templateId=${templateId}" fit="true" fitColumns="true" idField="id" queryMode="group">
-		
-	<t:dgCol title="编号" field="id" hidden="false" ></t:dgCol>
+	<t:dgCol title="编号" field="id" hidden="true" ></t:dgCol>
 	<t:dgCol title="标题" field="title" width="100"></t:dgCol>
 	<t:dgCol title="作者" field="author" width="100"></t:dgCol>
 	<t:dgCol title="操作" field="opt"></t:dgCol>

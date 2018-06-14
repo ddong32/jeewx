@@ -64,14 +64,30 @@ public interface SystemService extends CommonService{
 	 * @param functionId
 	 * @return
 	 */
-	public  Set<String> getOperationCodesByUserIdAndFunctionId(String userId,String functionId);
+	public Set<String> getOperationCodesByUserIdAndFunctionId(String userId,String functionId);
 	/**
 	 * 根据角色ID 和 菜单Id 获取 具有操作权限的按钮Codes
 	 * @param roleId
 	 * @param functionId
 	 * @return
 	 */
-	public  Set<String> getOperationCodesByRoleIdAndFunctionId(String roleId,String functionId);
+	public Set<String> getOperationCodesByRoleIdAndFunctionId(String roleId,String functionId);
+	
+	/**
+    *
+     * getOperationCodesByRoleIdAndruleDataId
+     * 根据角色id 和 菜单Id 获取 具有操作权限的数据规则
+     *
+     * @Title: getOperationCodesByRoleIdAndruleDataId
+     * @Description: TODO
+     * @param @param roleId
+     * @param @param functionId
+     * @param @return    设定文件
+     * @return Set<String>    返回类型
+     * @throws
+    */
+   public Set<String> getOperationCodesByRoleIdAndruleDataId(String roleId,String functionId);
+
 	/**
 	 * 根据编码获取字典组
 	 * 
@@ -104,19 +120,19 @@ public interface SystemService extends CommonService{
      * 加载所有图标
      * @return
      */
-    public  void initAllTSIcons();
+    public void initAllTSIcons();
     
     /**
      * 更新图标
      * @param icon
      */
-    public  void upTSIcons(TSIcon icon);
+    public void upTSIcons(TSIcon icon);
     
     /**
      * 更新图标
      * @param icon
      */
-    public  void delTSIcons(TSIcon icon);
+    public void delTSIcons(TSIcon icon);
     
     /**
      * 获取页面控件权限控制的

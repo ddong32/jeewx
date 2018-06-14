@@ -45,21 +45,26 @@
 	});
 </script>
 </head>
-<body style="overflow-y: hidden" scroll="no">
+<body style="overflow-y: scroll" scroll="no">
 <t:formvalid formid="formobj" layout="div" dialog="true" refresh="true" action="functionController.do?saveFunction">
 	<input name="id" type="hidden" value="${function.id}">
 	<fieldset class="step">
 	<div class="form"><label class="Validform_label"> 菜单名称: </label> <input name="functionName" class="inputxt" value="${function.functionName}" datatype="s1-15"> <span
 		class="Validform_checktip">菜单名称范围1~15位字符,且不为空</span></div>
-	<div class="form"><label class="Validform_label"> 菜单等级: </label> <select name="functionLevel" id="functionLevel" datatype="*">
-		<option value="0" <c:if test="${function.functionLevel eq 0}">selected="selected"</c:if>>一级菜单</option>
-		<option value="1" <c:if test="${function.functionLevel>0}"> selected="selected"</c:if>>下级菜单</option>
-	</select> <span class="Validform_checktip"></span></div>
-	<div class="form" id="pfun"><label class="Validform_label"> 父菜单: </label> <input id="cc" <c:if test="${function.TSFunction.functionLevel eq 0}">
-					value="${function.TSFunction.id}"</c:if>
-		<c:if test="${function.TSFunction.functionLevel > 0}">
-					value="${function.TSFunction.functionName}"</c:if>> <input id="functionId" name="TSFunction.id" style="display: none;"
-		value="${function.TSFunction.id}"></div>
+	<div class="form">
+        <label class="Validform_label"> 菜单等级: </label> 
+        <select name="functionLevel" id="functionLevel" datatype="*">
+    		<option value="0" <c:if test="${function.functionLevel eq 0}">selected="selected"</c:if>>一级菜单</option>
+    		<option value="1" <c:if test="${function.functionLevel>0}"> selected="selected"</c:if>>下级菜单</option>
+    	</select> 
+        <span class="Validform_checktip"></span>
+    </div>
+	<div class="form" id="pfun">
+        <label class="Validform_label"> 父菜单: </label> 
+        <input id="cc" <c:if test="${function.TSFunction.functionLevel eq 0}"> value="${function.TSFunction.id}"</c:if>
+		<c:if test="${function.TSFunction.functionLevel > 0}"> value="${function.TSFunction.functionName}"</c:if>> 
+        <input id="functionId" name="TSFunction.id" style="display: none;" value="${function.TSFunction.id}">
+    </div>
 	<div class="form" id="funurl"><label class="Validform_label"> 菜单地址: </label> <input name="functionUrl" class="inputxt" value="${function.functionUrl}" style="width:300px"></div>
 	<div class="form"><label class="Validform_label"> 图标名称: </label> <select name="TSIcon.id">
 		<c:forEach items="${iconlist}" var="icon">

@@ -28,6 +28,24 @@ CmsAritcleInterval.prototype = {
 	initData : function() {
 		var me = this;
 		me.cacheData.articleId = $("#articleId").val();  //文章数据库编号
+		//栏目菜单
+        $('#menuentityTree').combotree({
+            url : 'menuManagerController.do?treeMenu',
+            onClick : function(node) {
+            	$("#menuentityId").val(node.id);
+            },
+            onLoadSuccess:function(node,data){  
+            	$("#menuentityTree").combotree('setValue',$("#menuentityId").val());
+            },
+            onBeforeSelect : function(node){  
+                var t = $(this).tree;  
+                var isLeaf = t('isLeaf', node.target);  
+                if (!isLeaf) {//选择的不是叶子节点  
+                    return false;  
+                }
+            }
+        });
+        
 	},
 	
 	uploadfile : function() {
@@ -57,8 +75,7 @@ CmsAritcleInterval.prototype = {
 			autoUpload : false,
 			acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
 			maxFileSize : 2000000, // 2 MB
-			disableImageResize : /Android(?!.*Chrome)|Opera/
-				.test(window.navigator.userAgent),
+			disableImageResize : /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
 			previewMaxWidth : 290,
 			previewMaxHeight : 160,
 			previewCrop : true
@@ -83,7 +100,8 @@ CmsAritcleInterval.prototype = {
 			}
 			if (file.error) {
 				node.append('<br>')
-					.append($('<span class="text-danger"/>').text(file.error));
+					.append($('<span class="text-danger"/>')
+					.text(file.error));
 			}
 			if (index + 1 === data.files.length) {
 				data.context.find('button')
@@ -123,94 +141,20 @@ CmsAritcleInterval.prototype = {
 		}).prop('disabled', !$.support.fileInput)
 			.parent().addClass($.support.fileInput ? undefined : 'disabled');
 
-		//编辑时初始化图片预览
-		var frm = document.formobj;
-		//var name = "${cmsArticlePage.title}", imageHref = "${cmsArticlePage.imageHref}";
-		var name = frm["title"].value,
-			imageHref = frm["imageHref"].value;
-		if (name != "") {
-			$("#imageTitle").html(name);
-		}
-		if (imageHref != "") {
-			$("#imageShow").html('<img src="' + imageHref + '" width="100%" height="160" />');
-		}
-		//重新布局
-		setTimeout(me.layoutThePage, 512);
 		//在线编辑器通用配置
 		var ueditorConfig = {
 			elementPathEnabled : false,
 			wordCount : false,
 			autoHeightEnabled : false
 		};
-		//注意事项编辑
-		me.cacheData.noticeEditor = UE.getEditor('notice', $.extend({
-			initialFrameHeight : 240
-		}, ueditorConfig));
-		//购买须知编辑
-		$.each([ 'expense_contain', 'expense_ncontain' ], function(i, e) {
-			window[e + 'Editor'] = UE.getEditor(e, $.extend({
-				initialFrameHeight : 158
-			}, ueditorConfig));
-		});
 		//形成描述编辑
-		me.cacheData.routeDetailEditor = UE.getEditor('routeDetail', $.extend({
-			initialFrameHeight : 240
-		}, ueditorConfig));
+		me.cacheData.routeDetailEditor = UE.getEditor('routeDetail', $.extend({initialFrameHeight: 240}, ueditorConfig));
 		//支持上传头部图片
 		me.enableUploadPhoto();
 		//行程图片
 		me.enableRouteUploadPhoto();
-		//
-		//me.previewListener();
 	},
 	
-	/**
-	 * 1头部图片
-	 */
-	edit_cmsPhoto : function() {
-		$('.data-edit-layout').css("display","none");
-		$('#data-list').css("display","block");
-	},
-	
-	/**
-	 * 2基本信息
-	 */
-	edit_cmsArticle : function() {
-		$('.data-edit-layout').css("display","none");
-		$('#edit_cmsArticle').css("display","block");
-	},
-	
-	/**
-	 * 3行程列表
-	 */
-	edit_cmsRoute : function() {
-		$('.data-edit-layout').css("display","none");
-		$('#data-list-cmsRouteList').css("display","block");
-	},
-	
-	/**
-	 * 4注意事项
-	 */
-	edit_notice : function() {
-		$('.data-edit-layout').css("display","none");
-		$('#data-notice').css("display","block");
-	},
-	
-	/**
-	 * 5费用包含
-	 */
-	edit_expense_contain : function() {
-		$('.data-edit-layout').css("display","none");
-		$('#data-expense-contain').css("display","block");
-	},
-	
-	/**
-	 * 6费用不包含
-	 */
-	edit_expense_ncontain : function() {
-		$('.data-expense-ncontain').css("display","none");
-		$('#data-expense-ncontain').css("display","block");
-	},
 	
 	/**
 	 * 图片列表加载完成触发
@@ -274,8 +218,9 @@ CmsAritcleInterval.prototype = {
 	delPhoto : function(rowi) {
 		var me = this;
 		var dg = $('#cmsPhotoList'), r = dg.datagrid('getRows')[rowi];
-	 	me.affirmDelPhoto(r['id'], function() {$('#cmsPhotoList').datagrid('deleteRow', rowi);});
+	 	me.affirmDelPhoto(r['id'], function() {dg.datagrid('deleteRow', rowi);});
 	 	me.preparePreview();
+	 	dg.datagrid('reload');
 	},
 	
 	/**
@@ -287,12 +232,12 @@ CmsAritcleInterval.prototype = {
 		$.messager.confirm('确认', '是否确定删除?', function(v) {
 			if(v) {
 				var ajaxOpts = {
-						dataType: 'json'
-						, success: function(rs) {
-							if(rs && rs['success']) {
-								cb();
-							}
+					dataType: 'json'
+					, success: function(rs) {
+						if(rs && rs['success']) {
+							cb();
 						}
+					}
 				};
 				$.ajax('./cmsPhotoController.do?del&id=' + id, ajaxOpts);
 			}
@@ -323,7 +268,7 @@ CmsAritcleInterval.prototype = {
 	 */
 	enableUploadPhoto : function() {
 		//文件表单元素盖住'上传'按钮
-		var dgtoolbtn = $('#cmsPhotoListtb .datagrid-toolbar a[icon="icon-add"]');
+		var dgtoolbtn = $('#cmsPhotoListtb a[icon="icon-add"]');
 		var cmsPhotoUploadButton = $('#cmsPhotoUploadButton');
 		dgtoolbtn.css('position', 'relative');
 		var w = dgtoolbtn.width(), h = dgtoolbtn.height();
@@ -335,27 +280,24 @@ CmsAritcleInterval.prototype = {
 	        dataType: 'json',
 	        autoUpload: true,
 	        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+	        maxNumberOfFiles: 4,
 	        maxFileSize: 2000000, // 2 MB
 	        disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
 	        previewMaxWidth: 290,
 	        previewMaxHeight: 160,
 	        previewCrop: true
+	    }).on('fileuploadadd', function(e, data) {
+	    	var acceptFileTypes = /^image\/(gif|jpe?g|png)$/i;
+	    	//文件类型判断
+	        if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
+	            alert("上传文件类型不对");
+	            return ;
+	        }
+	        data.submit();
 	    }).on('fileuploaddone', function (e, data) {
-	        /*var files = data? data['files'] : null;
-	        if(files && files.length) {
-	        	var dg = $('#cmsPhotoList');
-	        	for(var i = 0, f, r; i < files.length; i ++) {
-	        		f = files[i];
-	        		r = {attachmenttitle: f['name'], createdate: new Date(f['lastModified']).fmt2Str()};
-	        		dg.datagrid('appendRow', r);
-	        	}
-	        }*/
 	    	var rs = data? data['result'] : null, entity;
 	    	if(rs && (entity = rs['obj'])) {
-	    		entity['createdate'] = new Date(entity['createdate']).fmt2Str();
 	    		$('#cmsPhotoList').datagrid('appendRow', entity);
-	    		
-	    		//preparePreview();
 	    	}
 	    });
 		
@@ -378,7 +320,16 @@ CmsAritcleInterval.prototype = {
 			disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
 			previewMaxWidth: 290,
 			previewMaxHeight: 160,
-			previewCrop: true
+			previewCrop: true,
+			add: function(e, data) {
+		        var acceptFileTypes = /^image\/(gif|jpe?g|png)$/i;
+		        //文件类型判断
+		        if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
+		            alert("上传文件类型不对");
+		            return ;
+		        }
+		        data.submit();
+			}
 		}).on('fileuploaddone', function (e, data) {
 			console.info(data);
 			var rs = data? data['result'] : null, entity;
@@ -447,7 +398,7 @@ CmsAritcleInterval.prototype = {
 				//
 				$(frm).form('load', entity);
 				//
-				routeDetailEditor.setContent(entity['detail'] || '');
+				me.cacheData.routeDetailEditor.setContent(entity['detail'] || '');
 				//traffic_box
 				var trff = entity['traffic'];
 				if(trff) {
@@ -458,7 +409,7 @@ CmsAritcleInterval.prototype = {
 							e = segm[i];
 							//交通工具和地点'1:南宁'
 							if(-1 != (j = e.indexOf(':'))) {
-								addPlace(e.substring(0, j), e.substring( j+ 1));
+								me.addPlace(e.substring(0, j), e.substring( j+ 1));
 							}
 						}
 					}
@@ -468,12 +419,53 @@ CmsAritcleInterval.prototype = {
 				if(photos && photos.length) {
 					var ul = $('#cmsRoutePhotoList');
 					for(var i = 0; i < photos.length; i ++) {
-						buildRoutePhoto(photos[i], ul);
+						me.buildRoutePhoto(photos[i], ul);
 					}
 				}
 			}
 		};
 		$.ajax('./cmsRouteController.do?get&id=' + rid, ajaxOpts);
+	},
+	
+	/**
+	 * 删除行程图片
+	 */
+	delRoutePhoto : function(id) {
+		this.affirmDelPhoto(id, function() {$('#cmsRoutePhotoList').find('[cache-id="' + id + '"]').remove();});
+	},
+	/**
+	 * 行程图片列表
+	 * @returns
+	 */
+	buildRoutePhoto : function(photo, ul) {
+		var photo_id = photo['id'], photo_name = photo['attachmenttitle'];
+		var itm = ['<li cache-id="' + photo_id + '">'];
+		//itm.push('<img src="' + photo['attachmentcontent'] + '" alt="" rid="' + photo_id + '" />');
+		itm.push('<span class="routePhotoItem" onclick="openPhotoViewer(\'' + photo_id + '\')" title=\"点击查看\">' + photo_name + '</span>');
+		itm.push('<span class="routePhotoDel" onclick="delRoutePhoto(\'' + photo_id + '\')" title=\"点击删除\">X</span>');
+		itm.push('</li>');
+		return $(itm.join('')).appendTo(ul);
+	},
+	
+	/**
+	 * 确认删除
+	 * @param id 图片id
+	 * @param cb 回调
+	 */
+	affirmDelPhoto : function(id, cb) {
+		$.messager.confirm('确认', '是否确定删除?', function(v) {
+			if(v) {
+				var ajaxOpts = {
+						dataType: 'json'
+						, success: function(rs) {
+							if(rs && rs['success']) {
+								cb();
+							}
+						}
+				};
+				$.ajax('./cmsPhotoController.do?del&id=' + id, ajaxOpts);
+			}
+		});
 	},
 	
 	/**
@@ -514,6 +506,7 @@ CmsAritcleInterval.prototype = {
 	* 保存行程
 	*/
 	saveRoute : function() {
+	     var me = this;
 		 var frm = document.routeForm;
 		 //
 		 var routePhotosId = [], routePhotos = [];
@@ -539,9 +532,8 @@ CmsAritcleInterval.prototype = {
 		        	var entity = rs['obj'], cd = parseInt(entity['createDate']);
 		        	if(cd) {
 		        		cd = new Date(cd);
-		        		entity['createDate'] = cd.getFullYear() + '-' + (cd.getMonth() + 1) + '-' + cd.getDate()
-		        			+ ' ' + cd.getHours() + ':' + cd.getMinutes() + ':' + cd.getSeconds();
-		        		entity['traffic_trim'] = fmt_cmsRouteList_traffic(entity['traffic']);
+		        		entity['createDate']   = cd.getFullYear() + '-' + (cd.getMonth() + 1) + '-' + cd.getDate() + ' ' + cd.getHours() + ':' + cd.getMinutes() + ':' + cd.getSeconds();
+		        		entity['traffic_trim'] = me.fmt_cmsRouteList_traffic(entity['traffic']);
 		        	}
 		        	//
 		        	var dg = $('#cmsRouteList');
@@ -553,8 +545,7 @@ CmsAritcleInterval.prototype = {
 		        	}
 		        	//更新预览
 		        	entity['photos'] = routePhotos;
-		        	preparePreview();
-		        	
+		        	//me.preparePreview();
 		        	$('#routeWindow').window('close');
 		        }
 		    }
@@ -579,6 +570,26 @@ CmsAritcleInterval.prototype = {
 		}
 	},
 	
+	preparePlace : function() {
+		this.addPlace();
+	},
+	
+	/**
+	 * 识别线路的目的地, 乘坐交通工具
+	 * 将'南宁>1:北海'替换为'南宁>北海'显示
+	 */
+	fmt_cmsRouteList_traffic : function (val, row, rowi) {
+		if(val) {
+			var re_trimTraffic = /(\>|\&gt\;)[a-zA-Z0-9]+\:/g;
+			re_trimTraffic.lastIndex = -1;
+			if(re_trimTraffic.test(val)) {
+				val = val.replace(re_trimTraffic, '$1');
+			}
+		}
+		
+		return val;
+	},
+	
 	/**
 	 * 添加地点
 	 * @param tl 交通工具
@@ -586,7 +597,8 @@ CmsAritcleInterval.prototype = {
 	 */
 	addPlace : function(tl, pla) {
 		//交通工具
-		var trafficTools = readTrafficTools();
+		var me = this;
+		var trafficTools = me.readTrafficTools();
 		if(!trafficTools || !trafficTools.length) {
 			return;
 		}
@@ -603,11 +615,36 @@ CmsAritcleInterval.prototype = {
 		htm.push('<input class="inputxt" name="traffic_place" style="width: 60px" placeholder="输入地点" value="' + (pla || '') + '" >');
 		//
 		$(htm.join('')).appendTo($('#traffic_box'));
+	},
+	
+	/**
+	 * 读取交通工具数据字典
+	 * @returns
+	 */
+	readTrafficTools : function () {
+		//是否已经读取了, 有就不读了
+		var cacheName = 'routeTrafficTools', tools = window[cacheName];
+		if(tools && tools.length) {
+			return tools;
+		}
+		
+		var ajaxOpts = {
+				async: false
+				, dataType: 'json'
+				, success: function(dat) {
+					if(dat) {
+						window[cacheName] = tools = dat['obj'] || null;
+					}
+				}
+		};
+		$.ajax('./cmsRouteController.do?readTrafficTools', ajaxOpts);
+		
+		return tools;
 	}
 }
 
 var cmsAritcleInterval;
-jQuery(function() {
+$(function() {
 	cmsAritcleInterval = new CmsAritcleInterval();
 	cmsAritcleInterval.init();
 });

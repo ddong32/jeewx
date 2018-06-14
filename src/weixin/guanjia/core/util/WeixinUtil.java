@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -36,7 +38,8 @@ public class WeixinUtil {
     // 客服接口地址
     public static String send_message_url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=ACCESS_TOKEN";
     //
-    // private static final ResourceBundle bundle = ResourceBundle.getBundle("weixin");
+    // private static final ResourceBundle bundle =
+    // ResourceBundle.getBundle("weixin");
 
     /**
      * 发起https请求并获取结果
@@ -211,7 +214,8 @@ public class WeixinUtil {
      * @return
      */
     public static void updateAccessToken(AccessTokenYw accessTocken, SystemService systemService) {
-        String sql = "update accesstoken set access_token='" + accessTocken.getAccess_token() + "',expires_ib=" + accessTocken.getExpires_in() + ",addtime=now() where id='" + accessTocken.getId() + "'";
+        String sql = "update accesstoken set access_token='" + accessTocken.getAccess_token() + "',expires_ib=" + accessTocken.getExpires_in() + ",addtime=now() where id='" + accessTocken.getId()
+                + "'";
         systemService.updateBySqlString(sql);
     }
 
@@ -242,6 +246,33 @@ public class WeixinUtil {
         }
         return bt;
 
+    }
+
+    public static String doHttpsGetJson(String Url) {
+        String message = "";
+        try {
+            System.out.println("doHttpsGetJson");// TODO:dd
+            URL urlGet = new URL(Url);
+            HttpURLConnection http = (HttpURLConnection) urlGet.openConnection();
+            http.setRequestMethod("GET"); // 必须是get方式请求 24
+            http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            http.setDoOutput(true);
+            http.setDoInput(true);
+            System.setProperty("sun.net.client.defaultConnectTimeout", "30000");// 连接超时30秒28
+            System.setProperty("sun.net.client.defaultReadTimeout", "30000"); // 读取超时30秒29
+                                                                              // 30
+            http.connect();
+            InputStream is = http.getInputStream();
+            int size = is.available();
+            byte[] jsonBytes = new byte[size];
+            is.read(jsonBytes);
+            message = new String(jsonBytes, "UTF-8");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return message;
     }
 
 }

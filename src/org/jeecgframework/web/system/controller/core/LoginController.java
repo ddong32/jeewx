@@ -274,6 +274,9 @@ public class LoginController extends BaseController {
         if (loginActionlist.size() > 0) {
             Collection<TSFunction> allFunctions = loginActionlist.values();
             for (TSFunction function : allFunctions) {
+                if ("4028d881436d514601436d5af95501b1".equals(function.getId())) {
+                    System.out.println(function.getId());
+                }
                 if (function != null && !functionMap.containsKey(function.getFunctionLevel() + 0)) {
                     functionMap.put(function.getFunctionLevel() + 0, new ArrayList<TSFunction>());
                 }

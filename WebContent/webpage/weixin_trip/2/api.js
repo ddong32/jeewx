@@ -40,7 +40,13 @@ var api = function(window, document) {
 			__scrolltop__: 0,
 			init: function() {
 				function asyncLoadScripts() {
-					for(var $array = ["127.0.0.1:8080/jeewx/plug-in/common/pagestatistics.js"], $arrayScript = ["127.0.0.1:8080/jeewx/webpage/weixin_trip/2/gmlinks.js"], $hasScripts = document.getElementsByTagName("script"), $frgmentGa = document.createDocumentFragment(), $frgmentGmlinks = document.createDocumentFragment(), _arrayHasScripts = [], a = 0; a < $hasScripts.length; a++) _arrayHasScripts = _arrayHasScripts.concat($hasScripts[a].getAttribute("src"));
+					for(var $array = ["127.0.0.1:8080/jeewx/plug-in/common/pagestatistics.js"], 
+							$arrayScript = ["127.0.0.1:8080/jeewx/webpage/weixin_trip/2/gmlinks.js"], 
+							$hasScripts = document.getElementsByTagName("script"), 
+							$frgmentGa = document.createDocumentFragment(), 
+							$frgmentGmlinks = document.createDocumentFragment(), 
+							_arrayHasScripts = [], a = 0; a < $hasScripts.length; a++) 
+					_arrayHasScripts = _arrayHasScripts.concat($hasScripts[a].getAttribute("src"));
 					_arrayHasScripts = _arrayHasScripts.toString();
 					for(var _a = 0; _a < $array.length; _a++)
 						if(_arrayHasScripts.indexOf($array[_a]) < 0) {

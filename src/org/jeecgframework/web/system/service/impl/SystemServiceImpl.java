@@ -212,6 +212,26 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		}
 	}
 
+   public Set<String> getOperationCodesByRoleIdAndruleDataId(String roleId, String functionId) {
+        Set<String> operationCodes = new HashSet<String>();
+        TSRole role = commonDao.get(TSRole.class, roleId);
+        CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+        cq1.eq("TSRole.id", role.getId());
+        cq1.eq("TSFunction.id", functionId);
+        cq1.add();
+        List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+        if (null != rFunctions && rFunctions.size() > 0) {
+            TSRoleFunction tsRoleFunction = rFunctions.get(0);
+            if (null != tsRoleFunction.getDataRule()) {
+                String[] operationArry = tsRoleFunction.getDataRule().split(",");
+                for (int i = 0; i < operationArry.length; i++) {
+                    operationCodes.add(operationArry[i]);
+                }
+            }
+        }
+        return operationCodes;
+    }
+	
 	/**
      * 加载所有图标
      * @return

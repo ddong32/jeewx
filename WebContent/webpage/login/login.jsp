@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="org.jeecgframework.core.util.SysThemesUtil,org.jeecgframework.core.enums.SysThemesEnum"%>
 <%@include file="/context/mytags.jsp"%>
+<%
+    session.setAttribute("lang","zh-cn");
+    SysThemesEnum sysTheme = SysThemesUtil.getSysTheme(request);
+    String lhgdialogTheme = SysThemesUtil.getLhgdialogTheme(sysTheme);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -138,5 +144,6 @@ label.iPhoneCheckLabelOn span {
 	<script type="text/javascript" src="plug-in/login/js/iphone.check.js"></script>
 	<script type="text/javascript" src="plug-in/login/js/login.js"></script>
 	<script type="text/javascript" src="plug-in/lhgDialog/lhgdialog.min.js"></script>
+    <%=lhgdialogTheme %>
 </body>
 </html>

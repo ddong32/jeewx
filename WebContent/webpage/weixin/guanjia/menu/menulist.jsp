@@ -4,7 +4,7 @@
 <div id="system_function_functionList" class="easyui-layout" fit="true">
     <div region="center" style="padding:1px;">
         <t:datagrid actionUrl="menuManagerController.do?datagrid"  name="menuList" queryMode="group" treegrid="true" fitColumns="true" idField="id">
-        <t:dgCol field="id" treefield="id" title="主键" hidden="false"></t:dgCol>
+        <t:dgCol field="id" treefield="id" title="主键" hidden="true"></t:dgCol>
         <t:dgCol field="name" treefield="text" title="菜单名称" query="true" width="100"></t:dgCol> 
         <t:dgCol field="type" treefield="src" title="菜单类型" replace="消息触发类_click,网页链接类_view" width="100" ></t:dgCol>
         <t:dgCol field="orders" treefield="order" title="顺序" width="100"></t:dgCol>

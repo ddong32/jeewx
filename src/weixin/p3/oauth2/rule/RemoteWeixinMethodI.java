@@ -54,5 +54,11 @@ public interface RemoteWeixinMethodI {
 	//高级群发接口
 	//将消息转发到多客服
 	
-	
+	/**
+     * 调用微信author2.0 通用方法
+     * @param request    前台请求
+     * @param accountId    微信公众账号信息ID
+     * @return
+     */
+    public String callWeixinAuthor2ReturnUrl(HttpServletRequest request,String accountId,String tagetUrl);
 }

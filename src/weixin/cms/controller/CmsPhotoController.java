@@ -66,6 +66,9 @@ public class CmsPhotoController extends BaseController {
      */
     @RequestMapping(params = "datagrid")
     public void datagrid(CmsPhotoEntity entity, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+        dataGrid.setField("id,attachmenttitle,createdate,");
+        dataGrid.setOrder("desc");
+        dataGrid.setSort("createdate");
         CriteriaQuery cq = new CriteriaQuery(CmsPhotoEntity.class, dataGrid);
         // cq.eq("accountid", ResourceUtil.getWeiXinAccountId());
         // 查询条件组装器

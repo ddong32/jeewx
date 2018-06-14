@@ -72,54 +72,53 @@ public class WeixinAccountTokenTask{
 				// 重置获取token时间
 				account.setAddtoekntime(getAccessTokenDate);
 				
-				
-					//------------------------------------------------------------------------------------------------
-					try {
-						//[2].获取api凭证
-						GetticketRtn getticketRtn = JwQrcodeAPI.doGetticket(token);
-						if (null != getticketRtn) {
-							try {
-								// 重置token
-								account.setApiticket(getticketRtn.getTicket());
-								// 重置事件
-								account.setApiticketttime(getAccessTokenDate);
-								LogUtil.info("---------定时任务重置超过2小时失效token------------------"+"获取Apiticket成功");
-							} catch (Exception e) {
-								// 获取api凭证失败
-								String wrongMessage = "获取api凭证失败 errcode:{"+ getticketRtn.getErrcode()+"} errmsg:{"+getticketRtn.getErrmsg()+"}";
-								LogUtil.info(wrongMessage);
-							}
+				//------------------------------------------------------------------------------------------------
+				try {
+					//[2].获取api凭证
+					GetticketRtn getticketRtn = JwQrcodeAPI.doGetticket(token);
+					if (null != getticketRtn) {
+						try {
+							// 重置token
+							account.setApiticket(getticketRtn.getTicket());
+							// 重置事件
+							account.setApiticketttime(getAccessTokenDate);
+							LogUtil.info("---------定时任务重置超过2小时失效token------------------"+"获取Apiticket成功");
+						} catch (Exception e) {
+							// 获取api凭证失败
+							String wrongMessage = "获取api凭证失败 errcode:{"+ getticketRtn.getErrcode()+"} errmsg:{"+getticketRtn.getErrmsg()+"}";
+							LogUtil.info(wrongMessage);
 						}
-					} catch (Exception e) {
-						LogUtil.info("---------------------定时任务异常--【获取api凭证】--------------"+e.toString());
 					}
-					//------------------------------------------------------------------------------------------------
-					//[3].获取jsapi凭证
-					try {
-						String jsapiticket = null;
-						String jsapi_ticket_url = WeiXinOpenConstants.JSAPI_TICKET_URL.replace("ACCESS_TOKEN", token);
-						JSONObject jsapi_ticket_json = WeixinUtil.httpRequest(jsapi_ticket_url, "GET", null);
-						if (null != jsapi_ticket_json) {
-							try {
-								jsapiticket = jsapi_ticket_json.getString("ticket");
-								// 重置token
-								account.setJsapiticket(jsapiticket);
-								// 重置事件
-								account.setJsapitickettime(getAccessTokenDate);
-								LogUtil.info("---------定时任务重置超过2小时失效token------------------"+"获取Jsapiticket成功");
-							} catch (Exception e) {
-								//获取jsapi凭证失败
-								String wrongMessage = "获取jsapi凭证失败 errcode:{"+ (jsonObject.containsKey("errcode")?jsonObject.get("errcode"):"") +"} errmsg:{"+ (jsonObject.containsKey("errmsg")?jsonObject.getString("errmsg"):"") +"}";
-								LogUtil.info(wrongMessage);
-							}
+				} catch (Exception e) {
+					LogUtil.info("---------------------定时任务异常--【获取api凭证】--------------"+e.toString());
+				}
+				//------------------------------------------------------------------------------------------------
+				//[3].获取jsapi凭证
+				try {
+					String jsapiticket = null;
+					String jsapi_ticket_url = WeiXinOpenConstants.JSAPI_TICKET_URL.replace("ACCESS_TOKEN", token);
+					JSONObject jsapi_ticket_json = WeixinUtil.httpRequest(jsapi_ticket_url, "GET", null);
+					if (null != jsapi_ticket_json) {
+						try {
+							jsapiticket = jsapi_ticket_json.getString("ticket");
+							// 重置token
+							account.setJsapiticket(jsapiticket);
+							// 重置事件
+							account.setJsapitickettime(getAccessTokenDate);
+							LogUtil.info("---------定时任务重置超过2小时失效token------------------"+"获取Jsapiticket成功");
+						} catch (Exception e) {
+							//获取jsapi凭证失败
+							String wrongMessage = "获取jsapi凭证失败 errcode:{"+ (jsonObject.containsKey("errcode")?jsonObject.get("errcode"):"") +"} errmsg:{"+ (jsonObject.containsKey("errmsg")?jsonObject.getString("errmsg"):"") +"}";
+							LogUtil.info(wrongMessage);
 						}
-					} catch (Exception e) {
-						LogUtil.info("---------------------定时任务异常--【获取jsapi凭证】--------------"+e.toString());
 					}
-					//------------------------------------------------------------------------------------------------
-				
-					systemService.saveOrUpdate(account);
-				LogUtil.info("---------定时任务定时任务【重置超过2小时失效token】成功公众号------------------" + account.getAccountname());
+				} catch (Exception e) {
+					LogUtil.info("---------------------定时任务异常--【获取jsapi凭证】--------------"+e.toString());
+				}
+				//------------------------------------------------------------------------------------------------
+			
+				systemService.saveOrUpdate(account);
+				LogUtil.info("---------定时任务【重置超过2小时失效token】成功公众号------------------" + account.getAccountname());
 			} catch (Exception e) {
 				// 获取token失败
 				String wrongMessage = "获取token失败 errcode:{"+ (jsonObject.containsKey("jsonObject")?jsonObject.get("errcode"):"")+"} errmsg:{"+ (jsonObject.containsKey("errmsg")?jsonObject.getString("errmsg"):"") +"}";

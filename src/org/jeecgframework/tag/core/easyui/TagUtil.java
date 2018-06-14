@@ -350,8 +350,8 @@ public class TagUtil {
 			e.printStackTrace();
 		}
 		return jObject;
-
 	}
+	
 	/**
 	 * 返回列表JSONObject对象
 	 * @param field
@@ -556,7 +556,7 @@ public class TagUtil {
 			pw.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
 			try {
 				pw.close();
 

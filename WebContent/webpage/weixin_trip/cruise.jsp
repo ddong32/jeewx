@@ -57,9 +57,10 @@
 					<div class="more-list hide">
 						<ul>
                             <li><a ng-click="signup()"><i class="iconfont icon-comfooter-wode"></i>注册会员</a></li>
+                            <%--
                             <li><a ng-click="GoMyOrder()"><i class="iconfont icon-order"></i>我的订单</a></li>
 							<li ng-if="!isApp" class="ng-scope"><a class="history-show" ng-click="history_init()"><i class="iconfont icon-history"></i>浏览历史</a></li>
-							<li><a ng-click="GoIndex()"><i class="iconfont icon-home"></i>回到首页</a></li>
+							<li><a ng-click="GoIndex()"><i class="iconfont icon-home"></i>回到首页</a></li> --%>
 						</ul>
 					</div>
 				</header>
@@ -182,12 +183,8 @@
 		
 		<!-- 详细行程 -->
         <div class="J-router-traveldetail uzai-wrapper j-router" id="detail_wrapper" style="display: none;"></div>
-        <!-- 
 		<script src="${trip_res}/2/api.js"></script>  
 		<script src="${trip_res}/2/api-weixin.js"></script>
-        <script src="${trip_res}/2/overlay.js"></script>
-        -->
-        <script src="${webRoot}/plug-in/blockui/jquery.blockUI.js"></script>
 		<script src="${trip_res}/2/swiper-3.3.1.min.js"></script>
 		<script src="${trip_res}/2/angular.min.js"></script>
 		<script src="${trip_res}/2/detail.js"></script>

@@ -3,19 +3,19 @@
  */
 (function() {
 	function run(fx) {
-        var u = "./weixinUserinfoController.do?getUserinfo";
+        var u = "./weixinUserinfoController.do?callWeixinAuthor2";
         var p = {
-        		dataType: "JSON"
-        		, success: function(resp) {
-        			//
-        			if(resp && resp['obj']) {
-        				fx(resp);
-        			} else if(resp && resp['msg']) {
-        				api.toast(resp['msg'], 6000);
-        			} else {
-        				apii.toast('无法获取微信标识.', 6000);
-        			}
-        		}
+    		dataType: "JSON"
+    		, success: function(resp) {
+    			//
+    			if(resp && resp['obj']) {
+    				fx(resp);
+    			} else if(resp && resp['msg']) {
+    				api.toast(resp['msg'], 6000);
+    			} else {
+    				apii.toast('无法获取微信标识.', 6000);
+    			}
+    		}
         };
         $.ajax(u, p);
 	}

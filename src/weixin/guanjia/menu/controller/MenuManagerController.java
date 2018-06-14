@@ -321,9 +321,9 @@ public class MenuManagerController {
         menu.setButton(firstArr);
         JSONObject jsonMenu = JSONObject.fromObject(menu);
         String accessToken = weixinAccountService.getAccessToken();
-        String url = WeixinUtil.menu_create_url.replace("ACCESS_TOKEN", accessToken);
         JSONObject jsonObject = new JSONObject();
         try {
+            String url = WeixinUtil.menu_create_url.replace("ACCESS_TOKEN", accessToken);
             jsonObject = WeixinUtil.httpRequest(url, "POST", jsonMenu.toString());
             LogUtil.info(jsonObject);
             if (jsonObject != null) {

@@ -1,17 +1,17 @@
 function DetailInterval() {
 	this.cacheData = {
 		queryParam: null,
-		ids: [], // 所有id
+		ids: [],  // 所有id
 		id: null, // 选中的id
-		sysconfig: {}, // 系统配置
-		vioBehavours: {}, // 违法行为
+		sysconfig: {},     // 系统配置
+		vioBehavours: {},  // 违法行为
 		currentBean: null, // 当前的bean
 	};
 }
 
 DetailInterval.prototype = {
 	init: function() {
-		this.readDetail(); //读取
+		this.readDetail(); //读取, 页面数据初始化
 		this.Swiper_content();
 		this.Bind_event();
 		this.contentScroll_fixNavL();
@@ -46,89 +46,6 @@ DetailInterval.prototype = {
 			}
 		})
 		
-		//1头部图片
-		$("#wrapper-scroll").hover(function(){
-			$(this).block({ 
-				message: '<h1>点击编辑</h1>',
-				css: { backgroundColor: '#f00', color: '#fff', cursor: 'pointer' },
-				overlayCSS: { backgroundColor: '#00f', cursor: 'pointer', width: '355px', left: '10px'},
-			});
-			$(this).find('.blockOverlay').on("click", function() { 
-				parent.cmsAritcleInterval.edit_cmsPhoto();
-			});
-		},function(){
-			$(this).unblock();
-		});
-		
-		//2基本信息
-		$("#scroll-head").hover(function(){
-			$(this).block({ 
-				message: '<h1>点击编辑</h1>',
-				css: { backgroundColor: '#f00', color: '#fff', cursor: 'pointer' },
-				overlayCSS: { backgroundColor: '#f00', cursor: 'pointer'},
-			});
-			$(this).find('.blockOverlay').on("click", function() { 
-				parent.cmsAritcleInterval.edit_cmsArticle();
-			});
-		},function(){
-			$(this).unblock();
-		});
-		
-		//3行程
-		$("#jounery-group-info").hover(function(){
-			$(this).block({ 
-				message: '<h1>点击编辑</h1>',
-				css: { backgroundColor: '#f00', color: '#fff', cursor: 'pointer' },
-				overlayCSS: { backgroundColor: '#0f0', cursor: 'pointer'},
-			});
-			$(this).find('.blockOverlay').on("click", function() { 
-				parent.cmsAritcleInterval.edit_cmsRoute();
-			});
-		},function(){
-			$(this).unblock();
-		});
-		
-		//4注意事项
-		$("#data-notice").hover(function(){
-			$(this).block({ 
-				message: '<h1>点击编辑</h1>',
-				css: { backgroundColor: '#f00', color: '#fff', cursor: 'pointer' },
-				overlayCSS: { backgroundColor: '#0f0', cursor: 'pointer'},
-			});
-			$(this).find('.blockOverlay').on("click", function() { 
-				parent.cmsAritcleInterval.edit_notice();
-			});
-		},function(){
-			$(this).unblock();
-		});
-		
-		//5费用说明
-		$("#edit_expense_contain").hover(function(){
-			$(this).block({ 
-				message: '<h1>点击编辑</h1>',
-				css: { backgroundColor: '#f00', color: '#fff', cursor: 'pointer' },
-				overlayCSS: { backgroundColor: '#0f0', cursor: 'pointer'},
-			});
-			$(this).find('.blockOverlay').on("click", function() { 
-				parent.cmsAritcleInterval.edit_cmsPhoto();
-			});
-		},function(){
-			$(this).unblock();
-		});
-		
-		//6费用说明
-		$("#edit_expense_ncontain").hover(function(){
-			$(this).block({ 
-				message: '<h1>点击编辑</h1>',
-				css: { backgroundColor: '#f00', color: '#fff', cursor: 'pointer' },
-				overlayCSS: { backgroundColor: '#0f0', cursor: 'pointer'},
-			});
-			$(this).find('.blockOverlay').on("click", function() { 
-				parent.cmsAritcleInterval.edit_cmsPhoto();
-			});
-		},function(){
-			$(this).unblock();
-		});
 	},
 
 	/**
@@ -178,12 +95,14 @@ DetailInterval.prototype = {
 			$(".trip-header").addClass("hide");
 		}
 		
+		var herf = location.protocol + "//" + location.hostname + ":" + location.port;
+		
 		10 > num ? $(".white-topbar").removeClass("bg-gradient") : $(".white-topbar").addClass("bg-gradient"), num > 500 ? $(".back-top").removeClass("hide") : $(".back-top").addClass("hide");
-		for(var _img = $(".j-img-show .img-lazy"), _defauleImg = "https://r03.uzaicdn.com/content/hybrid/images/product/comment-default.jpg", i = 0; i < _img.length; i++) _img.eq(i).offset().top < $("#wrapper").height() && (_img.eq(i).attr("data-src", _img.eq(i).attr("data-self")), 3 > i && (_img.eq(i).error(function() {
+		for(var _img = $(".j-img-show .img-lazy"), _defauleImg = herf + "/jeewx/webpage/weixin/cms/images/comment-default.jpg", i = 0; i < _img.length; i++) _img.eq(i).offset().top < $("#wrapper").height() && (_img.eq(i).attr("data-src", _img.eq(i).attr("data-self")), 3 > i && (_img.eq(i).error(function() {
 			$(this).attr("src", _defauleImg)
 		}), _img.eq(i).attr("src") !== _defauleImg && _img.eq(i).attr("src") !== _img.eq(i).attr("data-self") && _img.eq(i).attr("src", _img.eq(i).attr("data-self"))));
 		
-		for(var _imgTrip = $(".trip .img-list"), _lazyImgTrip = void 0, _defauleTripImg = "https://r03.uzaicdn.com/content/hybrid/images/product/trip-default.jpg", _i = 0; _i < _imgTrip.length; _i++){
+		for(var _imgTrip = $(".trip .img-list"), _lazyImgTrip = void 0, _defauleTripImg = herf + "/jeewx/webpage/weixin/cms/images/trip-default.jpg", _i = 0; _i < _imgTrip.length; _i++){
 			if(_imgTrip.eq(_i).offset().top < $("#wrapper").height()) {
 				_lazyImgTrip = _imgTrip.eq(_i).find(".swiper-lazy");
 				for(var j = 0; j < _lazyImgTrip.length; j++) _lazyImgTrip.eq(j).attr("data-src", _lazyImgTrip.eq(j).attr("data-self")), 2 > j && (_lazyImgTrip.eq(j).error(function() {
@@ -217,7 +136,6 @@ DetailInterval.prototype = {
 	 */
 	readDetail : function () {
 		var me = this;
-		
 		//----------------------------------------------
 		var pat_id = /\bid=([^&]+)\b/, id = pat_id.test(location.search)? RegExp.$1 : null;
 		if(!id) {
@@ -408,10 +326,10 @@ try {
 				return;
 			}
 			$.get('./cruiseController.do?traveldetail', function(dat) {
-					var tpl = angular.element(dat);
-					var ele = $compile(tpl)($scope);
-					angular.element('#detail_wrapper').append(ele);
-					$scope.$apply();
+				var tpl = angular.element(dat);
+				var ele = $compile(tpl)($scope);
+				angular.element('#detail_wrapper').append(ele);
+				$scope.$apply();
 			});
 		};
 		
